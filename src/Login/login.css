@@ -1,9 +1,11 @@
 :root {
-    --background-color: rgb(230, 229, 229);
+    --background-color: rgb(245, 245, 245);
     --background-box-color: rgb(255, 255, 255);
+    --gradient-primary:linear-gradient(225deg, #5D379C 0%, #1D0B39 100%);
+    --gradient-primary-angle-change:linear-gradient(45deg, #5D379C 0%, #1D0B39 100%);
 
     /* basic colors */
-    --primary-color: #501f0b;
+    --primary-color: #271249;
     --secondary-color: #000000;
 
 
@@ -18,7 +20,7 @@
 
 
     /* button color */
-    --button-color-primary:#501f0b;
+    --button-color-primary:#271249;
     --button-color-secondary:#000;
     --button-color-accent:#000;
     --button-color-disabled:#000;
@@ -35,6 +37,21 @@
 
   }
 
+  .navbody{
+    background-color: var(--background-box-color);
+
+  }
+  .logo{
+    width: 171px;
+  }
+  .tab{
+    font-size: 16px;
+    font-weight: 100;
+    border-radius: 50px;
+    padding: 5px 15px;
+    border: solid black 0.5px;
+    background-color: rgb(226, 227, 228);
+}
 
 label{
     font-size: 14px;
@@ -43,12 +60,14 @@ label{
 
 .login-body{
     background-color: var(--background-color);
-    height: 88vmin;
-    /* padding-right: 200px; */
+    height: 100%;
+}
+.login-container{
 }
 
 .login-form-container{
     background-color:var(--background-box-color);
+    height: 410px;
 }
 
 .signup-input{
@@ -80,18 +99,22 @@ label{
 }
 
 .caption-container{
-    background-color: var(--primary-color);
+    background: var(--gradient-primary);
     color: var(--text-color-white-primary);
     position: relative;
     -webkit-box-shadow: -20px -7px 65px -39px rgba(0,0,0,0.74);
     -moz-box-shadow: -20px -7px 65px -39px rgba(0,0,0,0.74);
     box-shadow: -20px -7px 65px -39px rgba(0,0,0,0.74);
+    animation-name: view;
+    animation-timing-function: ease-in-out;
+    animation-duration: 500ms;
+
 }
 
 
 .caption-container::before{
     content: "";
-    background-color: var(--primary-color);
+    background: linear-gradient(233deg, #5D379C 0%, #3c1e61 100%);
     width: 100%;
     height: 50px;
     position: absolute;
@@ -100,9 +123,18 @@ label{
 
 .caption-container::after{
     content: "";
-    background-color: var(--primary-color);
+    background: linear-gradient(276deg, #42226a 0%, #210b3b 100%);
     width: 100%;
     height: 50px;
     position: absolute;
     bottom: -20px;
+}
+@keyframes view{
+    0%{
+        opacity: 0;
+        filter: blur(1px);
+    }
+    100%{
+        opacity: 1;
+    }
 }

@@ -1,12 +1,17 @@
 import "./App.css";
+import EmployeeDetails1 from "./EmployeeDetails/EmployeeDetails1";
 import Login from "./Login/Login";
-import Nav from "./Nav/Nav";
 
 function App() {
   return (
     <div className="App">
-      <Nav></Nav>
-      <Login />
+      {/* <Login /> */}
+      <EmployeeDetails1 /> 
+
+      {/* 
+      <Router>
+        <Route Element=></Route>
+      </Router> */}
     </div>
   );
 }
