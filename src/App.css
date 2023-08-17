@@ -3,8 +3,50 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
+:root {
+    --background-color: rgb(245, 245, 245);
+    --background-box-color: rgb(255, 255, 255);
+    --gradient-primary:linear-gradient(225deg, #5D379C 0%, #1D0B39 100%);
+    --gradient-primary-angle-change:linear-gradient(45deg, #5D379C 0%, #1D0B39 100%);
+  
+    /* basic colors */
+    --primary-color: #271249;
+    --secondary-color: #000000;
+  
+  
+    /* text color */
+    --text-color-white-primary:#ffffff;
+    --text-color-white-secondary:#e7e5e5;
+    --text-color-black-primary:#ffffff;
+    --text-color-black-secondary:#e7e5e5;
+    --text-color-heading:#000;
+    --text-color-subheading:#000;
+    --text-color-link:#000;
+  
+  
+    /* button color */
+    --button-color-primary:#271249;
+    --button-color-secondary:#000;
+    --button-color-accent:#000;
+    --button-color-disabled:#000;
+  
+  
+    /* accent colors */
+    --accent-color-primary:#000;
+    --accent-color-secondary:#000;
+    --accent-color-highlight:#000;
+    --accent-color-success:#000;
+    --accent-color-warning:#000;
+    --accent-color-error:#000;
+  
+  
+  }
 
 *{
     font-family: 'Poppins', sans-serif;
+}
+html{
+}
+.App{
+  background-color: var(--background-color);
 }

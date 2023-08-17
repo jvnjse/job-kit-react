@@ -1,3 +1,42 @@
 .employee-details{
     background: var(--background-color);
+    height: 100dvh;
+}
+.fill-personal{
+    color: rgb(34, 12, 94);
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input{
+    color:rgb(86, 88, 88);
+    
+}
+.continue-btn{
+    background-color: var(--button-color-primary);
+    color: var(--text-color-white-primary);
+}
+
+.profile-add-text{
+    color: rgb(34, 12, 94);
+}
+.choose-file-box::file-selector-button{
+    color: rgb(65, 65, 65);
+    width: 278px;
+    height: 159px;
+    background-image: url("../Assets/Images/addprofile.png");
+    background-position: center;
+    background-size: contain;
+    padding-top: 100px;
+    border: none;
+    background-color:var(--background-color)
+}
+.addprofile-image{
+    position: absolute;
+    top: 10px;
+    left:-10px;
 }
