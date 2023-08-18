@@ -2,7 +2,8 @@ import React from 'react'
 
 function VerifyOtp() {
   return (
-    <div>xxx</div>
+    <div>setSuccess
+    </div>
   )
 }
 

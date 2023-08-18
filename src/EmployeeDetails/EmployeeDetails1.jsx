@@ -1,6 +1,6 @@
 import React from 'react'
 import logoimage from "../Assets/Images/logo.png"
-import addprofile from "../Assets/Images/addprofile.png"
+// import addprofile from "../Assets/Images/addprofile.png"
 import "./employeedetails1.css"
 import PersonalDetails from './PersonalDetails/PersonalDetails'
 
