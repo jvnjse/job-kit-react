@@ -1,5 +1,6 @@
+
+
 .employee-details{
-    background: var(--background-color);
     height: 100dvh;
 }
 .fill-personal{
@@ -28,7 +29,7 @@ input{
     color: rgb(65, 65, 65);
     width: 278px;
     height: 159px;
-    background-image: url("../Assets/Images/addprofile.png");
+    background-image: url("../../Assets/Images/addprofile.png");
     background-position: center;
     background-size: contain;
     padding-top: 100px;
@@ -101,5 +102,29 @@ input{
   }
   .success-bg-main {
     background-color: rgba(0, 0, 0, 0.582);
+  }
+  .verify-heading{
+    color: rgb(23, 23, 90);
+  }
+  .otp-input:focus{
+    outline: none;
+    border: 1px solid rgb(24, 24, 83);
+  }
+  #partitioned {
+    letter-spacing: 42px;
+    text-align: center;
+    background-position: bottom;
+    background-size: 50px 1px;
+    background-repeat: repeat-x;
+    background-position-x: 35px;
+
+  }
+  .otp-submit-btn{
+    background-color: var(--button-color-primary);
+    color: var(--text-color-white-primary);
+  }
+  .disabled-otp-btn{
+    color: var(--text-color-white-primary);
+    background-color: rgba(46, 46, 66, 0.349) ;
   }
   

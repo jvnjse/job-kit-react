@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import successicon from "../../Assets/Images/success.png"
+import successicon from "../../../Assets/Images/success.png"
 
 
 function Skills() {

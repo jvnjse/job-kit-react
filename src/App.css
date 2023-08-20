@@ -18,15 +18,15 @@
     --text-color-white-primary:#ffffff;
     --text-color-white-secondary:#e7e5e5;
     --text-color-black-primary:#ffffff;
-    --text-color-black-secondary:#e7e5e5;
-    --text-color-heading:#000;
+    --text-color-black-secondary:#f9f4f4;
+    --text-color-heading:#141414;
     --text-color-subheading:#000;
     --text-color-link:#000;
   
   
     /* button color */
     --button-color-primary:#271249;
-    --button-color-secondary:#000;
+    --button-color-secondary:#251649;
     --button-color-accent:#000;
     --button-color-disabled:#000;
   
@@ -45,7 +45,9 @@
 *{
     font-family: 'Poppins', sans-serif;
 }
-html{
+body{
+
+  background: var(--background-color);
 }
 .App{
   background-color: var(--background-color);
