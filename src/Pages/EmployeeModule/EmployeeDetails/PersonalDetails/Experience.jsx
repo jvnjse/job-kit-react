@@ -16,10 +16,8 @@ function Experience() {
             {skillsview ?
                 <div>
                     <div className=' text-center text-2xl font-bold'>Experience</div>
-                    <i class="fa-brands fa-react fa-rotate-90 fa-sm"></i>
-                    <i className="fa fa-circle"></i>
-                    <div className="flex justify-evenly">
-                        <div className="flex flex-col border-r-2 flex-1 items-center">
+                    <div className="flex justify-evenly max-sm:flex-col-reverse ">
+                        <div className="flex flex-col border-r-2 flex-1 items-center max-sm:items-start max-sm:pl-16">
                             <div className=' text-left'>
                                 <div className=' mt-5'>Job Position</div>
                                 <div className=' text-sm'>Organization Name</div>

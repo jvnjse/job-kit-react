@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import "../EmployeeModule/EmployeeDetails/employeedetails1.css"
 
 function VerifyOtp() {
 

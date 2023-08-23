@@ -1,21 +1,48 @@
-import React from "react";
-import "./App.css";
-import EmployeeDetails1 from "./Pages/EmployeeDetails/EmployeeDetails1.jsx";
-import Login from "./Pages/Login/Login.jsx";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import VerifyOtp from "./Pages/Verify-Otp/VerifyOtp";
-import Home from "./Pages/Home/Home";
+import "./App.css";
+import AddDetails from "./Pages/CompanyModule/AddCompanyDetails/AddDetails";
+
+const EmployeeDetails1 = lazy(() =>
+  import("./Pages/EmployeeModule/EmployeeDetails/EmployeeDetails1.jsx")
+);
+const Login = lazy(() => import("./Pages/Login/Login.jsx"));
+const VerifyOtp = lazy(() => import("./Pages/Verify-Otp/VerifyOtp"));
+const Home = lazy(() => import("./Pages/EmployeeModule/Home/Home"));
+const JobDetail = lazy(() =>
+  import("./Pages/EmployeeModule/JobDescription/JobDetail")
+);
+const Employeeprofile = lazy(() =>
+  import("./Pages/EmployeeModule/EmployeeProfile/Employeeprofile")
+);
+const Companydetail = lazy(() =>
+  import("./Pages/EmployeeModule/CompanyPage/Companydetail")
+);
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <Routes>
-          <Route path="/employee-details" element={<EmployeeDetails1 />} />
-          <Route path="/employee-login" element={<Login />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
-          <Route path="/" element={<Home />} />
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/employee/verify-otp" element={<VerifyOtp />} />
+            {/* EMPLOYEE LINKS */}
+            <Route path="/employee" element={<Home />} />
+            <Route path="/employee/login" element={<Login />} />
+            <Route
+              path="/employee/employee-details"
+              element={<EmployeeDetails1 />}
+            />
+            <Route path="/employee/jobdetails" element={<JobDetail />} />
+            <Route
+              path="/employee/employee-profile"
+              element={<Employeeprofile />}
+            />
+            <Route path="/employee/company" element={<Companydetail />}></Route>
+            {/* COMPANY LINKS */}
+            <Route path="/" element={<AddDetails />} />
+          </Routes>
+        </Suspense>
       </Router>
     </div>
   );

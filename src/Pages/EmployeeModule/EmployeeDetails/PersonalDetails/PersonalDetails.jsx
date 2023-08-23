@@ -21,8 +21,8 @@ function PersonalDetails() {
     return (<>
         {
             details ?
-                <div className="flex justify-evenly pt-20">
-                    < div >
+                <div className="flex justify-evenly pt-20 max-sm:flex-col-reverse max-sm:justify-normal max-sm:pt-3">
+                    < div className=' max-sm:p-8'>
                         <div className='fill-personal font-bold text-xl '>Fill your Personal Information</div>
                         <label className='flex flex-col  gap-1 text-xs'>Full Name
                             <input type='text' className='signup-input border border-black-950 w-64 h-8 ml-2' />
@@ -55,8 +55,9 @@ function PersonalDetails() {
                         </div>
                         <div className="continue-btn float-right px-5 py-2 mt-6" onClick={HandleNextDetails}>Continue <FontAwesomeIcon icon={faArrowRight} color='white' /></div>
                     </div >
-                    <div className="flex flex-col">
-                        <div className="profile-add-text font-bold  text-base flex flex-col relative">Add your Profile Image
+                    <div className="flex flex-col ">
+                        <div className='font-bold  text-base '>Add your Profile Image</div>
+                        <div className="profile-add-text flex flex-col relative max-sm:flex-row">
                             <input type="file" title="" className='choose-file-box' id="" accept=" image/jpeg, image/png" onChange={handleChange} />
                             <div style={{
                                 backgroundImage: `url(${file})`, backgroundRepeat: 'no-repeat', backgroundSize: "cover", width: "200px", height: "200px", borderRadius: "25px"

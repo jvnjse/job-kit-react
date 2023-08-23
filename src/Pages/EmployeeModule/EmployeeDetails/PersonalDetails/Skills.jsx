@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import successicon from "../../../Assets/Images/success.png"
+import successicon from "../../../../Assets/Images/success.png"
 
 
 function Skills() {
@@ -12,7 +12,7 @@ function Skills() {
     useEffect(() => {
         if (success) {
             const redirectTimer = setTimeout(() => {
-                window.location.href = "/another-page";
+                window.location.href = "/employee";
             }, 5000);
 
             return () => clearTimeout(redirectTimer);

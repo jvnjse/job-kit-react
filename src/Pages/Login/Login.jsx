@@ -27,7 +27,7 @@ function Login() {
             <div className='login-body flex flex-row items-center justify-center'>
                 <div className="login-container flex">
                     {loginbox &&
-                        <div className="caption-container flex flex-col justify-center items-center p-8  w-96">
+                        <div className="caption-container flex flex-col justify-center items-center p-8  w-96 max-sm:hidden max-md:hidden">
                             <div className="caption text-3xl font-bold text-left w-full">Lorem ipsum <br></br>dolor sit</div>
                             <div className="sub-caption text-xs text-start w-full break-all pr-6 ">Lorem ipsum dolor sit amet consectetur. Orci tellus scelerisque lectus dui purus cras. Donec phasellus feugiat pretium vel aliquet urna.</div>
                         </div>}
@@ -51,7 +51,7 @@ function Login() {
                         <div className="login-link-btn text-center mt-3 cursor-pointer p-2" onClick={Register}>{loginbox ? "Log In Now" : "Register Now"}</div>
                     </div>
                     {!loginbox &&
-                        <div className="caption-container flex flex-col justify-center items-center p-8  w-96">
+                        <div className="caption-container flex flex-col justify-center items-center p-8  w-96 max-sm:hidden max-md:hidden">
                             <div className="caption text-3xl font-bold text-left w-full">Lorem ipsum <br></br>dolor sit</div>
                             <div className="sub-caption text-xs text-start w-full break-all pr-6 ">Lorem ipsum dolor sit amet consectetur. Orci tellus scelerisque lectus dui purus cras. Donec phasellus feugiat pretium vel aliquet urna.</div>
                         </div>}
