@@ -45,10 +45,9 @@
 *{
   font-family: 'Roboto', sans-serif;
   letter-spacing: .5px;
-  color: #333333;
 }
 body{
-
+  color: #333333;
   background: var(--background-color);
 }
 .App{

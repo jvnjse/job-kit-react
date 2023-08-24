@@ -2,6 +2,9 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AddDetails from "./Pages/CompanyModule/AddCompanyDetails/AddDetails";
+import CompanyHome from "./Pages/CompanyModule/Home/CompanyHome";
+import EmployeeDescription from "./Pages/CompanyModule/EmployeeDescription/EmployeeDescription";
+import CompanyProfile from "./Pages/CompanyModule/CompanyProfile/CompanyProfile";
 
 const EmployeeDetails1 = lazy(() =>
   import("./Pages/EmployeeModule/EmployeeDetails/EmployeeDetails1.jsx")
@@ -40,7 +43,13 @@ function App() {
             />
             <Route path="/employee/company" element={<Companydetail />}></Route>
             {/* COMPANY LINKS */}
-            <Route path="/" element={<AddDetails />} />
+            <Route path="/company" element={<CompanyHome />} />
+            <Route path="/company/company-details" element={<AddDetails />} />
+            <Route
+              path="/company/employeedetails"
+              element={<EmployeeDescription />}
+            />
+            <Route path="/company/profile" element={<CompanyProfile />} />
           </Routes>
         </Suspense>
       </Router>

@@ -49,7 +49,7 @@ function Companyinfo() {
                             <input type='text' className='signup-input border border-black-950 w-20 h-8 ml-2' />
                         </label>
                     </div>
-                    <div className="continue-btn float-right px-5 py-2 mt-6" onClick={HandleNextDetails}>Continue <FontAwesomeIcon icon={faArrowRight} color='white' /></div>
+                    <div className="continue-btn float-right px-5 py-2 mt-6 text-white" onClick={HandleNextDetails}>Continue <FontAwesomeIcon className='text-white continue-btn' icon={faArrowRight} color='white' /></div>
                 </div >
                 <div className="flex flex-col ">
                     <div className='font-bold  text-base '>Add your Company Logo</div>
