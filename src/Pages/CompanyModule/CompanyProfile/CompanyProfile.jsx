@@ -17,7 +17,7 @@ function CompanyProfile() {
     return (
         <div className='flex'>
             <CSidePanel handleLinkClick={handleLinkClick} />
-            <div className=' flex-1 h-screen overflow-hidden overflow-y-scroll '>
+            <div className=' flex-1 h-screen overflow-hidden overflow-y-scroll bg-gray-200 rounded-ss-2xl'>
                 {activeComponent === 'profile' && <CompanyMain />}
                 {activeComponent === 'employees' && <CompanyEmployees />}
                 {activeComponent === 'jobs' && <CompanyJobs />}
