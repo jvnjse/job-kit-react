@@ -3,9 +3,11 @@ import companylogo from "../../../Assets/Images/companylogo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 
-function Saved() {
+function Saved(props) {
+    const closetoggleBox = props.closetoggleBox
+
     return (
-        <div className=' flex flex-wrap gap-10 p-16'>
+        <div className=' flex flex-wrap gap-10 p-16' onClick={closetoggleBox}>
             <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
                 <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                     <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />

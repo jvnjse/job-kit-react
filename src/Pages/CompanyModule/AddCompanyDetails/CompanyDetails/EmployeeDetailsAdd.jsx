@@ -17,35 +17,32 @@ function EmployeeDetailsAdd() {
             return () => clearTimeout(redirectTimer);
         }
     }, [success]);
-    // const handleInputChange = (event) => {
-    //     setInputValue(event.target.value);
-    // };
 
 
     return (<>
         <div className=' text-center text-2xl font-bold text-primary_blue pt-10'>Employee Details</div>
-        <div className=' flex justify-evenly pt-4'>
-            <div className=' flex flex-col'>
-                <div className=' flex '>
-                    <label className='flex flex-col  gap-1 text-xs mt-4'>Employee Name
+        <div className=' flex justify-evenly pt-4 max-md:flex-col max-md:gap-4'>
+            <div className=' flex flex-col max-sm:px-4'>
+                <div className=' flex max-sm:flex-col'>
+                    <label className='flex flex-col gap-1 text-xs mt-4'>Employee Name
                         <input type='text' className='signup-input border border-black-950 w-64 h-8 ml-2' />
                     </label>
-                    <label className='flex flex-col  gap-1 text-xs mt-4 ml-4'>Employee Position
+                    <label className='flex flex-col  gap-1 text-xs mt-4 ml-4 max-sm:ml-0'>Employee Position
                         <input type='text' className='signup-input border border-black-950 w-64 h-8 ml-2' />
                     </label>
                 </div>
-                <div className=' flex'>
+                <div className=' flex max-sm:flex-col'>
                     <label className='flex flex-col  gap-1 text-xs mt-4'>Employee Email
                         <input type='text' className='signup-input border border-black-950 w-64 h-8 ml-2' />
                     </label>
-                    <label className='flex flex-col  gap-1 text-xs mt-4 ml-4'>Phone
+                    <label className='flex flex-col  gap-1 text-xs mt-4 ml-4 max-sm:ml-0'>Phone
                         <div className='flex gap-3'>
                             <input type='text' value="+91" className='signup-input border border-black-950 w-10 h-8 ml-2' />
                             <input type='number' className='signup-input border border-black-950 w-60  h-8 ' />
                         </div>
                     </label>
                 </div>
-                <div className=' flex '>
+                <div className=' flex max-sm:flex-col'>
                     <label className='flex flex-col  gap-1 text-xs mt-4'>Department of working
                         <input type='text' className='signup-input border border-black-950 w-64 h-8 ml-2' />
                     </label>

@@ -32,7 +32,7 @@ function JobDetail() {
                         </div>
                     </div>
                 </div>
-                <div className=' flex justify-evenly text-xs bg-background_grey_color py-[3px]'>
+                <div className=' flex justify-evenly flex-wrap text-xs bg-background_grey_color py-[3px]'>
                     <div>Experience 2 - 4 years</div>
                     <div>Package : 18000- 20000 / month</div>
                     <div>Experience 2 - 4 years</div>
@@ -42,7 +42,7 @@ function JobDetail() {
                         <div className=' text-lg font-bold text-text_black_primary_color'>Job description:</div>
                         <div className=' text-xs  text-text_black_primary_color'>Lorem ipsum dolor sit amet consectetur. Faucibus cras gravida arcu risus arcu a. Mi nulla justo velit interdum massa. Velit dictum velit aliquet sagittis libero quis. Ultrices sapien at tristique amet.</div>
                         <div className=' text-lg font-bold text-text_black_primary_color mt-5'>Key Responsibilities:</div>
-                        <ul className=' flex flex-col gap-1 list-outside ml-12 pr-24'>
+                        <ul className=' flex flex-col gap-1 list-outside ml-12 pr-24 max-sm:pr-2'>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>

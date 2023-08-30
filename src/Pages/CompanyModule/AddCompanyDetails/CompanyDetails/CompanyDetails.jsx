@@ -16,7 +16,7 @@ function CompanyDetails() {
         {details ?
             <div>
                 <div className=' text-center text-2xl font-semibold text-primary_blue'>Company Information</div>
-                <div className=' flex justify-evenly pt-4'>
+                <div className=' flex justify-evenly pt-4 max-sm:flex-col-reverse max-sm:px-5'>
                     <div>
                         <label className='flex flex-col  gap-1 text-xs mt-4'>Company Type
                             <input type='text' className='signup-input border border-black-950 w-64 h-8 ml-2' />
@@ -33,7 +33,7 @@ function CompanyDetails() {
                         <div className="continue-btn float-right px-5 py-2 mt-6 " onClick={HandleNextDetails}>Continue <FontAwesomeIcon icon={faArrowRight} className='text-blue-50' color='#ffffff' /></div>
                     </div>
                     <div>
-                        <div className=' flex  flex-col  items-start rounded-xl bg-gray-200 px-10 py-10'>
+                        <div className=' flex  flex-col  items-start rounded-xl bg-gray-200 px-10 py-10 max-sm:p-0'>
                             {/* <img src="" alt="" /> */}
                             <div>
                                 <FontAwesomeIcon className='text-6xl' icon={faUpload} />

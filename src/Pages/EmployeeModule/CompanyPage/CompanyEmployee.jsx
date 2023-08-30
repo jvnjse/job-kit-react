@@ -4,7 +4,7 @@ import imageemployee from "../../../Assets/Images/employeeprofile.png"
 
 function CompanyEmployee() {
     return (
-        <div className=' flex flex-wrap gap-14 px-24'>
+        <div className=' flex flex-wrap gap-14 px-24 max-sm:px-2'>
             <div className=' w-[280px] bg-primary_white flex px-3 py-2 rounded-lg gap-2 shadow-md relative cursor-pointer '>
                 <div className=' w-14 h-14 rounded-xl'>
                     <img src={imageemployee} alt="" className=' object-cover mix-blend-multiply' />

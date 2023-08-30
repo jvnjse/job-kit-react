@@ -26,14 +26,18 @@ function CompanyHome() {
     };
 
     const handleBoxClick = () => {
-        if (doubleClickTimeout.current) {
-            clearTimeout(doubleClickTimeout.current);
-            handleemployeeBoxDoubleClick();
+        if (window.innerWidth < 1000) {
+            navigate('/company/employeedetails');
         } else {
-            doubleClickTimeout.current = setTimeout(() => {
-                doubleClickTimeout.current = null;
-                handleemployeeBoxClick();
-            }, 300);
+            if (doubleClickTimeout.current) {
+                clearTimeout(doubleClickTimeout.current);
+                handleemployeeBoxDoubleClick();
+            } else {
+                doubleClickTimeout.current = setTimeout(() => {
+                    doubleClickTimeout.current = null;
+                    handleemployeeBoxClick();
+                }, 300);
+            }
         }
     };
     return (

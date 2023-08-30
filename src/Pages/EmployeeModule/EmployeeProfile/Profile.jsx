@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCirclePlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 
-function Profile() {
+function Profile(props) {
+    const closetoggleBox = props.closetoggleBox
     return (
-        <div className='p-10 text-text_black_primary_color'>
+        <div className='p-10 text-text_black_primary_color' onClick={closetoggleBox}>
             <div className=' flex gap-5'>
                 <div className=' bg-background_grey_color w-20 h-20 rounded-3xl'>
                     <img src={profileimage} alt="" className=' object-cover mix-blend-multiply' />
@@ -22,15 +23,15 @@ function Profile() {
             <div className=' text-lg font-bold text-text_black_primary_color mt-14'>About Candidate:</div>
             <div className=' text-xs  text-text_black_primary_color w-9/12'>Lorem ipsum dolor sit amet consectetur. Erat dictum eget in sed eget iaculis arcu orci scelerisque. Elementum amet tincidunt erat ac. Bibendum elit odio mauris eget mauris. Ullamcorper lectus vivamus tortor vitae.</div>
             <div className=' text-lg font-bold text-text_black_primary_color mt-8'>Add Professional Skills: <FontAwesomeIcon icon={faCirclePlus} /></div>
-            <div className=' flex gap-3 pl-5 mt-3'>
+            <div className=' flex flex-wrap gap-3 pl-5 mt-3'>
                 <div className=' px-2 border rounded-2xl border-gray-800'>Python</div>
                 <div className=' px-2 border rounded-2xl border-gray-800'>Django</div>
                 <div className=' px-2 border rounded-2xl border-gray-800'>Bootstrap</div>
                 <div className=' px-2 border rounded-2xl border-gray-800'>Tailwind</div>
                 <div className=' px-2 border rounded-2xl border-gray-800'>React</div>
             </div>
-            <div className='flex justify-start gap-10'>
-                <div className='flex-1 p-10'>
+            <div className='flex justify-start gap-10 flex-wrap'>
+                <div className='flex-1 p-10 max-lg:p-2 max-lg:pt-4'>
                     <div className=' font-semibold text-lg'>Experience <FontAwesomeIcon icon={faEdit} /></div>
                     <ul className=' list-outside flex flex-col gap-3 ml-8'>
                         <li className='list-disc leading-4'>
@@ -62,7 +63,7 @@ function Profile() {
                         </li>
                     </ul>
                 </div>
-                <div className='flex-1 p-10'>
+                <div className='flex-1 p-10 max-lg:p-2 max-lg:pt-4'>
                     <div className=' font-semibold text-lg'>Education <FontAwesomeIcon icon={faEdit} /></div>
                     <ul className=' list-outside flex flex-col gap-3 ml-8'>
                         <li className='list-disc leading-4'>

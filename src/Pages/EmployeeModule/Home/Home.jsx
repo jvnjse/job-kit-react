@@ -17,7 +17,7 @@ function Home() {
   const doubleClickTimeout = useRef(null);
 
   const handleJobBoxDoubleClick = () => {
-    navigate('/jobdetails');
+    navigate('/employee/jobdetails');
   };
 
   const handleJobBoxClick = () => {
@@ -27,19 +27,21 @@ function Home() {
   const closemodal = () => {
     setJobDetailModal(false);
   };
-
   const handleBoxClick = () => {
-    if (doubleClickTimeout.current) {
-      clearTimeout(doubleClickTimeout.current);
-      handleJobBoxDoubleClick();
+    if (window.innerWidth < 1000) {
+      navigate('/employee/jobdetails');
     } else {
-      doubleClickTimeout.current = setTimeout(() => {
-        doubleClickTimeout.current = null;
-        handleJobBoxClick();
-      }, 300);
+      if (doubleClickTimeout.current) {
+        clearTimeout(doubleClickTimeout.current);
+        handleJobBoxDoubleClick();
+      } else {
+        doubleClickTimeout.current = setTimeout(() => {
+          doubleClickTimeout.current = null;
+          handleJobBoxClick();
+        }, 300);
+      }
     }
   };
-
 
   return (
 

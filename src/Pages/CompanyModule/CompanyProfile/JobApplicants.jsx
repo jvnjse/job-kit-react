@@ -1,18 +1,23 @@
 import React, { useState } from 'react'
 import employeeprofile from "../../../Assets/Images/employeeprofile.png"
 import EmployeeDescription from '../Home/EmployeeDescription';
+import { useNavigate } from "react-router-dom"
 
 function JobApplicants() {
     const [employeedetailmodal, setemployeeDetailModal] = useState(false);
-
-
+    const navigate = useNavigate()
     const closemodal = () => {
         setemployeeDetailModal(false);
     };
 
     const handleemployeeBoxClick = () => {
-        setemployeeDetailModal(true);
+        if (window.innerWidth < 1000) {
+            navigate('/company/employeedetails');
+        } else {
+            setemployeeDetailModal(true);
+        }
     };
+
 
     return (
         <div className=' px-8 py-4'>

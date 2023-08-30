@@ -1,11 +1,24 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
-import AddDetails from "./Pages/CompanyModule/AddCompanyDetails/AddDetails";
-import CompanyHome from "./Pages/CompanyModule/Home/CompanyHome";
-import EmployeeDescription from "./Pages/CompanyModule/EmployeeDescription/EmployeeDescription";
-import CompanyProfile from "./Pages/CompanyModule/CompanyProfile/CompanyProfile";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faCircleDot } from "@fortawesome/free-solid-svg-icons";
+import animationloading from "./Assets/Images/animationloading.png";
+import Links from "./Links";
 
+const AddDetails = lazy(() =>
+  import("./Pages/CompanyModule/AddCompanyDetails/AddDetails")
+);
+const CompanyHome = lazy(() =>
+  import("./Pages/CompanyModule/Home/CompanyHome")
+);
+const EmployeeDescription = lazy(() =>
+  import("./Pages/CompanyModule/EmployeeDescription/EmployeeDescription")
+);
+const CompanyProfile = lazy(() =>
+  import("./Pages/CompanyModule/CompanyProfile/CompanyProfile")
+);
 const EmployeeDetails1 = lazy(() =>
   import("./Pages/EmployeeModule/EmployeeDetails/EmployeeDetails1.jsx")
 );
@@ -26,12 +39,18 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className=" w-full flex justify-center items-center h-screen">
+              <img className="w-20 animate-spin" src={animationloading}></img>
+            </div>
+          }
+        >
           <Routes>
-            <Route path="/employee/verify-otp" element={<VerifyOtp />} />
+            <Route path="/verify-otp" element={<VerifyOtp />} />
             {/* EMPLOYEE LINKS */}
             <Route path="/employee" element={<Home />} />
-            <Route path="/employee/login" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             <Route
               path="/employee/employee-details"
               element={<EmployeeDetails1 />}
@@ -50,6 +69,7 @@ function App() {
               element={<EmployeeDescription />}
             />
             <Route path="/company/profile" element={<CompanyProfile />} />
+            <Route path="/" element={<Links />} />
           </Routes>
         </Suspense>
       </Router>

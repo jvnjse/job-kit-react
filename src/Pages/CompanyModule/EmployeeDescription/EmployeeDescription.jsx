@@ -9,7 +9,7 @@ function EmployeeDescription() {
     return (<>
         <Nav />
         <div className=' bg-slate-50 pb-20'>
-            <div className="flex justify-start gap-3 p-4 px-14">
+            <div className="flex justify-start gap-3 p-4 px-14 max-sm:px-4">
                 <div className=' bg-background_grey_color w-20 h-20 rounded-xl'>
                     <img src={profileimage} alt="" className=' object-cover mix-blend-multiply' />
                 </div>
@@ -18,13 +18,13 @@ function EmployeeDescription() {
                     <div className=' text-base font-medium text-text_black_primary_color'>Job Profile</div>
                     <div className=' text-xs font-extralight text-text_black_primary_color'>Lorem ipsum dolor sit amet consectetur. Sed tincidunt viverra eget amet a cursus sed condimentum dictum.</div>
 
-                    <div className="flex justify-between pr-10">
+                    <div className="flex justify-between pr-10 max-md:flex-col max-sm:pr-2">
                         <div>
                             <div className='font-bold mt-4'>About Candidate:</div>
                             <div className=' text-xs w-3/4'>Lorem ipsum dolor sit amet consectetur. Erat dictum eget in sed eget iaculis arcu orci scelerisque. Elementum amet tincidunt erat ac. Bibendum elit odio mauris eget mauris. Ullamcorper lectus vivamus tortor vitae.
                             </div>
                         </div>
-                        <div className=' flex items-center flex-1 w-3/12 rounded-lg gap-5 bg-primary_blue text-text_white_primary_color h-min px-7 py-7'>Resume <FontAwesomeIcon className='text-4xl' icon={faFilePdf} /></div>
+                        <div className=' flex items-center flex-1 max-w-max rounded-lg gap-5 bg-primary_blue text-text_white_primary_color h-min px-7 py-7 max-md:p-2'>Resume <FontAwesomeIcon className='text-4xl max-md:text-2xl' icon={faFilePdf} /></div>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@ function EmployeeDescription() {
                     <div>Kochi</div>
                 </div>
             </div>
-            <div className='flex justify-between px-10'>
+            <div className='flex justify-between px-10 max-md:px-2 max-sm:flex-col'>
                 <div className='flex-1 p-10'>
                     <div className=' font-semibold text-lg'>Experience </div>
                     <ul className=' list-outside flex flex-col gap-3 ml-8'>
@@ -108,7 +108,7 @@ function EmployeeDescription() {
                     </ul>
                 </div>
             </div>
-            <div className='flex gap-56 px-24'>
+            <div className='flex justify-between px-24 max-md:flex-col max-sm:px-6'>
                 <div>
                     <div>Professional Skills</div>
                     <div className='flex gap-4'>

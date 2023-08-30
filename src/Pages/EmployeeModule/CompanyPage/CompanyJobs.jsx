@@ -5,7 +5,7 @@ import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 
 function CompanyJobs() {
     return (
-        <div className=' flex flex-wrap gap-14 px-24'>
+        <div className=' flex flex-wrap gap-14 px-24 max-sm:px-2'>
             <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
                 <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                     <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />

@@ -16,7 +16,7 @@ function Companydetail() {
     return (
         <div>
             <Nav />
-            <div className=' py-20 px-32'>
+            <div className=' py-20 px-32  max-sm:py-2 max-sm:px-2'>
                 <div className=' flex gap-4'>
                     <div className=' w-20'>
                         <img src={companylogo} alt="" />
