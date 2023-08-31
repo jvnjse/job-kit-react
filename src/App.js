@@ -1,11 +1,9 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCircleDot } from "@fortawesome/free-solid-svg-icons";
 import animationloading from "./Assets/Images/animationloading.png";
 import Links from "./Links";
+import AdminMain from "./Pages/AdminModule/AdminMain";
 
 const AddDetails = lazy(() =>
   import("./Pages/CompanyModule/AddCompanyDetails/AddDetails")
@@ -42,7 +40,11 @@ function App() {
         <Suspense
           fallback={
             <div className=" w-full flex justify-center items-center h-screen">
-              <img className="w-20 animate-spin" src={animationloading}></img>
+              <img
+                className="w-20 animate-spin"
+                alt=""
+                src={animationloading}
+              ></img>
             </div>
           }
         >
@@ -70,6 +72,7 @@ function App() {
             />
             <Route path="/company/profile" element={<CompanyProfile />} />
             <Route path="/" element={<Links />} />
+            <Route path="/admin" element={<AdminMain />} />
           </Routes>
         </Suspense>
       </Router>
