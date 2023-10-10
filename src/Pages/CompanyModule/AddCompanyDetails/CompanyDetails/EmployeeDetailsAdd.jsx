@@ -81,7 +81,7 @@ function EmployeeDetailsAdd() {
         </div>
         {success &&
             <div className='success-bg-main absolute w-full h-full top-0 flex justify-center items-center'>
-                <div className="success-box flex flex-col items-center w-6/12 h-3/6 bg-white rounded-lg">
+                <div className="success-box flex flex-col items-center w-6/12 h-3/6 bg-white rounded-lg max-sm:w-10/12">
                     <div className=' mt-10'>
                         <img src={successicon} alt="" />
                     </div>

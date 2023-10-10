@@ -9,7 +9,6 @@ function Experience() {
     const [skillsview, setSkillsview] = useState(true)
     function HandleSkillDetails() {
         setSkillsview(false)
-
     }
     return (
         <>
