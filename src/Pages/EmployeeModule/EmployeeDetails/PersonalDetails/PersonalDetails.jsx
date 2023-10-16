@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import Education from './Education';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
 import MakeApiRequest from '../../../../Functions/AxiosApi';
+import Education from './Education';
 
 
 function PersonalDetails() {

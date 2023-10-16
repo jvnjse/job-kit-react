@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import successicon from "../../../../Assets/Images/success.png"
+import MakeApiRequest from '../../../../Functions/AxiosApi';
 
 
 function Skills() {
@@ -38,12 +39,33 @@ function Skills() {
             }
         }
     };
+
     const handleTagRemove = (tagIndex) => {
         const updatedTags = tags.filter((_, index) => index !== tagIndex);
         setTags(updatedTags);
     };
+
+
+    const headers = {
+        "Content-Type": "application/json",
+
+    }
+    const data = { "skills": tags }
+    console.log(data)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        MakeApiRequest('POST', 'http://127.0.0.1:8000/employees/2/skills/', headers, data)
+            .then(response => {
+                console.log(response)
+                // setSuccess(true)
+            })
+            .catch(error => {
+                // Handle any errors
+                console.log(error)
+            });
+    }
     return (<>
-        <div className=' flex flex-col items-center '>
+        <form onSubmit={handleSubmit} className=' flex flex-col items-center '>
             <div className=' text-center text-2xl font-bold'>Skills</div>
             <div className=''>
                 <div className="tag-input-container text-base font-semibold">
@@ -71,9 +93,9 @@ function Skills() {
                     </div>
                 </div>
             </div>
-            <div className="continue-btn  px-5 py-2 float-right" onClick={() => setSuccess(true)}>Continue &nbsp;&nbsp;<FontAwesomeIcon icon={faArrowRight} color='white' />
-            </div>
-        </div>
+            <button type='submit' className="continue-btn  px-5 py-2 float-right" >Continue &nbsp;&nbsp;<FontAwesomeIcon icon={faArrowRight} color='white' />
+            </button>
+        </form>
         {success &&
             <div className='success-bg-main absolute w-full h-full top-0 flex justify-center items-center '>
                 <div className="success-box flex flex-col items-center w-6/12 h-3/6 bg-white rounded-lg max-sm:w-10/12">

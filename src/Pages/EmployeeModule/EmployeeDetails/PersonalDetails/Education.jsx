@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import "../../EmployeeDetails/employeedetails1.css"
-import Experience from './Experience'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useState } from 'react';
 import MakeApiRequest from '../../../../Functions/AxiosApi';
+import "../../EmployeeDetails/employeedetails1.css";
+import Experience from './Experience';
 
 function Education() {
     const [experienceview, setExperienceview] = useState(true)
     const [file, setFile] = useState();
+    const [inputValue, setInputValue] = useState('');
+    const [showSuggestions, setShowSuggestions] = useState(false);
     const [educationdata, setEducationdata] = useState()
+    const [companyListdata, setCompanyListdata] = useState()
     const [educationinfo, setEducationInfo] = useState({
         user_id: "1",
-        course_job_name: "",
+        course_name: "",
         from_date: "",
         to_date: "",
-        is_experience: "",
-        organization_id: "",
-        experience_education_document: null,
+        organization_name: "",
+        education_document: null,
     })
     function HandleExperienceDetails() {
         setExperienceview(false)
@@ -39,13 +40,22 @@ function Education() {
         for (let key in educationinfo) {
             formData.append(key, educationinfo[key]);
         }
-        formData.append("experience_education_document", file);
+        formData.append("education_document", file);
+        formData.append("organization_id", inputValue);
 
         const headers = {}
 
         MakeApiRequest('POST', 'http://127.0.0.1:8000/employee/education/', headers, formData)
             .then(response => {
-                // Handle the API response
+                MakeApiRequest('get', 'http://127.0.0.1:8000/employee/education/?id=1', headers)
+                    .then(response => {
+                        console.log(response)
+                        setEducationdata(response)
+                    })
+                    .catch(error => {
+                        // Handle any errors
+                        console.log(error)
+                    });
             })
             .catch(error => {
                 // Handle any errors
@@ -56,7 +66,7 @@ function Education() {
     useEffect(() => {
         const headers = {}
 
-        MakeApiRequest('get', 'http://127.0.0.1:8000/employee/education/?user_id=1', headers)
+        MakeApiRequest('get', 'http://127.0.0.1:8000/employee/education/?id=1', headers)
             .then(response => {
                 console.log(response)
                 setEducationdata(response)
@@ -65,8 +75,41 @@ function Education() {
                 // Handle any errors
                 console.log(error)
             });
+        MakeApiRequest('get', 'http://127.0.0.1:8000/companies/', headers)
+            .then(response => {
+                console.log(response)
+                setCompanyListdata(response)
+            })
+            .catch(error => {
+                // Handle any errors
+                console.log(error)
+            });
     }, [])
 
+    const handleInputChange = (event) => {
+        const value = event.target.value;
+        setInputValue(value);
+        setShowSuggestions(false);
+    };
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowSuggestions(true);
+        }, 1000);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [inputValue]);
+
+    const handleSuggestionClick = (suggestion) => {
+        setInputValue(suggestion.company_name);
+        setShowSuggestions(false);
+
+    };
+
+    const filteredSuggestions = companyListdata && companyListdata.filter((suggestion) =>
+        suggestion.company_name.toLowerCase().includes(inputValue.toLowerCase())
+    );
 
     return (
         <div>
@@ -76,8 +119,8 @@ function Education() {
                     <div className="flex flex-col border-r-2 flex-1 items-center max-sm:items-start max-sm:pl-16">
                         {educationdata && educationdata.map((education, index) => (
                             <div className=' text-left' key={index}>
-                                <div className=' mt-5'>{education.course_job_name}</div>
-                                <div className=' text-sm'>Institution Name</div>
+                                <div className=' mt-5'>{education.course_name}</div>
+                                <div className=' text-sm'>{education.organization_id}</div>
                                 <div className='flex gap-3'>
                                     <div className=' text-xs'>{education.from_date}</div>
                                     <div className=' text-xs'>{education.to_date}</div>
@@ -108,21 +151,30 @@ function Education() {
                                 <input
                                     type='text'
                                     className='signup-input border border-black-950 w-64 h-8 ml-2'
-                                    name='course_job_name'
-                                    value={educationinfo.course_job_name}
+                                    name='course_name'
+                                    value={educationinfo.course_name}
                                     onChange={HandlePesronalInfo}
                                     required
                                 />
                             </label>
-                            <label className='flex flex-col gap-1 text-xs pl-10'>Institution Name
+                            <label className='flex flex-col gap-1 text-xs pl-10 relative'>Institution Name
                                 <input
                                     type='text'
                                     className='signup-input border border-black-950 w-64 h-8 ml-2'
                                     name='organization_id'
-                                    value={educationinfo.organization_id}
-                                    onChange={HandlePesronalInfo}
+                                    value={inputValue}
+                                    onChange={handleInputChange}
                                     required
                                 />
+                                {showSuggestions && inputValue && (
+                                    <ul className='absolute top-14 bg-[#e2d2f8]  w-64 ml-2'>
+                                        {filteredSuggestions && filteredSuggestions.map((suggestion) => (
+                                            <li className='px-3 py-1' key={suggestion.company_user_id} onClick={() => handleSuggestionClick(suggestion)}>
+                                                {suggestion.company_name}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                             </label>
                             <div className="flex">
                                 <label className='flex flex-col gap-1 text-xs pl-10'>From
@@ -150,7 +202,7 @@ function Education() {
                                 type="file"
                                 className='education-choose-file mt-10 ml-5'
                                 accept="image/jpeg, image/png"
-                                name="experience_education_document"
+                                name="education_document"
                                 id="experience_education_document"
                                 onChange={handleFileChange}
                                 required
@@ -160,7 +212,8 @@ function Education() {
 
                     </div>
                 </div>
-                <div className="continue-btn w-36 float-right px-5 py-2 mt-16 mr-36" onClick={HandleExperienceDetails}>Continue <FontAwesomeIcon icon={faArrowRight} color='white' /></div>
+
+                <div className="continue-btn w-36 float-right px-5 py-2 mt-16 mr-36" onClick={HandleExperienceDetails}>Next <FontAwesomeIcon icon={faArrowRight} color='white' /></div>
             </> :
                 <>
                     <Experience />
