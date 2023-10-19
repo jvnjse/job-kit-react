@@ -3,9 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import successicon from "../../../../Assets/Images/success.png"
 import MakeApiRequest from '../../../../Functions/AxiosApi';
+import Cookies from "js-cookie";
+import config from '../../../../Functions/config';
 
 
 function Skills() {
+    const user_id = Cookies.get('user_id')
     const [tags, setTags] = useState([]);
     const [success, setSuccess] = useState(false)
     const [inputValue, setInputValue] = useState('');
@@ -13,7 +16,7 @@ function Skills() {
     useEffect(() => {
         if (success) {
             const redirectTimer = setTimeout(() => {
-                window.location.href = "/employee";
+                window.location.href = "/employee/employee-profile";
             }, 5000);
 
             return () => clearTimeout(redirectTimer);
@@ -48,19 +51,17 @@ function Skills() {
 
     const headers = {
         "Content-Type": "application/json",
-
     }
     const data = { "skills": tags }
     console.log(data)
     const handleSubmit = (e) => {
         e.preventDefault();
-        MakeApiRequest('POST', 'http://127.0.0.1:8000/employees/2/skills/', headers, data)
+        MakeApiRequest('POST', `${config.baseUrl}employees/${user_id}/skills/`, headers, data)
             .then(response => {
                 console.log(response)
-                // setSuccess(true)
+                setSuccess(true)
             })
             .catch(error => {
-                // Handle any errors
                 console.log(error)
             });
     }
@@ -68,7 +69,7 @@ function Skills() {
         <form onSubmit={handleSubmit} className=' flex flex-col items-center '>
             <div className=' text-center text-2xl font-bold'>Skills</div>
             <div className=''>
-                <div className="tag-input-container text-base font-semibold">
+                <div className="tag-input-container w-[300px] text-base font-semibold">
                     Add Skills you have
                     <div className="tag-list px-2 py-2 ml-4">
                         {tags.map((tag, index) => (
@@ -93,7 +94,7 @@ function Skills() {
                     </div>
                 </div>
             </div>
-            <button type='submit' className="continue-btn  px-5 py-2 float-right" >Continue &nbsp;&nbsp;<FontAwesomeIcon icon={faArrowRight} color='white' />
+            <button type='submit' className="continue-btn  px-5 py-2 float-right">Continue &nbsp;&nbsp;<FontAwesomeIcon icon={faArrowRight} color='white' />
             </button>
         </form>
         {success &&

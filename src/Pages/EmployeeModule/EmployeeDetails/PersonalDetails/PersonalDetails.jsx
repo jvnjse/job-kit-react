@@ -3,13 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import MakeApiRequest from '../../../../Functions/AxiosApi';
 import Education from './Education';
-
+import Cookies from "js-cookie";
+import config from '../../../../Functions/config';
 
 function PersonalDetails() {
-
+    const user_id = Cookies.get('user_id')
 
     const [personalinfo, setPersonalinfo] = useState({
-        user_id: "1",
+        user_id: user_id,
         full_name: "",
         dob: "",
         mobile: "",
@@ -48,9 +49,10 @@ function PersonalDetails() {
         formData.append("profile_image", file);
         const headers = {}
 
-        MakeApiRequest('post', 'http://127.0.0.1:8000/employee/1/', headers, formData)
+        MakeApiRequest('post', `${config.baseUrl}employee/${user_id}/`, headers, formData)
             .then(response => {
                 // Handle the API response
+                console.log(response)
             })
             .catch(error => {
                 // Handle any errors
@@ -66,7 +68,7 @@ function PersonalDetails() {
             details ?
                 <form onSubmit={handleSubmit} >
                     <div className="flex justify-evenly pt-20 max-sm:flex-col-reverse max-sm:justify-normal max-sm:pt-3">
-                        <div className=' max-sm:p-8'>
+                        <div className='flex flex-col gap-2 max-sm:p-8'>
                             <div className='fill-personal font-bold text-xl '>Fill your Personal Information</div>
                             <label className='flex flex-col  gap-1 text-xs'>Full Name
                                 <input

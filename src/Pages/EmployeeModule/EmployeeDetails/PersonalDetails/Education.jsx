@@ -4,16 +4,20 @@ import React, { useEffect, useState } from 'react';
 import MakeApiRequest from '../../../../Functions/AxiosApi';
 import "../../EmployeeDetails/employeedetails1.css";
 import Experience from './Experience';
+import Cookies from "js-cookie";
+import config from '../../../../Functions/config';
+
 
 function Education() {
-    const [experienceview, setExperienceview] = useState(true)
+    const user_id = Cookies.get('user_id')
+    const [experienceview, setExperienceview] = useState(false)
     const [file, setFile] = useState();
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [educationdata, setEducationdata] = useState()
     const [companyListdata, setCompanyListdata] = useState()
     const [educationinfo, setEducationInfo] = useState({
-        user_id: "1",
+        user_id: user_id,
         course_name: "",
         from_date: "",
         to_date: "",
@@ -41,13 +45,13 @@ function Education() {
             formData.append(key, educationinfo[key]);
         }
         formData.append("education_document", file);
-        formData.append("organization_id", inputValue);
+        formData.append("organization_name", inputValue);
 
         const headers = {}
 
-        MakeApiRequest('POST', 'http://127.0.0.1:8000/employee/education/', headers, formData)
+        MakeApiRequest('POST', `${config.baseUrl}employee/education/`, headers, formData)
             .then(response => {
-                MakeApiRequest('get', 'http://127.0.0.1:8000/employee/education/?id=1', headers)
+                MakeApiRequest('get', `${config.baseUrl}employee/education/?id=${user_id}`, headers)
                     .then(response => {
                         console.log(response)
                         setEducationdata(response)
@@ -66,7 +70,7 @@ function Education() {
     useEffect(() => {
         const headers = {}
 
-        MakeApiRequest('get', 'http://127.0.0.1:8000/employee/education/?id=1', headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/education/?id=${user_id}`, headers)
             .then(response => {
                 console.log(response)
                 setEducationdata(response)
@@ -75,7 +79,7 @@ function Education() {
                 // Handle any errors
                 console.log(error)
             });
-        MakeApiRequest('get', 'http://127.0.0.1:8000/companies/', headers)
+        MakeApiRequest('get', `${config.baseUrl}organizations/`, headers)
             .then(response => {
                 console.log(response)
                 setCompanyListdata(response)
@@ -94,7 +98,7 @@ function Education() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowSuggestions(true);
-        }, 1000);
+        }, 500);
 
         return () => {
             clearTimeout(timer);
@@ -102,13 +106,13 @@ function Education() {
     }, [inputValue]);
 
     const handleSuggestionClick = (suggestion) => {
-        setInputValue(suggestion.company_name);
+        setInputValue(suggestion.organization_name);
         setShowSuggestions(false);
 
     };
 
     const filteredSuggestions = companyListdata && companyListdata.filter((suggestion) =>
-        suggestion.company_name.toLowerCase().includes(inputValue.toLowerCase())
+        suggestion.organization_name.toLowerCase().includes(inputValue.toLowerCase())
     );
 
     return (
@@ -120,7 +124,7 @@ function Education() {
                         {educationdata && educationdata.map((education, index) => (
                             <div className=' text-left' key={index}>
                                 <div className=' mt-5'>{education.course_name}</div>
-                                <div className=' text-sm'>{education.organization_id}</div>
+                                <div className=' text-sm'>{education.organization_name}</div>
                                 <div className='flex gap-3'>
                                     <div className=' text-xs'>{education.from_date}</div>
                                     <div className=' text-xs'>{education.to_date}</div>
@@ -169,8 +173,8 @@ function Education() {
                                 {showSuggestions && inputValue && (
                                     <ul className='absolute top-14 bg-[#e2d2f8]  w-64 ml-2'>
                                         {filteredSuggestions && filteredSuggestions.map((suggestion) => (
-                                            <li className='px-3 py-1' key={suggestion.company_user_id} onClick={() => handleSuggestionClick(suggestion)}>
-                                                {suggestion.company_name}
+                                            <li className='px-3 py-1' key={suggestion.id} onClick={() => handleSuggestionClick(suggestion)}>
+                                                {suggestion.organization_name}
                                             </li>
                                         ))}
                                     </ul>

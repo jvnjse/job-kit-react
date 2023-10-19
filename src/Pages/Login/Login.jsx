@@ -1,15 +1,55 @@
 import React, { useState } from 'react';
 import "./login.css";
 import logoimage from "../../Assets/Images/logo.png"
-
+import MakeApiRequest from '../../Functions/AxiosApi';
+import Cookies from "js-cookie";
+import config from '../../Functions/config';
 
 function Login() {
     const [loginbox, setLoginbox] = useState(true)
-
-
+    const [email, setEmail] = useState()
+    const [username, setUsername] = useState()
+    const [password, setPassword] = useState()
     function Register() {
         setLoginbox(!loginbox)
+    }
+    const headers = {
+        'Content-Type': 'application/json'
+    }
+    const data1 = {
+        "email": email,
+        "username": username,
+        "password": password
+    }
+    const data = {
+        "email": email,
+        "password": password
+    }
 
+    const HandleRegister = () => {
+        MakeApiRequest('POST', `${config.baseUrl}register/employee/`, headers, data1)
+            .then((response) => {
+                console.log(response)
+                setEmail("")
+                setPassword("")
+                setUsername("")
+                window.location.href = "/verify-otp";
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+    const HandleLogin = () => {
+        MakeApiRequest('POST', `${config.baseUrl}login/`, headers, data)
+            .then((response) => {
+                console.log(response)
+                Cookies.set("user_id", response.user_id, { expires: 5 });
+                window.location.href = "/employee/employee-profile";
+
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
 
@@ -34,19 +74,24 @@ function Login() {
                     <div className="login-form-container flex flex-col items-center px-14 py-5 ">
                         <div className='w-full text-left text-2xl font-semibold' >{loginbox ? "Sign Up" : "Sign In"}</div>
                         <label className='flex flex-col'>Email
-                            <input type='email' className='signup-input border border-black-950 w-64 h-8 ' />
-                        </label>
-                        <label className='flex flex-col'>Password
-                            <input type='password' className='signup-input border border-black-950 w-64 h-8 ' />
+                            <input type='email' className='signup-input border border-black-950 w-64 h-8 ' onChange={(e) => { setEmail(e.target.value) }} />
                         </label>
                         {loginbox && <div>
-                            <label className='flex flex-col'>Confirm Password
-                                <input type='password' className='signup-input border border-black-950 w-64 h-8 ' />
+                            <label className='flex flex-col'>User name
+                                <input type='text' className='signup-input border border-black-950 w-64 h-8 ' name='username' onChange={(e) => { setUsername(e.target.value) }} />
                             </label>
                         </div>}
-                        <div className="signup-btn text-center w-full cursor-pointer mt-4">
-                            {loginbox ? "Register" : "Log In"}
-                        </div>
+                        <label className='flex flex-col'>Password
+                            <input type='password' className='signup-input border border-black-950 w-64 h-8 ' onChange={(e) => { setPassword(e.target.value) }} />
+                        </label>
+                        {loginbox ?
+                            <div className="signup-btn text-center w-full cursor-pointer mt-4" onClick={() => { HandleRegister() }}>Register
+                            </div> :
+                            <div className="signup-btn text-center w-full cursor-pointer mt-4" onClick={() => { HandleLogin() }}>Login
+                            </div>}
+
+
+
                         <div className="account-question text-xs text-center mt-7">{loginbox ? "Already Have An Account?" : "Don’t Have An Account?"}</div>
                         <div className="login-link-btn text-center mt-3 cursor-pointer p-2" onClick={Register}>{loginbox ? "Log In Now" : "Register Now"}</div>
                     </div>
