@@ -1,5 +1,5 @@
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import MakeApiRequest from '../../../../Functions/AxiosApi';
 import Education from './Education';
@@ -8,7 +8,7 @@ import config from '../../../../Functions/config';
 
 function PersonalDetails() {
     const user_id = Cookies.get('user_id')
-
+    const access_token = Cookies.get('access_token')
     const [personalinfo, setPersonalinfo] = useState({
         user_id: user_id,
         full_name: "",
@@ -21,7 +21,7 @@ function PersonalDetails() {
         pin_code: "",
     })
     const [file, setFile] = useState();
-    const [details, setDetails] = useState(false);
+    const [details, setDetails] = useState(true);
 
     function HandleNextDetails() {
         setDetails(false)
@@ -40,6 +40,10 @@ function PersonalDetails() {
         }));
     }
 
+    const headers = {
+        'Authorization': `Bearer ${access_token}`
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -47,7 +51,6 @@ function PersonalDetails() {
             formData.append(key, personalinfo[key]);
         }
         formData.append("profile_image", file);
-        const headers = {}
 
         MakeApiRequest('post', `${config.baseUrl}employee/${user_id}/`, headers, formData)
             .then(response => {

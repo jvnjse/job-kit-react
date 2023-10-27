@@ -9,6 +9,7 @@ import config from '../../../../Functions/config';
 
 function Skills() {
     const user_id = Cookies.get('user_id')
+    const access_token = Cookies.get('access_token')
     const [tags, setTags] = useState([]);
     const [success, setSuccess] = useState(false)
     const [inputValue, setInputValue] = useState('');
@@ -50,6 +51,7 @@ function Skills() {
 
 
     const headers = {
+        'Authorization': `Bearer ${access_token}`,
         "Content-Type": "application/json",
     }
     const data = { "skills": tags }

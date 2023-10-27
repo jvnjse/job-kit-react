@@ -28,7 +28,7 @@ function CompanyMain() {
                     <div className=' text-xs'>Lorem ipsum dolor sit amet consectetur. Sed tincidunt viverra eget amet a cursus sed condimentum dictum.</div>
                 </div>
             </div>
-            <div className=' bg-primary_blue px-3 py-2 rounded-xl w-[130px] text-sm text-text_white_primary_color mt-3 cursor-pointer ' onClick={handlejobPostmodal}>Post a New Job</div>
+            <div className=' bg-primary_blue px-3 py-2 rounded-xl w-[130px] text-sm text-text_white_primary_color mt-3 cursor-pointer whitespace-nowrap ' onClick={handlejobPostmodal}>Post a New Job</div>
             <div className=' text-lg font-bold mt-3'>About Company</div>
             <div className=' text-sm w-3/5 leading-4'>Lorem ipsum dolor sit amet consectetur. Volutpat et vivamus amet feugiat et nisi vulputate nullam cras. Sem quis dui metus diam in elit sollicitudin nec. In euismod justo sodales suscipit id duis.</div>
             <div className=' text-lg font-bold mt-3'>Add Company Working Sector <FontAwesomeIcon icon={faPlusCircle} /></div>
@@ -39,8 +39,8 @@ function CompanyMain() {
             </div>
             {jobpostmodal && (
                 <div className="" onClick={closemodal}>
-                    <div className="absolute top-0 left-0 bg-neutral-700/70 w-full flex justify-center">
-                        <div className=' w-9/12 bg-white mt-20 rounded-t-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
+                    <div className="absolute top-0 left-0 bg-neutral-700/70 w-full flex justify-center py-32">
+                        <div className=' w-9/12 bg-white rounded-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
                             <label className='flex flex-col font-bold mt-3'>Job Title:
                                 <input type="text" className='text-sm font-thin bg-gray-200 p-2 rounded-lg ' placeholder='Eg: HR Associate' />
                             </label>

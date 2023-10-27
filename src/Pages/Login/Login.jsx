@@ -22,7 +22,7 @@ function Login() {
         "password": password
     }
     const data = {
-        "email": email,
+        "email_or_username": email,
         "password": password
     }
 
@@ -44,6 +44,7 @@ function Login() {
             .then((response) => {
                 console.log(response)
                 Cookies.set("user_id", response.user_id, { expires: 5 });
+                Cookies.set("access_token", response.access_token, { expires: 5 });
                 window.location.href = "/employee/employee-profile";
 
             })
@@ -73,8 +74,8 @@ function Login() {
                         </div>}
                     <div className="login-form-container flex flex-col items-center px-14 py-5 ">
                         <div className='w-full text-left text-2xl font-semibold' >{loginbox ? "Sign Up" : "Sign In"}</div>
-                        <label className='flex flex-col'>Email
-                            <input type='email' className='signup-input border border-black-950 w-64 h-8 ' onChange={(e) => { setEmail(e.target.value) }} />
+                        <label className='flex flex-col'>{loginbox ? "Email" : "Email or Username"}
+                            <input type='text' className='signup-input border border-black-950 w-64 h-8 ' onChange={(e) => { setEmail(e.target.value) }} />
                         </label>
                         {loginbox && <div>
                             <label className='flex flex-col'>User name

@@ -10,6 +10,7 @@ import config from '../../../../Functions/config';
 
 function Experience() {
     const user_id = Cookies.get('user_id')
+    const access_token = Cookies.get('access_token')
     const [skillsview, setSkillsview] = useState(true)
     const [file, setFile] = useState();
     const [inputValue, setInputValue] = useState('');
@@ -29,6 +30,10 @@ function Experience() {
         setInputValue(value);
         setShowSuggestions(false);
     };
+
+    const headers = {
+        'Authorization': `Bearer ${access_token}`
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -38,7 +43,6 @@ function Experience() {
         formData.append("experience_document", file);
         formData.append("company_name", inputValue);
 
-        const headers = {}
 
         MakeApiRequest('POST', `${config.baseUrl}employee/experience/`, headers, formData)
             .then(response => {
@@ -60,7 +64,6 @@ function Experience() {
     };
 
     useEffect(() => {
-        const headers = {}
 
         MakeApiRequest('get', `${config.baseUrl}employee/experience/?id=${user_id}`, headers)
             .then(response => {

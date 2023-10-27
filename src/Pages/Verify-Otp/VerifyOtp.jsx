@@ -19,6 +19,7 @@ function VerifyOtp() {
       .then((response) => {
         console.log(response)
         Cookies.set("user_id", response.user_id, { expires: 5 })
+        Cookies.set("access_token", response.access_token, { expires: 5 });
         window.location.href = "/employee/employee-details";
 
       })

@@ -10,7 +10,8 @@ import config from '../../../../Functions/config';
 
 function Education() {
     const user_id = Cookies.get('user_id')
-    const [experienceview, setExperienceview] = useState(false)
+    const access_token = Cookies.get('access_token')
+    const [experienceview, setExperienceview] = useState(true)
     const [file, setFile] = useState();
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -38,6 +39,10 @@ function Education() {
             [name]: value,
         }));
     }
+    const headers = {
+        'Authorization': `Bearer ${access_token}`
+    }
+    console.log(headers)
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -47,14 +52,21 @@ function Education() {
         formData.append("education_document", file);
         formData.append("organization_name", inputValue);
 
-        const headers = {}
 
         MakeApiRequest('POST', `${config.baseUrl}employee/education/`, headers, formData)
             .then(response => {
-                MakeApiRequest('get', `${config.baseUrl}employee/education/?id=${user_id}`, headers)
+                MakeApiRequest('get', `${config.baseUrl}employee/education/?user_id=${user_id}`, headers)
                     .then(response => {
                         console.log(response)
                         setEducationdata(response)
+                        setEducationInfo(
+                            {
+                                course_name: "",
+                                from_date: "",
+                                to_date: "",
+                                organization_name: "",
+                                education_document: null
+                            })
                     })
                     .catch(error => {
                         // Handle any errors
@@ -68,9 +80,8 @@ function Education() {
         console.log(formData)
     };
     useEffect(() => {
-        const headers = {}
 
-        MakeApiRequest('get', `${config.baseUrl}employee/education/?id=${user_id}`, headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/education/?user_id=${user_id}`, headers)
             .then(response => {
                 console.log(response)
                 setEducationdata(response)

@@ -14,6 +14,7 @@ import config from '../../../Functions/config';
 
 function Profile(props) {
     const user_id = Cookies.get('user_id')
+    const access_token = Cookies.get('access_token')
     const closetoggleBox = props.closetoggleBox
     const [employeepersonalData, setEmployeePersonalData] = useState()
     const [skills, setSkills] = useState()
@@ -23,29 +24,33 @@ function Profile(props) {
     const [addeducation, setAddeducation] = useState(false)
     const [addskills, setAddskills] = useState(false)
     const [imageurl, setImageurl] = useState()
-    const [tags, setTags] = useState([]);
+    const [addedskills, setSddedskills] = useState()
+
     const [experienceid, setexperienceid] = useState()
 
+    const headers = {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${access_token}`,
+    }
 
     const GetEmployee = () => {
-        MakeApiRequest('get', `${config.baseUrl}employee/${user_id}/`)
+        MakeApiRequest('get', `${config.baseUrl}employee/${user_id}/`, headers)
             .then(response => {
                 // Handle the API response
                 console.log(response)
                 setEmployeePersonalData(response)
                 setSkills(response.skills)
                 setImageurl(config.baseUrl + response.profile_image)
-                setTags(response.skills)
+                setSddedskills(response.skills)
             })
             .catch(error => {
-                // Handle any errors
                 console.log(error)
             });
     }
     const GetExperience = () => {
         MakeApiRequest('get', `${config.baseUrl}employee/experience/?id=${user_id}`, headers)
             .then(response => {
-                // console.log(response)
+                console.log(response)
                 setExperienceData(response)
             })
             .catch(error => {
@@ -75,9 +80,6 @@ function Profile(props) {
     const stopPropagation = (e) => {
         e.stopPropagation();
     };
-    const headers = {
-        "Content-Type": "application/json",
-    }
     const handleEditExperience = (experienceId) => {
         setAddexperience(true);
         setexperienceid(experienceId)
@@ -88,6 +90,7 @@ function Profile(props) {
         setexperienceid(educationid)
     };
     function AddSKills() {
+        const [tags, setTags] = useState([]);
         const [skillInputValue, setskillInputValue] = useState('');
         const handleSkillInputChange = (event) => {
             setskillInputValue(event.target.value);
@@ -117,23 +120,48 @@ function Profile(props) {
 
 
 
+
         const data = { "skills": tags }
         console.log(data)
         const handleSkillSubmit = (e) => {
+
+
             e.preventDefault();
             MakeApiRequest('POST', `${config.baseUrl}employees/${user_id}/skills/`, headers, data)
                 .then(response => {
                     console.log(response)
+                    GetEmployee()
+                    setAddskills(false)
                     // setSuccess(true)
                 })
                 .catch(error => {
                     console.log(error)
                 });
         }
+        console.log(headers)
+        const HandleSkillDelete = (tag) => {
+            console.log("tag", tag)
+            const skilldata = {
+                "skills": tag
+            }
+            MakeApiRequest('DELETE', `${config.baseUrl}/employees/${user_id}/skills/`, headers, skilldata)
+                .then((repsonse) => {
+                    console.log(repsonse)
+                    GetEmployee()
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
 
         return (
             <div className=' w-6/12 flex flex-col gap-3 bg-white mt-20 rounded-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
                 <div>Add Skills</div>
+                <div className='flex flex-wrap gap-3  '>
+                    {addedskills && addedskills.map((tag, index) => (
+                        <div className='cursor-delete px-2 py-1 rounded-lg border border-gray-700 cursor-pointer hover:bg-red-100' onClick={() => { HandleSkillDelete(tag) }} >{tag}</div>
+                    ))}
+                </div>
                 <form onSubmit={handleSkillSubmit} className="w-[100%] tag-input-container  text-base font-semibold" >
                     <div className="tag-list px-2 py-2 ml-4">
                         {tags.map((tag, index) => (
@@ -156,7 +184,7 @@ function Profile(props) {
                             onKeyPress={handleInputKeyPress}
                         />
                     </div>
-                    <div className='self-end font-normal bg-primary_blue px-3 py-2 max-h-max text-xs rounded-lg text-text_white_primary_color cursor-pointer ml-20 whitespace-nowrap' >Add Skills</div>
+                    <button type='submit' className='self-end font-normal bg-primary_blue px-3 py-2 max-h-max text-xs rounded-lg text-text_white_primary_color cursor-pointer ml-20 whitespace-nowrap' >Add Skills</button>
                 </form>
 
             </div>
@@ -178,7 +206,6 @@ function Profile(props) {
             user_id: user_id,
             job_title: jobTitle,
             job_description: jobDescription,
-            company_name: companyName,
             from_date: fromDate,
             to_date: toDate,
             education_document: null,
@@ -186,9 +213,11 @@ function Profile(props) {
 
         const handleInputChange = (event) => {
             const value = event.target.value;
+            // console.log(value)
             setInputValue(value);
             setShowSuggestions(false);
         };
+        console.log(inputValue)
         useEffect(() => {
 
             MakeApiRequest('get', `${config.baseUrl}companies/`, headers)
@@ -219,12 +248,12 @@ function Profile(props) {
             formData.append("experience_document", file);
             formData.append("company_name", inputValue);
 
-            const headers = {}
 
             MakeApiRequest('POST', `${config.baseUrl}employee/experience/`, headers, formData)
                 .then(response => {
                     GetExperience()
                     setAddexperience(false)
+                    console.log(formData)
                 })
                 .catch(error => {
                     // Handle any errors
@@ -256,7 +285,7 @@ function Profile(props) {
         };
         return (
             <form onSubmit={handleExperienceSubmit} className=' w-6/12 flex flex-col gap-3 bg-white mt-20 rounded-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
-                <div cl>Add Experience</div>
+                <div >Add Experience</div>
                 <div className='flex flex-wrap gap-4 max-sm:flex-col max-md:flex-col'>
                     <label className='flex flex-col flex-1  gap-1 text-xs '>Job Position
                         <input
@@ -264,7 +293,7 @@ function Profile(props) {
                             name='job_title'
                             value={experienceinfo.job_title}
                             onChange={HandleExperienceInfo}
-                            required
+
                             className='signup-input border border-black-950 w-64 h-8 ml-2' />
                     </label>
                     <label className='flex flex-col flex-1 gap-1 text-xs relative'>Company Name
@@ -273,7 +302,7 @@ function Profile(props) {
                             name='company_name'
                             value={inputValue}
                             onChange={handleInputChange}
-                            required
+
                             className='signup-input border border-black-950 w-64 h-8 ml-2' />
                         {showSuggestions && inputValue && (
                             <ul className='absolute top-14 bg-[#e2d2f8]  w-64 ml-2'>
@@ -291,7 +320,7 @@ function Profile(props) {
                         <textarea type='text' name='job_description'
                             value={experienceinfo.job_description}
                             onChange={HandleExperienceInfo}
-                            required
+
                             className='signup-input border border-black-950 h-24 ml-2' />
                     </label>
                 </div>
@@ -302,7 +331,7 @@ function Profile(props) {
                             name='from_date'
                             value={experienceinfo.from_date}
                             onChange={HandleExperienceInfo}
-                            required
+
                             className='signup-input border border-black-950  w-32 h-8 ml-2' />
 
                     </label>
@@ -312,7 +341,7 @@ function Profile(props) {
                             name='to_date'
                             value={experienceinfo.to_date}
                             onChange={HandleExperienceInfo}
-                            required
+
                             className='signup-input border border-black-950  w-32 h-8 ml-2' />
 
                     </label>
@@ -320,7 +349,7 @@ function Profile(props) {
                         <input
                             type="file"
                             onChange={handleFileChange}
-                            required
+
                             className='education-choose-file' accept=" image/jpeg, image/png" name="" id="" />
                     </label>
 
@@ -342,7 +371,7 @@ function Profile(props) {
         const organizationName = education ? education.organization_name : "";
         const coursedes = education ? education.course_description : "";
         const [file, setFile] = useState();
-        const [inputValue, setInputValue] = useState(organizationName);
+        const [eduinputValue, setEduInputValue] = useState(organizationName);
         const [showSuggestions, setShowSuggestions] = useState(false);
         const [companyListdata, setCompanyListdata] = useState()
         const [educationinfo, setEducationInfo] = useState({
@@ -379,6 +408,7 @@ function Profile(props) {
         }
         const headers1 = {
             "Content-Type": "multipart/form-data",
+            'Authorization': `Bearer ${access_token}`
         }
 
         const handleEducationSubmit = (e) => {
@@ -388,9 +418,9 @@ function Profile(props) {
                 formData1.append(key, educationinfo[key]);
             }
             formData1.append("education_document", file);
-            formData1.append("organization_name", inputValue);
+            formData1.append("organization_name", eduinputValue);
 
-            MakeApiRequest('PUT', `${config.baseUrl}employee/education/${education.id}/`, headers1, formData1)
+            MakeApiRequest('POST', `${config.baseUrl}employee/education/?user_id=${user_id}`, headers1, formData1)
                 .then(response => {
                     GetEducation()
                     setAddeducation(false)
@@ -416,7 +446,7 @@ function Profile(props) {
 
         const handleEducationInputChange = (event) => {
             const value = event.target.value;
-            setInputValue(value);
+            setEduInputValue(value);
             setShowSuggestions(false);
         };
         useEffect(() => {
@@ -427,17 +457,17 @@ function Profile(props) {
             return () => {
                 clearTimeout(timer);
             };
-        }, [inputValue]);
+        }, [eduinputValue]);
 
         const handleSuggestionClick = (suggestion) => {
-            setInputValue(suggestion.organization_name);
+            setEduInputValue(suggestion.organization_name);
             setShowSuggestions(false);
 
         };
 
 
         const filteredSuggestions = companyListdata && companyListdata.filter((suggestion) =>
-            suggestion.organization_name.toLowerCase().includes(inputValue.toLowerCase())
+            suggestion.organization_name.toLowerCase().includes(eduinputValue.toLowerCase())
         );
 
         return (
@@ -455,10 +485,10 @@ function Profile(props) {
                     <label className='flex flex-col flex-1 gap-1 text-xs relative' >Organization Name
                         <input type='text' className='signup-input border border-black-950 w-full h-8 ml-2'
                             name='organization_id'
-                            value={inputValue}
+                            value={eduinputValue}
                             onChange={handleEducationInputChange}
                             required />
-                        {showSuggestions && inputValue && (
+                        {showSuggestions && eduinputValue && (
                             <ul className='absolute top-14 bg-[#e2d2f8]  w-64 ml-2'>
                                 {filteredSuggestions && filteredSuggestions.map((suggestion) => (
                                     <li className='px-3 py-1' key={suggestion.id} onClick={() => handleSuggestionClick(suggestion)}>
@@ -528,8 +558,8 @@ function Profile(props) {
                     </div>
                 </div>
             </div>
-            <div className=' text-lg font-bold text-text_black_primary_color mt-14'>About Candidate:</div>
-            <div className=' text-xs  text-text_black_primary_color w-9/12'>Lorem ipsum dolor sit amet consectetur. Erat dictum eget in sed eget iaculis arcu orci scelerisque. Elementum amet tincidunt erat ac. Bibendum elit odio mauris eget mauris. Ullamcorper lectus vivamus tortor vitae.</div>
+            <div className=' text-lg font-bold text-text_black_primary_color mt-14' >About Candidate:</div>
+            <div className=' text-xs  text-text_black_primary_color w-9/12' >Lorem ipsum dolor sit amet consectetur. Erat dictum eget in sed eget iaculis arcu orci scelerisque. Elementum amet tincidunt erat ac. Bibendum elit odio mauris eget mauris. Ullamcorper lectus vivamus tortor vitae.</div>
             <div className=' text-lg font-bold text-text_black_primary_color mt-8'>Add Professional Skills:
                 <FontAwesomeIcon icon={faCirclePlus}
                     data-tooltip-id="Skills"
