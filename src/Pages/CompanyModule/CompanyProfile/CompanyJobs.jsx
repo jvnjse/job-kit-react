@@ -24,7 +24,7 @@ function CompanyJobs() {
                 <div className=' text-2xl font-bold text-text_black_primary_color select-none'>Job Vacancies</div>
             </div>
             <div onClick={handleemployeeBoxClick} className='whitespace-nowrap w-min mt-4 text-sm px-2 bg-primary_blue py-1 text-text_white_primary_color rounded-lg cursor-pointer'>Add Job</div>
-            <div className="flex flex-col gap-4 mt-5">
+            <div className="flex flex-row flex-wrap gap-4 mt-5">
                 <Link to={"/employee/jobdetails"}>
                     <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
                         <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>

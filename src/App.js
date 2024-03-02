@@ -1,9 +1,16 @@
-import React, { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { Suspense, lazy, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import animationloading from "./Assets/Images/animationloading.png";
 import Links from "./Links";
 import AdminMain from "./Pages/AdminModule/AdminMain";
+import CompanyLogin from "./Pages/Login/CompanyLogin";
+import VerifyOtpCompany from "./Pages/Verify-Otp/VerifyOtpCompany";
 
 const AddDetails = lazy(() =>
   import("./Pages/CompanyModule/AddCompanyDetails/AddDetails")
@@ -50,9 +57,11 @@ function App() {
         >
           <Routes>
             <Route path="/verify-otp" element={<VerifyOtp />} />
+            <Route path="/company/verify-otp" element={<VerifyOtpCompany />} />
             {/* EMPLOYEE LINKS */}
             <Route path="/employee" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/company/login" element={<CompanyLogin />} />
             <Route
               path="/employee/employee-details"
               element={<EmployeeDetails1 />}
