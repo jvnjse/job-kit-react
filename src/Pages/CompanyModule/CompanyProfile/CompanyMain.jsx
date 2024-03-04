@@ -78,6 +78,7 @@ function CompanyMain() {
 
     return (
         <div className='px-7 pt-10'>
+           
             <div className='flex gap-3'>
                 <div className=' w-24 h-24 rounded-2xl overflow-hidden'>
                     <img src={config.baseUrl + companydetails.profile_image} alt="" />
@@ -99,11 +100,14 @@ function CompanyMain() {
                 ))}
                 {/* <div className=' border border-gray-700 px-2 rounded-full'>Developement</div>
                 <div className=' border border-gray-700 px-2 rounded-full'>Finance</div> */}
+              \
             </div>
             {jobpostmodal && (
                 <div className="" onClick={closemodal}>
                     <div className="absolute top-0 left-0 bg-neutral-700/70 w-full flex justify-center py-32">
                         <div className=' w-9/12 bg-white rounded-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
+                        <h2 className="text-2xl text-center font-bold">Add Job</h2>
+
                             <label className="flex flex-col font-bold mt-3">
                                 Job Title:
                                 <input
