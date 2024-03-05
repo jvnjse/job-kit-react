@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import companylogo from "../../../Assets/Images/companylogo.png"
 // import JobDescription from '../../EmployeeModule/Home/JobDescription';
 import { Link } from "react-router-dom"
+import Cookies from 'js-cookie';
+import MakeApiRequest from '../../../Functions/AxiosApi';
+import config from '../../../Functions/config';
+import axios from 'axios';
+
 
 function CompanyJobs() {
     const [jobpostmodal, setJobpostModal] = useState(false);
-
+    const user_id = Cookies.get('user_id')
+    const access_token = Cookies.get('access_token')
+    const [jobData, setJobData] = useState([])
     const closemodal = () => {
         setJobpostModal(false);
     };
@@ -13,13 +20,76 @@ function CompanyJobs() {
     const handleemployeeBoxClick = () => {
         setJobpostModal(true);
     };
-    const stopPropagation = (e) => {
+    const stopPropagation = (e) => { 
         e.stopPropagation();
     };
+    const headers = {
+        'Authorization': `Bearer ${access_token}`
+    }
 
+    useEffect(() => {
+        MakeApiRequest('get', `${config.baseUrl}/post/job/4/`, headers)
+            .then(response => {
+                console.log(response.data)
+                setJobData(response.data)
+                // closemodal()
+                console.log("its working")
+               
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }, []);
+  
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //       try {
+    //         const response = await axios.get('http://127.0.0.1:8000/post/job/4/');
+    //         setJobData(response.data);
+    //       } catch (error) {
+    //         console.error('Error fetching data: ', error);
+    //       }
+    //     };
+    
+    //     fetchData();
+    //   }, []);
 
     return (
         <div className=' px-8 py-4'>
+{/* --------------------------------------------------------------------------------------    
+--------------------------------------------------------------------------------------  
+ dispaly in the job vacancies 
+   
+--------------------------------------------------------------------------------------  
+--------------------------------------------------------------------------------------      */}
+
+     <div>
+      {jobData  &&
+      jobData.map((job) => (
+        <div key={job.id} className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
+          <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
+            <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
+          </div>
+          <div className='flex flex-col'>
+            <div className='text-base font-semibold'>{job.job_title}</div>
+            <div className='text-[10px] font-thin'>{job.job_description}</div>
+            <div className='flex gap-2 mt-1'>
+              <div className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
+              <div className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Remote</div>
+            </div>
+          </div>
+          <div className='text-button_primary_color absolute top-1 right-2'></div>
+        </div>
+      ))}
+     </div>
+
+{/* --------------------------------------------------------------------------------------    
+--------------------------------------------------------------------------------------  
+ dispaly 
+   
+--------------------------------------------------------------------------------------  
+--------------------------------------------------------------------------------------      */}
             <div className='flex'>
                 <div className=' text-2xl font-bold text-text_black_primary_color select-none'>Job Vacancies</div>
             </div>

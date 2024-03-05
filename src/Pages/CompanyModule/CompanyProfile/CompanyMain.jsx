@@ -6,6 +6,8 @@ import Cookies from "js-cookie";
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 
+
+
 function CompanyMain() {
     const user_id = Cookies.get('user_id')
     const access_token = Cookies.get('access_token')
@@ -34,7 +36,7 @@ function CompanyMain() {
         salary_range_from: '',
         salary_range_to: '',
         application_deadline: '',
-        keywords_tags: '',
+        tags: '', //keywords_tags given earlier which were not accepted in the backend
     });
 
     const [response, setResponse] = useState(null);
@@ -42,12 +44,14 @@ function CompanyMain() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setJobData({ ...jobData, [name]: value });
+        console.log(jobData)
     };
-    const keywordsTagsArray = jobData.keywords_tags.split(',').map(tagId => parseInt(tagId, 10));
-
+    // const keywordsTagsArray = jobData.tags.split(',').map(tagId => parseInt(tagId, 10));
+    const tagsArray = jobData.tags.split(',').map(tag => tag.trim()); // Split by comma and trim whitespace
     const dataToSend = {
         ...jobData,
-        keywords_tags: keywordsTagsArray,
+         tags: tagsArray,
+        // tags:jobData.tags,
         user: 1,
     };
     const HandleJobpost = () => {
@@ -62,6 +66,19 @@ function CompanyMain() {
     }
 
     const GetCompanyDetails = () => {
+        // MakeApiRequest('get', `${config.baseUrl}/skills/`, headers)  // Fetch all skills
+        // .then(skillResponse => {
+        //     const skillsMap = skillResponse.reduce((map, skill) => {
+        //         map[skill.id] = skill;
+        //         return map;
+        //     }, {});
+
+        //     const skills = keywordsTagsArray.map(tagId => skillsMap[tagId]);
+
+        //     const dataToSendWithSkills = {
+        //         ...dataToSend,
+        //         keywords_tags: skills,
+        //     };
         MakeApiRequest('get', `${config.baseUrl}/company/${user_id}/`, headers)
             .then(response => {
                 console.log(response)
@@ -69,6 +86,7 @@ function CompanyMain() {
                 // closemodal()
                 // HandleNextDetails()
             })
+        // })
             .catch(error => {
             });
     }
@@ -100,7 +118,7 @@ function CompanyMain() {
                 ))}
                 {/* <div className=' border border-gray-700 px-2 rounded-full'>Developement</div>
                 <div className=' border border-gray-700 px-2 rounded-full'>Finance</div> */}
-              \
+              
             </div>
             {jobpostmodal && (
                 <div className="" onClick={closemodal}>
@@ -156,7 +174,7 @@ function CompanyMain() {
                                 />
                             </label>
 
-                            <label className="flex flex-col font-bold mt-3">
+                            {/* <label className="flex flex-col font-bold mt-3">
                                 Mode of Work:
                                 <input
                                     type="text"
@@ -166,8 +184,26 @@ function CompanyMain() {
                                     className="text-sm font-thin bg-gray-200 p-2 rounded-lg"
                                     placeholder="Select the mode of work"
                                 />
-                            </label>
+                            </label> */}
 
+                            <label className="flex flex-col font-bold mt-3">
+                                Mode of Work:
+                                <select
+                                    name="mode_of_work"
+                                    value={jobData.mode_of_work}
+                                    onChange={handleChange}
+                                    className="text-sm font-thin bg-gray-200 p-2 rounded-lg"
+                                >
+                                    <option value="">Select the mode of work</option>
+                                    <option value="Full-Time">Full-Time</option>
+                                    <option value="Part-Time">Part-Time</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Remote">Remote</option>
+                                </select>
+                            </label>
+                            
+                            
+                            
                             <label className="flex flex-col font-bold mt-3">
                                 Add Salary Range:
                                 <div className="flex gap-8">
@@ -206,8 +242,8 @@ function CompanyMain() {
                                 Keywords and Tags:
                                 <input
                                     type="text"
-                                    name="keywords_tags"
-                                    value={jobData.keywords_tags}
+                                    name="tags"
+                                    value={jobData.tags}
                                     onChange={handleChange}
                                     className="h-16 text-sm font-thin bg-gray-200 p-2 rounded-lg"
                                     placeholder="Enter the keywords and tags related to the job"
