@@ -12,6 +12,7 @@ function CompanyJobs() {
     const [jobpostmodal, setJobpostModal] = useState(false);
     const user_id = Cookies.get('user_id')
     const access_token = Cookies.get('access_token')
+    const [companydetails, setCompanydetails] = useState([])
     const [jobData, setJobData] = useState([])
     const closemodal = () => {
         setJobpostModal(false);
@@ -27,11 +28,28 @@ function CompanyJobs() {
         'Authorization': `Bearer ${access_token}`
     }
 
-    useEffect(() => {
-        MakeApiRequest('get', `${config.baseUrl}/post/job/4/`, headers)
+    const GetCompanyDetails = () => {
+        
+        MakeApiRequest('get', `${config.baseUrl}/company/${user_id}/`, headers)
             .then(response => {
-                console.log(response.data)
-                setJobData(response.data)
+                console.log(response)
+                setCompanydetails(response[0])
+               
+            })
+      
+            .catch(error => {
+            });
+    }
+    useEffect(() => {
+        GetCompanyDetails()
+    }, [])
+
+
+    useEffect(() => {
+        MakeApiRequest('get', `${config.baseUrl}/post/job/${user_id}/`, headers)
+            .then(response => {
+                console.log(response)
+                setJobData(response)
                 // closemodal()
                 console.log("its working")
                
@@ -39,6 +57,7 @@ function CompanyJobs() {
             .catch(error => {
                 console.log(error)
             });
+            console.log(jobData,"data")
     }, []);
   
 
@@ -57,14 +76,22 @@ function CompanyJobs() {
 
     return (
         <div className=' px-8 py-4'>
-{/* --------------------------------------------------------------------------------------    
+
+            <div className='flex'>
+            {console.log("in return2")}
+                <div className=' text-2xl font-bold text-text_black_primary_color select-none'>Job Vacancies</div>
+            </div>
+            
+            <div onClick={handleemployeeBoxClick} className='whitespace-nowrap w-min mt-4 text-sm px-2 bg-primary_blue py-1 text-text_white_primary_color rounded-lg cursor-pointer'>Add Job</div>
+            {/* --------------------------------------------------------------------------------------    
 --------------------------------------------------------------------------------------  
  dispaly in the job vacancies 
    
 --------------------------------------------------------------------------------------  
 --------------------------------------------------------------------------------------      */}
 
-     <div>
+     {/* <div>
+        hi
       {jobData  &&
       jobData.map((job) => (
         <div key={job.id} className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
@@ -72,6 +99,7 @@ function CompanyJobs() {
             <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
           </div>
           <div className='flex flex-col'>
+            {console.log("in return")}
             <div className='text-base font-semibold'>{job.job_title}</div>
             <div className='text-[10px] font-thin'>{job.job_description}</div>
             <div className='flex gap-2 mt-1'>
@@ -82,7 +110,7 @@ function CompanyJobs() {
           <div className='text-button_primary_color absolute top-1 right-2'></div>
         </div>
       ))}
-     </div>
+     </div> */}
 
 {/* --------------------------------------------------------------------------------------    
 --------------------------------------------------------------------------------------  
@@ -90,12 +118,49 @@ function CompanyJobs() {
    
 --------------------------------------------------------------------------------------  
 --------------------------------------------------------------------------------------      */}
-            <div className='flex'>
-                <div className=' text-2xl font-bold text-text_black_primary_color select-none'>Job Vacancies</div>
-            </div>
-            <div onClick={handleemployeeBoxClick} className='whitespace-nowrap w-min mt-4 text-sm px-2 bg-primary_blue py-1 text-text_white_primary_color rounded-lg cursor-pointer'>Add Job</div>
             <div className="flex flex-row flex-wrap gap-4 mt-5">
-                <Link to={"/employee/jobdetails"}>
+            <Link to={"/employee/jobdetails"}>
+            <div className="flex flex-row flex-wrap gap-4 mt-5">
+     
+      {jobData  &&
+      jobData.map((job) => (
+        <div key={job.id} className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
+          <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
+            <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
+          </div>
+          <div className='flex flex-col  w-[250px]'>
+            {console.log("in return")}
+            <div className='text-base font-semibold'>{job.job_title}</div>
+            <div className='text-[12px] font-thin'>{companydetails.company_name} </div>
+            <div className='font-thin text-[10px]'>{job.location}</div>
+            <div className='flex gap-2 mt-1'>
+              <div className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
+              <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>{job.mode_of_work}</div>
+            </div>
+          </div>
+          <div className='text-button_primary_color absolute top-1 right-2'></div>
+        </div>
+      ))}
+     </div>
+                </Link>
+                {/* <Link to={"/employee/jobdetails"}>
+                    <div className=' bg-primary_white flex p-3  rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max '>
+                        <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
+                            <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
+                        </div>
+                        <div className='flex  flex-col w-[250px]'>
+                            <div className=' text-base font-semibold'>Job Title</div>
+                            <div className=' text-[12px] font-thin'>Company name</div>
+                            <div className='font-thin text-[10px]'>location  </div>
+                            <div className=' flex gap-2 mt-1'>
+                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
+                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>mode</div>
+                            </div>
+                        </div>
+                        <div className=' text-button_primary_color absolute top-1 right-2'></div>
+                    </div>
+                </Link> */}
+                {/* <Link to={"/employee/jobdetails"}>
                     <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
                         <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                             <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
@@ -126,8 +191,8 @@ function CompanyJobs() {
                         </div>
                         <div className=' text-button_primary_color absolute top-1 right-2'></div>
                     </div>
-                </Link>
-                <Link to={"/employee/jobdetails"}>
+                </Link> */}
+                {/* <Link to={"/employee/jobdetails"}>
                     <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
                         <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                             <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
@@ -142,7 +207,7 @@ function CompanyJobs() {
                         </div>
                         <div className=' text-button_primary_color absolute top-1 right-2'></div>
                     </div>
-                </Link>
+                </Link> */}
             </div>
             {jobpostmodal && (
                 <div className="" onClick={closemodal}>
