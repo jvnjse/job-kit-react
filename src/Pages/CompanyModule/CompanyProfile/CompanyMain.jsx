@@ -64,6 +64,32 @@ function CompanyMain() {
             .catch(error => {
             });
     }
+   
+    //  to handle the tag in skill-----------------------------------------
+    //----------------------------------------------------------------------------
+    const handleInputKeyPress = (event) => {
+        if ((event.key === 'Enter' || event.key === ',') && event.target.classList.contains('tag-input')) {
+            event.preventDefault();
+    
+            const newTag = jobData.tags.trim();
+            if (newTag !== '') {
+                const existingTag = tagsArray.find(tag => tag.toLowerCase() === newTag.toLowerCase());
+    
+                if (!existingTag) {
+                    setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
+                }
+    
+                setJobData({ ...jobData, tags: '' });
+            }
+        }
+    };
+    
+    
+
+    
+
+    //----------------------------------------------------------------------------
+    
 
     const GetCompanyDetails = () => {
         // MakeApiRequest('get', `${config.baseUrl}/skills/`, headers)  // Fetch all skills
@@ -240,14 +266,38 @@ function CompanyMain() {
 
                             <label className="flex flex-col font-bold mt-3">
                                 Keywords and Tags:
-                                <input
+                                <div className="tag-list px-2 py-2 ml-4">
+                                   {tagsArray.map((tag, index) => (
+                                       <div key={index} className="tag text-sm font-thin">
+                                           {tag}
+                                           <button
+                                               className="tag-remove-button"
+                                               onClick={() =>setJobData({ ...jobData, tags: tagsArray.filter((_, i) => i !== index).join(',') })}
+                                           >
+                                               &times;
+                                           </button>
+                                       </div>
+                                   ))}
+                                   <input
+                                       type="text"
+                                       className="tag-input font-thin"
+                                       name="tags"
+                                       
+                                       placeholder="Enter a Skill"
+                                       onChange={handleChange}
+                                       onKeyPress={handleInputKeyPress}
+                                   />
+                                   </div>
+
+
+                                {/* <input
                                     type="text"
                                     name="tags"
                                     value={jobData.tags}
                                     onChange={handleChange}
                                     className="h-16 text-sm font-thin bg-gray-200 p-2 rounded-lg"
                                     placeholder="Enter the keywords and tags related to the job"
-                                />
+                                /> */}
                             </label>
 
                             <label className="flex flex-col font-bold mt-3">

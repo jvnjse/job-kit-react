@@ -133,9 +133,10 @@ function CompanyJobs() {
             <div className='text-base font-semibold'>{job.job_title}</div>
             <div className='text-[12px] font-thin'>{companydetails.company_name} </div>
             <div className='font-thin text-[10px]'>{job.location}</div>
+            <div className='font-thin text-[10px]'>{job.mode_of_work}</div>
             <div className='flex gap-2 mt-1'>
               <div className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
-              <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>{job.mode_of_work}</div>
+              <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Edit Details</div>
             </div>
           </div>
           <div className='text-button_primary_color absolute top-1 right-2'></div>

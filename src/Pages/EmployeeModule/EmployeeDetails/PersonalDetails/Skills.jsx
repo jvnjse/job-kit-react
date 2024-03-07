@@ -26,9 +26,9 @@ function Skills() {
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
     };
-
+//---------------------------------------------------------------------------------
     const handleInputKeyPress = (event) => {
-        if (event.key === 'Enter' || event.key === ',' || event.key === " ") {
+        if (event.key === 'Enter' || event.key === ',') {
             event.preventDefault();
 
             const newTag = inputValue.trim();
