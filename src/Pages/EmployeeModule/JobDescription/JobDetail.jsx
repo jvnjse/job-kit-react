@@ -87,13 +87,20 @@ function JobDetail() {
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
                         </ul>
-                        <div className=' text-lg font-bold text-text_black_primary_color mt-5'>Key Skills:</div>
-                        <div className=' flex text-base font-medium ml-12 gap-3'>
+                        <div className='flex text-base font-medium ml-12 gap-3'>
+                             {job.tags.map((tag, index) => (
+                               <div key={index} className='bg-violet-300 px-2 rounded-lg text-text_black_primary_color'>
+                                 {tag}
+                               </div>
+                             ))}
+                        </div>
+
+                        {/* <div className=' flex text-base font-medium ml-12 gap-3'>
                             <div className=' bg-violet-300 px-2 rounded-lg  text-text_black_primary_color'>{job.tags}
 </div>
                             <div className=' bg-violet-300 px-2 rounded-lg  text-text_black_primary_color'>React</div>
                             <div className=' bg-violet-300 px-2 rounded-lg  text-text_black_primary_color'>Tailwind</div>
-                        </div>
+                        </div> */}
                         <div className=' text-lg font-bold text-text_black_primary_color mt-5'>Related Jobs:</div>
                         {/* JOBBOX */}
                         <div className=' flex flex-wrap gap-10 px-12 mt-6'>
@@ -174,7 +181,7 @@ function JobDetail() {
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>Social Media</div>
                         <div className=' flex gap-3 mt-2 text-xl ml-3 text-text_black_primary_color'><FontAwesomeIcon icon={faInstagram} /><FontAwesomeIcon icon={faTwitter} /><FontAwesomeIcon icon={faLinkedin} /></div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>Company Website</div>
-                        <div className=' flex gap-3 mt-1 text-sm ml-3 text-blue-700 underline'><a target='_blank' rel="noreferrer" href="http://www.company.com">www.company.com</a></div>
+                        <div className=' flex gap-3 mt-1 text-sm ml-3 text-blue-700 underline'><a target='_blank' rel="noreferrer" href={`http://${companydetails.company_website}`}> {companydetails.company_website ? companydetails.company_website : "Not Available"} </a></div>
                     </div>
                 </div>
             </div></div>

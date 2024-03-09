@@ -67,22 +67,40 @@ function CompanyMain() {
    
     //  to handle the tag in skill-----------------------------------------
     //----------------------------------------------------------------------------
+    // const handleInputKeyPress = (event) => {
+    //     if ((event.key === 'Enter' || event.key === ',') ) {
+    //         event.preventDefault();
+    
+    //         const newTag = jobData.tags.trim();
+    //         if (newTag !== '') {
+    //             const existingTag = tagsArray.find(tag => tag.toLowerCase() === newTag.toLowerCase());
+    
+    //             if (!existingTag) {
+    //                 setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
+    //             }
+    
+    //             setJobData({ ...jobData, tags: '' });
+    //         }
+    //     }
+    // };
+
     const handleInputKeyPress = (event) => {
-        if ((event.key === 'Enter' || event.key === ',') && event.target.classList.contains('tag-input')) {
-            event.preventDefault();
-    
-            const newTag = jobData.tags.trim();
-            if (newTag !== '') {
-                const existingTag = tagsArray.find(tag => tag.toLowerCase() === newTag.toLowerCase());
-    
-                if (!existingTag) {
-                    setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
-                }
-    
-                setJobData({ ...jobData, tags: '' });
+        if (event.key === 'Enter' || event.key === ',') {
+          event.preventDefault();
+      
+          const newTag = jobData.tags.trim();
+          if (newTag !== '') {
+            const existingTag = tagsArray.find((tag) => tag.toLowerCase() === newTag.toLowerCase());
+      
+            if (!existingTag) {
+                setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
             }
+      
+            setJobData({ ...jobData, tags: '' });
+          }
         }
-    };
+      };
+      
     
     
 

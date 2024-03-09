@@ -149,15 +149,15 @@ function CompanyJobs() {
             });
     } else {
         console.log("jobData.id is undefined. Cannot proceed with HandleJobpost");
-        // MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers, dataToSend)
-        //     .then(response => {
-        //         console.log(response);
-        //         closemodal();
-        //         // HandleNextDetails()
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
+        MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers, dataToSend)
+            .then(response => {
+                console.log(response);
+                closemodal();
+                // HandleNextDetails()
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 };
 
