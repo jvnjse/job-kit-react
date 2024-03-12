@@ -12,11 +12,14 @@ function CompanyJobs() {
     const [jobpostmodal, setJobpostModal] = useState(false);
     const user_id = Cookies.get('user_id')
     const access_token = Cookies.get('access_token')
+    const [tags, setTags] = useState([]); 
+    const [skillInputValue, setskillInputValue] = useState('');
     const [companydetails, setCompanydetails] = useState([])
     const [selectedJobId, setSelectedJobId] = useState(null);
     const [job, setJob] = useState([])
     const closemodal = () => {
         setJobpostModal(false);
+        resetJobData()
     };
 
     const handleemployeeBoxClick = () => {
@@ -38,15 +41,15 @@ function CompanyJobs() {
         salary_range_from: '',
         salary_range_to: '',
         application_deadline: '',
-        tags: '', //keywords_tags given earlier which were not accepted in the backend
+       // tags: '', //keywords_tags given earlier which were not accepted in the backend
     });
 
-    const tagsArray = jobData.tags ? jobData.tags.split(',').map(tag => tag.trim()) : []; // Split by comma and trim whitespace
-    const dataToSend = jobData ? {
-        ...jobData,
-        tags: tagsArray,
-        user: 1,
-    } : {};
+    // const tagsArray = jobData.tags ? jobData.tags.split(',').map(tag => tag.trim()) : []; // Split by comma and trim whitespace
+    // const dataToSend = jobData ? {
+    //     ...jobData,
+    //     tags: tagsArray,
+    //     user: 1,
+    // } : {};
     // const dataToSend = {
     //     ...jobData,
     //     tags: tagsArray,
@@ -103,18 +106,23 @@ function CompanyJobs() {
             if (response.length > 0) {
                 const jobData = response[0]; // Assuming response is an array of objects
                 console.log("jobData.id:", jobData.id); // Log the id value here
-             setJobData({
-                id: jobData.id,
-                job_title: jobData.job_title,
-                job_description: jobData.job_description,
-                qualifications_requirements: jobData.qualifications_requirements,
-                location:jobData.location,
-                mode_of_work: jobData.mode_of_work,
-                salary_range_from:jobData.salary_range_from,
-                salary_range_to:jobData.salary_range_to,
-                application_deadline: jobData.application_deadline,
+            //  setJobData({
+            //     id: jobData.id,
+            //     job_title: jobData.job_title,
+            //     job_description: jobData.job_description,
+            //     qualifications_requirements: jobData.qualifications_requirements,
+            //     location:jobData.location,
+            //     mode_of_work: jobData.mode_of_work,
+            //     salary_range_from:jobData.salary_range_from,
+            //     salary_range_to:jobData.salary_range_to,
+            //     application_deadline: jobData.application_deadline,
+            //     tags: jobData.tags?.join(','), // Assuming tags is an array
+            //  });
+            setJobData({
+                ...jobData,
                 tags: jobData.tags?.join(','), // Assuming tags is an array
-             });
+            });
+            setTags(jobData.tags);
             setSelectedJobId(jobData.id); // Set the selected job ID in the parent component state
             setJobpostModal(true);
             }
@@ -130,6 +138,22 @@ function CompanyJobs() {
 
 
   //----------------------------------------------------------------------
+
+  const resetJobData = () => {
+    setSelectedJobId(null) // initializing the globally available id to null
+    setJobData({
+        job_title: '',
+        job_description: '',
+        qualifications_requirements: '',
+        location: '',
+        mode_of_work: '',
+        salary_range_from: '',
+        salary_range_to: '',
+        application_deadline: '',
+        tags: '',
+    });
+};
+
   //--------------------------------------------------------------------------
   // adding
 
@@ -138,10 +162,14 @@ function CompanyJobs() {
     console.log("jobData before HandleJobpost:", jobData); 
     console.log("jobData.id:", jobData.id); // Log the id value here 
     if (selectedJobId) {
-        MakeApiRequest('put', `${config.baseUrl}/get/job/${selectedJobId}/`, headers, dataToSend)
+        MakeApiRequest('put', `${config.baseUrl}/get/job/${selectedJobId}/`, headers, {
+            ...jobData,
+            tags: tags,
+            })
             .then(response => {
                 console.log(response);
                 closemodal();
+                resetJobData(); // Reset form fields
                 // HandleNextDetails()
             })
             .catch(error => {
@@ -149,10 +177,14 @@ function CompanyJobs() {
             });
     } else {
         console.log("jobData.id is undefined. Cannot proceed with HandleJobpost");
-        MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers, dataToSend)
+        MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers,{
+            ...jobData,
+            tags: tags,
+            }) 
             .then(response => {
                 console.log(response);
                 closemodal();
+                resetJobData(); // Reset form fields
                 // HandleNextDetails()
             })
             .catch(error => {
@@ -175,22 +207,31 @@ function CompanyJobs() {
 
 //  to handle the tag in skill-----------------------------------------
 //----------------------------------------------------------------------------
+const handleSkillInputChange = (event) => {
+    setskillInputValue(event.target.value);
+};
+
 const handleInputKeyPress = (event) => {
-    if ((event.key === 'Enter' || event.key === ',') && event.target.classList.contains('tag-input')) {
+    if (event.key === 'Enter' || event.key === ',') {
         event.preventDefault();
 
-        const newTag = jobData.tags.trim();
+        const newTag = skillInputValue.trim();
         if (newTag !== '') {
-            const existingTag = tagsArray.find(tag => tag.toLowerCase() === newTag.toLowerCase());
+            const existingTag = tags.find(tag => tag.toLowerCase() === newTag.toLowerCase());
 
             if (!existingTag) {
-                setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
+                setTags([...tags, newTag]);
             }
 
-            setJobData({ ...jobData, tags: '' });
+            setskillInputValue('');
         }
     }
 };
+
+const handleTagRemove = (tagIndex) => {
+    const updatedTags = tags.filter((_, index) => index !== tagIndex);
+    setTags(updatedTags);
+};;
 
     // useEffect(() => {
     //     const fetchData = async () => {
@@ -464,12 +505,12 @@ const handleInputKeyPress = (event) => {
                             <label className="flex flex-col font-bold mt-3">
                                 Keywords and Tags:
                                 <div className="tag-list px-2 py-2 ml-4">
-                                   {tagsArray.map((tag, index) => (
-                                       <div key={index} className="tag text-sm font-thin">
+                                {tags.map((tag, tagIndex) => (
+                                       <div key={tagIndex} className="tag text-sm font-thin">
                                            {tag}
                                            <button
                                                className="tag-remove-button"
-                                               onClick={() =>setJobData({ ...jobData, tags: tagsArray.filter((_, i) => i !== index).join(',') })}
+                                               onClick={() =>handleTagRemove(tagIndex)}
                                            >
                                                &times;
                                            </button>
@@ -479,9 +520,9 @@ const handleInputKeyPress = (event) => {
                                        type="text"
                                        className="tag-input font-thin"
                                        name="tags"
-                                       
+                                       value={skillInputValue}
                                        placeholder="Enter a Skill"
-                                       onChange={handleChange}
+                                       onChange={handleSkillInputChange}
                                        onKeyPress={handleInputKeyPress}
                                    />
                                    </div>

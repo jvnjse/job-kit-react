@@ -97,7 +97,7 @@ function Profile(props) {
         };
 
         const handleInputKeyPress = (event) => {
-            if (event.key === 'Enter' || event.key === ',' || event.key === " ") {
+            if (event.key === 'Enter' || event.key === ',') {
                 event.preventDefault();
 
                 const newTag = skillInputValue.trim();

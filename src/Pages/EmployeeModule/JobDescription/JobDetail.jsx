@@ -8,9 +8,11 @@ import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 import { useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { Link } from "react-router-dom"
 
 function JobDetail() {
     const [job, setJob] = useState([])
+    const [jobs, setJobs] = useState([])
     const user_id = Cookies.get('user_id')
     const access_token = Cookies.get('access_token')
     const location = useLocation();
@@ -44,6 +46,22 @@ function JobDetail() {
             console.log(error);
         });
     }, []);
+
+    useEffect(() => {
+        MakeApiRequest('get', `${config.baseUrl}/post/job/${user_id}/`, headers)
+            .then(response => {
+                console.log(response)
+                setJobs(response.slice(0, 4)); // Limiting to four elements
+                // closemodal()
+                console.log("its working")
+               
+            })
+            .catch(error => {
+                console.log(error)
+            });
+            console.log(jobs,"data")
+    }, []);
+
     return (
         <div>
             <Nav />
@@ -56,7 +74,8 @@ function JobDetail() {
                         <div className=' text-2xl font-semibold text-text_black_primary_color'>{job.job_title}</div>
                         <div className=' text-base font-medium text-text_black_primary_color'>{companydetails.company_name}</div>
                         <div className="flex justify-between">
-                            <div className=' text-xs font-extralight text-text_black_primary_color'>Lorem ipsum dolor sit amet consectetur. Sed tincidunt viverra eget amet a cursus sed condimentum dictum.</div>
+                            {/* hope job description is expected here */}
+                            <div className=' text-xs font-extralight text-text_black_primary_color'>{job.job_description}</div>
                             <div className='flex gap-3 text-xl'>
                                 <div className=' flex flex-col'>
                                     <FontAwesomeIcon icon={faBookmark} />
@@ -83,17 +102,19 @@ function JobDetail() {
                         <ul className=' flex flex-col gap-1 list-outside ml-12 pr-24 max-sm:pr-2'>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>{job.qualifications_requirements}
 </li>
+                            {/* <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
-                            <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
-                            <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
+                            <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li> */}
                         </ul>
+                        {/*------------------------------------------------------------------------------------------------ */}
                         <div className='flex text-base font-medium ml-12 gap-3'>
-                             {job.tags.map((tag, index) => (
-                               <div key={index} className='bg-violet-300 px-2 rounded-lg text-text_black_primary_color'>
-                                 {tag}
-                               </div>
-                             ))}
-                        </div>
+    {job?.tags?.map((tag, index) => (
+        <div key={index} className='bg-violet-300 px-2 rounded-lg text-text_black_primary_color'>
+            {tag}
+        </div>
+    ))}
+</div>
+
 
                         {/* <div className=' flex text-base font-medium ml-12 gap-3'>
                             <div className=' bg-violet-300 px-2 rounded-lg  text-text_black_primary_color'>{job.tags}
@@ -104,6 +125,32 @@ function JobDetail() {
                         <div className=' text-lg font-bold text-text_black_primary_color mt-5'>Related Jobs:</div>
                         {/* JOBBOX */}
                         <div className=' flex flex-wrap gap-10 px-12 mt-6'>
+                        {jobs  &&
+      jobs.map((job) => (
+        <div key={job.id} className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
+          <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
+            <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
+          </div>
+          <div className='flex flex-col  w-[250px]'>
+            {console.log("in return")}
+            <div className='text-base font-semibold'>{job.job_title}</div>
+            <div className='text-[12px] font-thin'>{companydetails.company_name} </div>
+            <div className='font-thin text-[10px]'>{job.location}</div>
+            <div className='font-thin text-[10px]'>{job.mode_of_work}</div>
+            <div className='flex gap-2 mt-1'>
+            <Link to={`/employee/jobdetails?id=${job.id}/`}> 
+              <div  className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
+              </Link>
+              {/* <div onClick={() => HandleEdit(job.id)} className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Edit Details</div> */}
+            </div>
+          </div>
+          <div className='text-button_primary_color absolute top-1 right-2'></div>
+        </div>
+      ))}
+      </div>
+   
+                        {/* since we are not having realted jobs, listing the jobs of the same comapny */}
+                        {/* <div className=' flex flex-wrap gap-10 px-12 mt-6'>
                             <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
                                 <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                                     <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
@@ -164,7 +211,7 @@ function JobDetail() {
                                 </div>
                                 <div className=' text-button_primary_color absolute top-1 right-2'><FontAwesomeIcon icon={faBookmark} /></div>
                             </div>
-                        </div>
+                        </div> */}
                         {/* JOBBOX */}
 
                         <div className=' flex ml-12 gap-3 flex-wrap mt-2'>
@@ -184,7 +231,8 @@ function JobDetail() {
                         <div className=' flex gap-3 mt-1 text-sm ml-3 text-blue-700 underline'><a target='_blank' rel="noreferrer" href={`http://${companydetails.company_website}`}> {companydetails.company_website ? companydetails.company_website : "Not Available"} </a></div>
                     </div>
                 </div>
-            </div></div>
+            </div>
+            </div>
     )
 }
 

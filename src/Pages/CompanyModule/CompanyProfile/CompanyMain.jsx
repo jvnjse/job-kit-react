@@ -13,6 +13,8 @@ function CompanyMain() {
     const access_token = Cookies.get('access_token')
     const [jobpostmodal, setJobpostModal] = useState(false);
     const [companydetails, setCompanydetails] = useState([])
+    const [tags, setTags] = useState([]); 
+    const [skillInputValue, setskillInputValue] = useState('');
     console.log(companydetails, "sss")
     const closemodal = () => {
         setJobpostModal(false);
@@ -36,7 +38,7 @@ function CompanyMain() {
         salary_range_from: '',
         salary_range_to: '',
         application_deadline: '',
-        tags: '', //keywords_tags given earlier which were not accepted in the backend
+       
     });
 
     const [response, setResponse] = useState(null);
@@ -47,15 +49,20 @@ function CompanyMain() {
         console.log(jobData)
     };
     // const keywordsTagsArray = jobData.tags.split(',').map(tagId => parseInt(tagId, 10));
-    const tagsArray = jobData.tags.split(',').map(tag => tag.trim()); // Split by comma and trim whitespace
-    const dataToSend = {
-        ...jobData,
-         tags: tagsArray,
-        // tags:jobData.tags,
-        user: 1,
-    };
+    // const tagsArray = jobData.tags.split(',').map(tag => tag.trim()); // Split by comma and trim whitespace
+    // const dataToSend = {
+    //     ...jobData,
+    //      tags: tagsArray,
+    //     // tags:jobData.tags,
+    //     user: 1,
+    // };
+   
+    
     const HandleJobpost = () => {
-        MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers, dataToSend)
+        MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers,{
+         ...jobData,
+         tags: tags,
+         })// Include tags in the request body for creating
             .then(response => {
                 console.log(response)
                 closemodal()
@@ -84,22 +91,48 @@ function CompanyMain() {
     //     }
     // };
 
+    // const handleInputKeyPress = (event) => {
+    //     // if (event.key === 'Enter' || event.key === ',') {
+    //     //   event.preventDefault();
+      
+    //       const newTag = jobData.tags.trim();
+    //       if (newTag !== '') {
+    //         const existingTag = tagsArray.find((tag) => tag.toLowerCase() === newTag.toLowerCase());
+      
+    //         if (!existingTag) {
+    //             setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
+    //         }
+      
+    //         setJobData({ ...jobData, tags: '' });
+    //       }
+    //     // }
+    //   };
+
+    const handleSkillInputChange = (event) => {
+        setskillInputValue(event.target.value);
+    };
+
     const handleInputKeyPress = (event) => {
         if (event.key === 'Enter' || event.key === ',') {
-          event.preventDefault();
-      
-          const newTag = jobData.tags.trim();
-          if (newTag !== '') {
-            const existingTag = tagsArray.find((tag) => tag.toLowerCase() === newTag.toLowerCase());
-      
-            if (!existingTag) {
-                setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
+            event.preventDefault();
+
+            const newTag = skillInputValue.trim();
+            if (newTag !== '') {
+                const existingTag = tags.find(tag => tag.toLowerCase() === newTag.toLowerCase());
+
+                if (!existingTag) {
+                    setTags([...tags, newTag]);
+                }
+
+                setskillInputValue('');
             }
-      
-            setJobData({ ...jobData, tags: '' });
-          }
         }
-      };
+    };
+
+    const handleTagRemove = (tagIndex) => {
+        const updatedTags = tags.filter((_, index) => index !== tagIndex);
+        setTags(updatedTags);
+    };
       
     
     
@@ -218,18 +251,6 @@ function CompanyMain() {
                                 />
                             </label>
 
-                            {/* <label className="flex flex-col font-bold mt-3">
-                                Mode of Work:
-                                <input
-                                    type="text"
-                                    name="mode_of_work"
-                                    value={jobData.mode_of_work}
-                                    onChange={handleChange}
-                                    className="text-sm font-thin bg-gray-200 p-2 rounded-lg"
-                                    placeholder="Select the mode of work"
-                                />
-                            </label> */}
-
                             <label className="flex flex-col font-bold mt-3">
                                 Mode of Work:
                                 <select
@@ -285,12 +306,13 @@ function CompanyMain() {
                             <label className="flex flex-col font-bold mt-3">
                                 Keywords and Tags:
                                 <div className="tag-list px-2 py-2 ml-4">
-                                   {tagsArray.map((tag, index) => (
-                                       <div key={index} className="tag text-sm font-thin">
+                                   {tags.map((tag, tagIndex) => (
+                                       <div key={tagIndex} className="tag text-sm font-thin">
                                            {tag}
                                            <button
                                                className="tag-remove-button"
-                                               onClick={() =>setJobData({ ...jobData, tags: tagsArray.filter((_, i) => i !== index).join(',') })}
+                                               onClick={() => handleTagRemove(tagIndex)}
+                                            
                                            >
                                                &times;
                                            </button>
@@ -300,22 +322,13 @@ function CompanyMain() {
                                        type="text"
                                        className="tag-input font-thin"
                                        name="tags"
-                                       
+                                       value={skillInputValue}
                                        placeholder="Enter a Skill"
-                                       onChange={handleChange}
+                                       onChange={handleSkillInputChange}
                                        onKeyPress={handleInputKeyPress}
                                    />
                                    </div>
 
-
-                                {/* <input
-                                    type="text"
-                                    name="tags"
-                                    value={jobData.tags}
-                                    onChange={handleChange}
-                                    className="h-16 text-sm font-thin bg-gray-200 p-2 rounded-lg"
-                                    placeholder="Enter the keywords and tags related to the job"
-                                /> */}
                             </label>
 
                             <label className="flex flex-col font-bold mt-3">
