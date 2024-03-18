@@ -9,6 +9,7 @@ function Login() {
     const [loginbox, setLoginbox] = useState(true)
     const [email, setEmail] = useState()
     const [username, setUsername] = useState()
+    const [usernameTaken, setUsernameTaken] = useState(false);
     const [password, setPassword] = useState()
     function Register() {
         setLoginbox(!loginbox)
@@ -25,6 +26,32 @@ function Login() {
         "email_or_username": email,
         "password": password
     }
+
+    const handleUsernameChange = (event) => {
+        const { value } = event.target;
+        setUsername(value.toLowerCase());
+        //  setUsername(event.target.value)
+        
+        if (loginbox) {
+            checkUsernameAvailability(value);
+        }
+       
+    };
+    console.log(loginbox, "loginbox")
+    console.log(username)
+    const checkUsernameAvailability = async (value) => {
+        MakeApiRequest('GET', `${config.baseUrl}check-username/?username=${value}`, headers)
+            .then((response) => {
+                console.log(response, '1st')
+               
+                setUsernameTaken(response.username_taken);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    };
+    
+    
 
     const HandleRegister = () => {
         MakeApiRequest('POST', `${config.baseUrl}register/employee/`, headers, data1)
@@ -79,8 +106,14 @@ function Login() {
                         </label>
                         {loginbox && <div>
                             <label className='flex flex-col'>User name
-                                <input type='text' className='signup-input border border-black-950 w-64 h-8 ' name='username' onChange={(e) => { setUsername(e.target.value) }} />
+                            {usernameTaken && <div className='text-red-600 text-xs' >Username is already taken</div>}
+                                <input type='text' className='signup-input border border-black-950 w-64 h-8 ' name='username'  value={username || ''} onChange={ handleUsernameChange} />
                             </label>
+
+                         
+                          
+                            
+
                         </div>}
                         <label className='flex flex-col'>Password
                             <input type='password' className='signup-input border border-black-950 w-64 h-8 ' onChange={(e) => { setPassword(e.target.value) }} />
