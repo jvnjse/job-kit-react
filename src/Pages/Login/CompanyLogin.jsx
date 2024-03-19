@@ -40,7 +40,7 @@ function CompanyLogin() {
     console.log(loginbox, "loginbox")
     console.log(username)
     const checkUsernameAvailability = async (value) => {
-        MakeApiRequest('GET', `${config.baseUrl}check-username/?username=${value}`, headers)
+        MakeApiRequest('GET', `${config.baseUrl}authentication/check-username/?username=${value}`, headers)
             .then((response) => {
                 console.log(response, '1st')
                
@@ -52,7 +52,7 @@ function CompanyLogin() {
     };
 
     const HandleRegister = () => {
-        MakeApiRequest('POST', `${config.baseUrl}register/company/`, headers, data1)
+        MakeApiRequest('POST', `${config.baseUrl}authentication/register/company/`, headers, data1)
             .then((response) => {
                 console.log(response)
                 setEmail("")
@@ -65,7 +65,7 @@ function CompanyLogin() {
             })
     }
     const HandleLogin = () => {
-        MakeApiRequest('POST', `${config.baseUrl}login/`, headers, data)
+        MakeApiRequest('POST', `${config.baseUrl}authentication/login/`, headers, data)
             .then((response) => {
                 console.log(response)
                 Cookies.set("user_id", response.user_id, { expires: 5 });

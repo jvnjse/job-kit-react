@@ -40,7 +40,7 @@ function Login() {
     console.log(loginbox, "loginbox")
     console.log(username)
     const checkUsernameAvailability = async (value) => {
-        MakeApiRequest('GET', `${config.baseUrl}check-username/?username=${value}`, headers)
+        MakeApiRequest('GET', `${config.baseUrl}authentication/check-username/?username=${value}`, headers)
             .then((response) => {
                 console.log(response, '1st')
                
@@ -54,7 +54,7 @@ function Login() {
     
 
     const HandleRegister = () => {
-        MakeApiRequest('POST', `${config.baseUrl}register/employee/`, headers, data1)
+        MakeApiRequest('POST', `${config.baseUrl}authentication/register/employee/`, headers, data1)
             .then((response) => {
                 console.log(response)
                 setEmail("")
@@ -67,18 +67,19 @@ function Login() {
             })
     }
     const HandleLogin = () => {
-        MakeApiRequest('POST', `${config.baseUrl}login/`, headers, data)
+        MakeApiRequest('POST', `${config.baseUrl}authentication/login/`, headers, data)
             .then((response) => {
                 console.log(response)
                 Cookies.set("user_id", response.user_id, { expires: 5 });
                 Cookies.set("access_token", response.access_token, { expires: 5 });
-                // window.location.href = "/employee/employee-profile";
-                  // Check the user type and redirect accordingly
+
+               
                   if (response.user === "company") {
                       window.location.href = "/company/profile";
                   } else {
                       window.location.href = "/employee/employee-profile";
                   }
+
 
             })
             .catch((error) => {

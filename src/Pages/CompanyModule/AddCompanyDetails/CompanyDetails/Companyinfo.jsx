@@ -47,7 +47,7 @@ function Companyinfo() {
         }
         formData.append("profile_image", file);
 
-        MakeApiRequest('post', `${config.baseUrl}company/${user_id}/`, headers, formData)
+        MakeApiRequest('post', `${config.baseUrl}company/company/${user_id}/`, headers, formData)
             .then(response => {
                 console.log(response)
                 HandleNextDetails()

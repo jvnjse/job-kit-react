@@ -49,6 +49,7 @@ function CompanyEmployees() {
   const [value, setValue] = React.useState("");
   const [frameworks, setFrameworks] = useState([]);
 
+
   useEffect(() => {
     // Fetch department names from API
     MakeApiRequest("get", `${config.baseUrl}employee/department/`)
@@ -83,7 +84,7 @@ function CompanyEmployees() {
     e.preventDefault();
     MakeApiRequest(
       "post",
-      `${config.baseUrl}company/employee/${user_id}/`,
+      `${config.baseUrl}company/company/employee/${user_id}/`,
       headers,
       employeeInfo
     )
