@@ -23,7 +23,7 @@ function JobDetail() {
     }
     const GetCompanyDetails = () => {
         
-        MakeApiRequest('get', `${config.baseUrl}/company/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/company/${user_id}/`, headers)
             .then(response => {
                 console.log(response)
                 setCompanydetails(response[0])
@@ -37,7 +37,7 @@ function JobDetail() {
             GetCompanyDetails()
         }, [])
     useEffect(() => {
-        MakeApiRequest('get', `${config.baseUrl}/get/job/${jobId}`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}`, headers)
         .then(response => {
             console.log(response, "getting the data");
             setJob(response[0])
@@ -48,7 +48,7 @@ function JobDetail() {
     }, []);
 
     useEffect(() => {
-        MakeApiRequest('get', `${config.baseUrl}/post/job/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/post/job/${user_id}/`, headers)
             .then(response => {
                 console.log(response)
                 setJobs(response.slice(0, 4)); // Limiting to four elements

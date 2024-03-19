@@ -52,7 +52,7 @@ function PersonalDetails() {
         }
         formData.append("profile_image", file);
 
-        MakeApiRequest('post', `${config.baseUrl}employee/${user_id}/`, headers, formData)
+        MakeApiRequest('post', `${config.baseUrl}employee/employee/${user_id}/`, headers, formData)
             .then(response => {
                 // Handle the API response
                 console.log(response)

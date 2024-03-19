@@ -53,9 +53,9 @@ function Education() {
         formData.append("organization_name", inputValue);
 
 
-        MakeApiRequest('POST', `${config.baseUrl}employee/education/`, headers, formData)
+        MakeApiRequest('POST', `${config.baseUrl}employee/employee/education/`, headers, formData)
             .then(response => {
-                MakeApiRequest('get', `${config.baseUrl}employee/education/?user_id=${user_id}`, headers)
+                MakeApiRequest('get', `${config.baseUrl}employee/employee/education/?user_id=${user_id}`, headers)
                     .then(response => {
                         console.log(response)
                         setEducationdata(response)
@@ -81,7 +81,7 @@ function Education() {
     };
     useEffect(() => {
 
-        MakeApiRequest('get', `${config.baseUrl}employee/education/?user_id=${user_id}`, headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/employee/education/?user_id=${user_id}`, headers)
             .then(response => {
                 console.log(response)
                 setEducationdata(response)
@@ -90,7 +90,7 @@ function Education() {
                 // Handle any errors
                 console.log(error)
             });
-        MakeApiRequest('get', `${config.baseUrl}organizations/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/organizations/`, headers)
             .then(response => {
                 console.log(response)
                 setCompanyListdata(response)

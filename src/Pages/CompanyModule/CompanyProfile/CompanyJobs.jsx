@@ -61,7 +61,7 @@ function CompanyJobs() {
 
     const GetCompanyDetails = () => {
         
-        MakeApiRequest('get', `${config.baseUrl}/company/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/company/${user_id}/`, headers)
             .then(response => {
                 console.log(response)
                 setCompanydetails(response[0])
@@ -82,7 +82,7 @@ function CompanyJobs() {
     };
 
     useEffect(() => {
-        MakeApiRequest('get', `${config.baseUrl}/post/job/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/post/job/${user_id}/`, headers)
             .then(response => {
                 console.log(response)
                 setJob(response)
@@ -99,7 +99,7 @@ function CompanyJobs() {
   //--------------------------------------------------------------------------
   // creating
   const HandleEdit = (jobId) => {
-    MakeApiRequest('get', `${config.baseUrl}/get/job/${jobId}/`, headers)
+    MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}/`, headers)
         .then(response => {
             console.log(response, "getting the data");
             console.log("get is active now");
@@ -162,7 +162,7 @@ function CompanyJobs() {
     console.log("jobData before HandleJobpost:", jobData); 
     console.log("jobData.id:", jobData.id); // Log the id value here 
     if (selectedJobId) {
-        MakeApiRequest('put', `${config.baseUrl}/get/job/${selectedJobId}/`, headers, {
+        MakeApiRequest('put', `${config.baseUrl}company/get/job/${selectedJobId}/`, headers, {
             ...jobData,
             tags: tags,
             })
@@ -177,7 +177,7 @@ function CompanyJobs() {
             });
     } else {
         console.log("jobData.id is undefined. Cannot proceed with HandleJobpost");
-        MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers,{
+        MakeApiRequest('post', `${config.baseUrl}company/post/job/${user_id}/`, headers,{
             ...jobData,
             tags: tags,
             }) 

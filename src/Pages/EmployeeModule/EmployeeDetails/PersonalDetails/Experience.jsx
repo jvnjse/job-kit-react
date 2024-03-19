@@ -44,9 +44,9 @@ function Experience() {
         formData.append("company_name", inputValue);
 
 
-        MakeApiRequest('POST', `${config.baseUrl}employee/experience/`, headers, formData)
+        MakeApiRequest('POST', `${config.baseUrl}employee/employee/experience/`, headers, formData)
             .then(response => {
-                MakeApiRequest('get', `${config.baseUrl}employee/experience/?id=${user_id}`, headers)
+                MakeApiRequest('get', `${config.baseUrl}employee/employee/experience/?id=${user_id}`, headers)
                     .then(response => {
                         console.log(response)
                         setExperienceData(response)
@@ -65,7 +65,7 @@ function Experience() {
 
     useEffect(() => {
 
-        MakeApiRequest('get', `${config.baseUrl}employee/experience/?id=${user_id}`, headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/employee/experience/?id=${user_id}`, headers)
             .then(response => {
                 console.log(response)
                 setExperienceData(response)
@@ -74,7 +74,7 @@ function Experience() {
                 // Handle any errors
                 console.log(error)
             });
-        MakeApiRequest('get', `${config.baseUrl}companies/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/companies/`, headers)
             .then(response => {
                 console.log(response)
                 setCompanyListdata(response)

@@ -38,7 +38,7 @@ function CompanyEmployees() {
   
     useEffect(() => {
       // Fetch department names from API
-      fetch("http://127.0.0.1:8000/employee/department/")
+      fetch("http://127.0.0.1:8000/company/employee/department/")
         .then((response) => response.json())
         .then((data) => setFrameworks(data))
         .catch((error) => console.error("Error fetching departments:", error));
@@ -61,7 +61,7 @@ function CompanyEmployees() {
     }
     const handleEmployeeSubmit = (e) => {
         e.preventDefault();
-        MakeApiRequest('post', `${config.baseUrl}company/employee/${user_id}/`, headers, employeeInfo)
+        MakeApiRequest('post', `${config.baseUrl}company/company/employee/${user_id}/`, headers, employeeInfo)
             .then(response => {
                 console.log(response)
                 // GetEmployeeDetailList()
