@@ -1,0 +1,9 @@
+.company-tab{
+    display: block;
+}
+.company-tab::after{
+    content: " ";
+    width: 100px;
+    height: 100px;
+    background-color: black;
+}

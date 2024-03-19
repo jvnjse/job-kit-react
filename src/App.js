@@ -1,12 +1,90 @@
+import React, { Suspense, lazy, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
-import Login from "./Login/Login";
-import Nav from "./Nav/Nav";
+import animationloading from "./Assets/Images/animationloading.png";
+import Links from "./Links";
+import AdminMain from "./Pages/AdminModule/AdminMain";
+import CompanyLogin from "./Pages/Login/CompanyLogin";
+import VerifyOtpCompany from "./Pages/Verify-Otp/VerifyOtpCompany";
+
+const AddDetails = lazy(() =>
+  import("./Pages/CompanyModule/AddCompanyDetails/AddDetails")
+);
+const CompanyHome = lazy(() =>
+  import("./Pages/CompanyModule/Home/CompanyHome")
+);
+const EmployeeDescription = lazy(() =>
+  import("./Pages/CompanyModule/EmployeeDescription/EmployeeDescription")
+);
+const CompanyProfile = lazy(() =>
+  import("./Pages/CompanyModule/CompanyProfile/CompanyProfile")
+);
+const EmployeeDetails1 = lazy(() =>
+  import("./Pages/EmployeeModule/EmployeeDetails/EmployeeDetails1.jsx")
+);
+const Login = lazy(() => import("./Pages/Login/Login.jsx"));
+const VerifyOtp = lazy(() => import("./Pages/Verify-Otp/VerifyOtp"));
+const Home = lazy(() => import("./Pages/EmployeeModule/Home/Home"));
+const JobDetail = lazy(() =>
+  import("./Pages/EmployeeModule/JobDescription/JobDetail")
+);
+const Employeeprofile = lazy(() =>
+  import("./Pages/EmployeeModule/EmployeeProfile/Employeeprofile")
+);
+const Companydetail = lazy(() =>
+  import("./Pages/EmployeeModule/CompanyPage/Companydetail")
+);
 
 function App() {
   return (
     <div className="App">
-      <Nav></Nav>
-      <Login />
+      <Router>
+        <Suspense
+          fallback={
+            <div className=" w-full flex justify-center items-center h-screen">
+              <img
+                className="w-20 animate-spin"
+                alt=""
+                src={animationloading}
+              ></img>
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/verify-otp" element={<VerifyOtp />} />
+            <Route path="/company/verify-otp" element={<VerifyOtpCompany />} />
+            {/* EMPLOYEE LINKS */}
+            <Route path="/employee" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/company/login" element={<CompanyLogin />} />
+            <Route
+              path="/employee/employee-details"
+              element={<EmployeeDetails1 />}
+            />
+            <Route path="/employee/jobdetails" element={<JobDetail />} />
+            <Route
+              path="/employee/employee-profile"
+              element={<Employeeprofile />}
+            />
+            <Route path="/employee/company" element={<Companydetail />}></Route>
+            {/* COMPANY LINKS */}
+            <Route path="/company" element={<CompanyHome />} />
+            <Route path="/company/company-details" element={<AddDetails />} />
+            <Route
+              path="/company/employeedetails"
+              element={<EmployeeDescription />}
+            />
+            <Route path="/company/profile" element={<CompanyProfile />} />
+            <Route path="/" element={<Links />} />
+            <Route path="/admin" element={<AdminMain />} />
+          </Routes>
+        </Suspense>
+      </Router>
     </div>
   );
 }
