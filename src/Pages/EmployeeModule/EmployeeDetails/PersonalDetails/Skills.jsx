@@ -58,7 +58,7 @@ function Skills() {
     console.log(data)
     const handleSubmit = (e) => {
         e.preventDefault();
-        MakeApiRequest('POST', `${config.baseUrl}employees/${user_id}/skills/`, headers, data)
+        MakeApiRequest('POST', `${config.baseUrl}employee/employees/${user_id}/skills/`, headers, data)
             .then(response => {
                 console.log(response)
                 setSuccess(true)

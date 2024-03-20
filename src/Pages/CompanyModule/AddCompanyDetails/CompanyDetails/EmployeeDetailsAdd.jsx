@@ -29,7 +29,7 @@ function EmployeeDetailsAdd() {
 
     const handleEmployeeSubmit = (e) => {
         e.preventDefault();
-        MakeApiRequest('post', `${config.baseUrl}company/employee/${user_id}/`, headers, employeeInfo)
+        MakeApiRequest('post', `${config.baseUrl}company/company/employee/${user_id}/`, headers, employeeInfo)
             .then(response => {
                 console.log(response)
                 GetEmployeeDetailList()
@@ -38,7 +38,7 @@ function EmployeeDetailsAdd() {
             });
     };
     const GetEmployeeDetailList = () => {
-        MakeApiRequest('get', `${config.baseUrl}company/employee/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/company/employee/${user_id}/`, headers)
             .then((response) => {
                 console.log(response)
                 setEmployeeData(response)
@@ -49,7 +49,7 @@ function EmployeeDetailsAdd() {
             })
     }
     const DownloadExcel = () => {
-        MakeApiRequest('get', `${config.baseUrl}download/excel_file/`)
+        MakeApiRequest('get', `${config.baseUrl}company/download/excel_file/`)
             .then((response) => {
                 console.log(response)
                 window.location.href = config.baseUrl + response.download_url
@@ -68,7 +68,7 @@ function EmployeeDetailsAdd() {
         e.preventDefault()
         const formData = new FormData();
         formData.append("excel_file", file);
-        MakeApiRequest('post', `${config.baseUrl}import_data/${user_id}/`, headers, formData)
+        MakeApiRequest('post', `${config.baseUrl}company/import_data/${user_id}/`, headers, formData)
             .then((response) => {
                 console.log(response)
                 // window.location.href = config.baseUrl + response.download_url

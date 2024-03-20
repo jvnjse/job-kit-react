@@ -59,7 +59,7 @@ function CompanyMain() {
    
     
     const HandleJobpost = () => {
-        MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers,{
+        MakeApiRequest('post', `${config.baseUrl}company/post/job/${user_id}/`, headers,{
          ...jobData,
          tags: tags,
          })// Include tags in the request body for creating
@@ -156,7 +156,7 @@ function CompanyMain() {
         //         ...dataToSend,
         //         keywords_tags: skills,
         //     };
-        MakeApiRequest('get', `${config.baseUrl}/company/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/company/${user_id}/`, headers)
             .then(response => {
                 console.log(response)
                 setCompanydetails(response[0])

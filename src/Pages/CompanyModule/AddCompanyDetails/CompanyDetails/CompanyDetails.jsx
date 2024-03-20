@@ -85,7 +85,7 @@ function CompanyDetails() {
                 });
             }
         });
-        MakeApiRequest('post', `${config.baseUrl}/update-sectors-and-departments/`, headers, userData)
+        MakeApiRequest('post', `${config.baseUrl}company/update-sectors-and-departments/`, headers, userData)
             .then(response => {
                 console.log(response)
                 HandleNextDetails()

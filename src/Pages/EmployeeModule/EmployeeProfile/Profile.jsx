@@ -34,7 +34,7 @@ function Profile(props) {
     }
 
     const GetEmployee = () => {
-        MakeApiRequest('get', `${config.baseUrl}employee/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/employee/${user_id}/`, headers)
             .then(response => {
                 // Handle the API response
                 console.log(response)
@@ -48,7 +48,7 @@ function Profile(props) {
             });
     }
     const GetExperience = () => {
-        MakeApiRequest('get', `${config.baseUrl}employee/experience/?id=${user_id}`, headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/employee/experience/?id=${user_id}`, headers)
             .then(response => {
                 console.log(response)
                 setExperienceData(response)
@@ -59,7 +59,7 @@ function Profile(props) {
             });
     }
     const GetEducation = () => {
-        MakeApiRequest('get', `${config.baseUrl}employee/education/?user_id=${user_id}`, headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/employee/education/?user_id=${user_id}`, headers)
             .then(response => {
                 console.log(response)
                 setEducationdata(response)
@@ -127,7 +127,7 @@ function Profile(props) {
 
 
             e.preventDefault();
-            MakeApiRequest('POST', `${config.baseUrl}employees/${user_id}/skills/`, headers, data)
+            MakeApiRequest('POST', `${config.baseUrl}employee/employees/${user_id}/skills/`, headers, data)
                 .then(response => {
                     console.log(response)
                     GetEmployee()
@@ -144,7 +144,7 @@ function Profile(props) {
             const skilldata = {
                 "skills": tag
             }
-            MakeApiRequest('DELETE', `${config.baseUrl}/employees/${user_id}/skills/`, headers, skilldata)
+            MakeApiRequest('DELETE', `${config.baseUrl}employee/employees/${user_id}/skills/`, headers, skilldata)
                 .then((repsonse) => {
                     console.log(repsonse)
                     GetEmployee()
@@ -220,7 +220,7 @@ function Profile(props) {
         console.log(inputValue)
         useEffect(() => {
 
-            MakeApiRequest('get', `${config.baseUrl}companies/`, headers)
+            MakeApiRequest('get', `${config.baseUrl}company/companies/`, headers)
                 .then(response => {
                     console.log(response)
                     setCompanyListdata(response)
@@ -249,7 +249,7 @@ function Profile(props) {
             formData.append("company_name", inputValue);
 
 
-            MakeApiRequest('POST', `${config.baseUrl}employee/experience/`, headers, formData)
+            MakeApiRequest('POST', `${config.baseUrl}employee/employee/experience/`, headers, formData)
                 .then(response => {
                     GetExperience()
                     setAddexperience(false)
@@ -420,7 +420,7 @@ function Profile(props) {
             formData1.append("education_document", file);
             formData1.append("organization_name", eduinputValue);
 
-            MakeApiRequest('POST', `${config.baseUrl}employee/education/?user_id=${user_id}`, headers1, formData1)
+            MakeApiRequest('POST', `${config.baseUrl}employee/employee/education/?user_id=${user_id}`, headers1, formData1)
                 .then(response => {
                     GetEducation()
                     setAddeducation(false)
@@ -433,7 +433,7 @@ function Profile(props) {
                 });
         };
         useEffect(() => {
-            MakeApiRequest('get', `${config.baseUrl}organizations/`, headers)
+            MakeApiRequest('get', `${config.baseUrl}company/organizations/`, headers)
                 .then(response => {
                     console.log(response)
                     setCompanyListdata(response)
