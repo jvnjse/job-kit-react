@@ -18,7 +18,7 @@ function VerifyOtpCompany() {
   }
   const HandleOtp = () => {
     console.log("first")
-    MakeApiRequest('POST', `${config.baseUrl}verify-otp/`, headers, data)
+    MakeApiRequest('POST', `${config.baseUrl}authentication/verify-otp/`, headers, data)
       .then((response) => {
         console.log(response)
         Cookies.set("user_id", response.user_id, { expires: 5 })

@@ -54,7 +54,7 @@ function Login() {
     
 
     const HandleRegister = () => {
-        MakeApiRequest('POST', `${config.baseUrl}register/employee/`, headers, data1)
+        MakeApiRequest('POST', `${config.baseUrl}authentication/register/employee/`, headers, data1)
             .then((response) => {
                 console.log(response)
                 setEmail("")
@@ -67,7 +67,7 @@ function Login() {
             })
     }
     const HandleLogin = () => {
-        MakeApiRequest('POST', `${config.baseUrl}login/`, headers, data)
+        MakeApiRequest('POST', `${config.baseUrl}authentication/login/`, headers, data)
             .then((response) => {
                 console.log(response)
                 Cookies.set("user_id", response.user_id, { expires: 5 });
