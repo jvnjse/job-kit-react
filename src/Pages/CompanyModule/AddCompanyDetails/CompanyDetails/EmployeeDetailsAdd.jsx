@@ -5,6 +5,7 @@ import successicon from "../../../../Assets/Images/success.png"
 import MakeApiRequest from '../../../../Functions/AxiosApi';
 import config from '../../../../Functions/config';
 import Cookies from "js-cookie";
+import CreatableSelect from 'react-select/creatable';
 
 
 function EmployeeDetailsAdd() {
@@ -26,7 +27,32 @@ function EmployeeDetailsAdd() {
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
+ // adding
+    const [departments, setDepartments] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      fetch('http://127.0.0.1:8000/company/department/')
+        .then(response => response.json())
+        .then(data => {
+          setDepartments(data.map(department => ({ value: department.name, label: department.name })));
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching departments:', error);
+          setLoading(false);
+        });
+    }, []);
 
+    const handleCreateOption = (inputValue) => {
+        // You can handle the creation of a new option here
+        const newValue = { value: inputValue.toLowerCase(), label: inputValue };
+        setDepartments([...departments, newValue]);
+        // You may also want to send a request to your server to create the option
+      };
+      console.log(departments, "depatrt")
+
+      //adding
     const handleEmployeeSubmit = (e) => {
         e.preventDefault();
         MakeApiRequest('post', `${config.baseUrl}company/company/employee/${user_id}/`, headers, employeeInfo)
@@ -155,12 +181,26 @@ function EmployeeDetailsAdd() {
                 </div>
                 <div className=' flex max-sm:flex-col'>
                     <label className='flex flex-col  gap-1 text-xs mt-4'>Department of working
-                        <input
-                            type='text'
-                            name='employee_department'
-                            onChange={HandleEmployeeInfo}
-                            value={employeeInfo.employee_department}
-                            className='signup-input border border-black-950 w-64 h-8 ml-2' />
+                    <div>
+                    {loading ? (
+                      <p>Loading...</p>
+                    ) : (
+                      <CreatableSelect
+                        isClearable
+                        options={departments}
+                        onChange={(selectedOption) => {
+                          const departmentValue = selectedOption
+                            ? selectedOption.value
+                            : "";
+                          setEmployeeInfo((prevState) => ({
+                            ...prevState,
+                            employee_department: [departmentValue], // Send as a list
+                            // employee_department: selectedOption ? selectedOption.value : '',
+                          }));
+                        }}
+                      />
+                    )}
+                  </div>
                     </label>
                     <button onClick={handleEmployeeSubmit} className='ml-4 bg-primary_blue text-text_white_primary_color self-end px-3 py-1 rounded-lg'> Add Employee</button>
 

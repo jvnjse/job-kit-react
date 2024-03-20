@@ -9,29 +9,14 @@ import { Link } from "react-router-dom";
 import MakeApiRequest from "../../../Functions/AxiosApi";
 import config from "../../../Functions/config";
 import Cookies from "js-cookie";
-//--------------for combobox----------
-import { Check, CheckIcon, ChevronsUpDown } from "lucide-react";
-import { cn } from "src/lib/utils";
-import { Button } from "src/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "src/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "src/components/ui/popover";
-import axios from "axios";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-
-function CompanyEmployees() {
+import CreatableSelect from 'react-select/creatable';
+const CompanyEmployees = () => {
+  // function CompanyEmployees() {
   const user_id = Cookies.get("user_id");
   const access_token = Cookies.get("access_token");
   const [addemployeemodal, setaddemployeemodal] = useState(false);
+
+  
 
   const closemodal = () => {
     setaddemployeemodal(false);
@@ -44,38 +29,42 @@ function CompanyEmployees() {
     e.stopPropagation();
   };
 
-  //--------------for combobox----------
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
-  const [frameworks, setFrameworks] = useState([]);
 
+  const [departments, setDepartments] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      fetch('http://127.0.0.1:8000/company/department/')
+        .then(response => response.json())
+        .then(data => {
+          setDepartments(data.map(department => ({ value: department.name, label: department.name })));
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching departments:', error);
+          setLoading(false);
+        });
+    }, []);
 
-  useEffect(() => {
-    // Fetch department names from API
-    MakeApiRequest("get", `${config.baseUrl}employee/department/`)
-      .then((response) => {
-        console.log(response, "hi");
-        setFrameworks(response);
-      })
-      .catch((error) => {});
-  }, []);
-  const transformedData = frameworks.map((item) => ({
-    value: item.employee_department,
-    label: item.employee_department,
-  }));
-  console.log(frameworks, "framework");
-  //--------------end for combobox----------
+    const handleCreateOption = (inputValue) => {
+        // You can handle the creation of a new option here
+        const newValue = { value: inputValue.toLowerCase(), label: inputValue };
+        setDepartments([...departments, newValue]);
+        // You may also want to send a request to your server to create the option
+      };
+      console.log(departments, "depatrt")
+  
 
   const [it, setit] = useState(true);
   const [sales, setsales] = useState(false);
   const [design, setdesign] = useState(false);
   const [employeeInfo, setEmployeeInfo] = useState({
-    company_user_id: "",
+    company_user_id: user_id,
     employee_name: "",
     employee_position: "",
     employee_phone_number: "",
     employee_email: "",
-    employee_department: "",
+    employee_department: [],
   });
   const headers = {
     Authorization: `Bearer ${access_token}`,
@@ -95,13 +84,31 @@ function CompanyEmployees() {
       .catch((error) => {});
   };
 
+  // function HandleEmployeeInfo(e) {
+  //   const { name, value } = e.target;
+  //   setEmployeeInfo((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // }
+
   function HandleEmployeeInfo(e) {
     const { name, value } = e.target;
-    setEmployeeInfo((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === "employee_department") {
+      // Split the string value into an array
+      const departments = value.split(",");
+      setEmployeeInfo((prevState) => ({
+        ...prevState,
+        [name]: departments,
+      }));
+    } else {
+      setEmployeeInfo((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   }
+  
 
   const handleIT = () => {
     setit(!it);
@@ -518,151 +525,26 @@ function CompanyEmployees() {
               <div className="flex gap-4 max-sm:flex-col max-md:flex-col">
                 <label className="flex flex-col  gap-1 text-xs">
                   Department of working
-                  {/* <input type='text' 
-                                    name='employee_department'
-                                    onChange={HandleEmployeeInfo}
-                                    value={employeeInfo.employee_department}
-                                    className='signup-input border border-black-950 h-8 ml-2' /> */}
-                  {/* //--------------for combobox---------- */}
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-[200px] justify-between"
-                      >
-                        {value
-                          ? frameworks.find(
-                              (framework) => framework.value === value
-                            )?.label
-                          : "Select framework..."}
-                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Search framework..."
-                          className="h-9"
-                        />
-                        <CommandEmpty>No framework found.</CommandEmpty>
-                        <CommandGroup>
-                          {frameworks.map((framework) => (
-                            <CommandItem
-                              key={framework.value}
-                              value={framework.value}
-                              onSelect={(currentValue) => {
-                                setValue(
-                                  currentValue === value ? "" : currentValue
-                                );
-                                setOpen(false);
-                              }}
-                            >
-                              {framework.label}
-                              <CheckIcon
-                                className={cn(
-                                  "ml-auto h-4 w-4",
-                                  value === framework.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {/* <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {value
-            ? transformedData.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
-          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandGroup>
-            {transformedData.map((framework) => (
-              <CommandItem
-                key={framework.value}
-                value={framework.value}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue)
-                  setOpen(false)
-                }}
-              >
-                {framework.label}
-                <CheckIcon
-                  className={cn(
-                    "ml-auto h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover> */}
-                  {/* <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={open}
-                          className="w-[200px] justify-between"
-                        >
-                          {frameworks
-                            ? frameworks.find(
-                                (framework) =>
-                                  framework.employee_department === value
-                              )?.employee_department
-                            : "Select department..."}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Search department..." />
-                          <CommandEmpty>No department found.</CommandEmpty>
-                          <CommandGroup>
-                            {frameworks.map((framework) => (
-                              <CommandItem
-                                key={framework.employee_department}
-                                value={framework.employee_department}
-                                onSelect={(currentValue) => {
-                                  setValue(
-                                    currentValue === value ? "" : currentValue
-                                  );
-                                  setOpen(false);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    value === framework.employee_department
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                {framework.employee_department}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </Command>
-                      </PopoverContent>
-                    </Popover> */}
+                  <div>
+                    {loading ? (
+                      <p>Loading...</p>
+                    ) : (
+                      <CreatableSelect
+                        isClearable
+                        options={departments}
+                        onChange={(selectedOption) => {
+                          const departmentValue = selectedOption
+                            ? selectedOption.value
+                            : "";
+                          setEmployeeInfo((prevState) => ({
+                            ...prevState,
+                            employee_department: [departmentValue], // Send as a list
+                            // employee_department: selectedOption ? selectedOption.value : '',
+                          }));
+                        }}
+                      />
+                    )}
+                  </div>
                 </label>
                 <div
                   onClick={handleEmployeeSubmit}
@@ -679,4 +561,4 @@ function CompanyEmployees() {
   );
 }
 
-export default CompanyEmployees;
+export default CompanyEmployees
