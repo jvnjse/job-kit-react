@@ -7,11 +7,7 @@ import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 import Cookies from "js-cookie";
 //--------------for combobox----------
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "src/lib/utils";
-import { Button } from "src/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "src/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "src/components/ui/popover";
+import CreatableSelect from 'react-select/creatable';
 
 function CompanyEmployees() {
     
@@ -32,17 +28,28 @@ function CompanyEmployees() {
     };
 
     //--------------for combobox----------
-    const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState("");
-    const [frameworks, setFrameworks] = React.useState([]);
+    const [departments, setDepartments] = useState([]);
+    const [loading, setLoading] = useState(true);
   
     useEffect(() => {
-      // Fetch department names from API
-      fetch("http://127.0.0.1:8000/company/employee/department/")
-        .then((response) => response.json())
-        .then((data) => setFrameworks(data))
-        .catch((error) => console.error("Error fetching departments:", error));
+      fetch('http://127.0.0.1:8000/company/employee/department/')
+        .then(response => response.json())
+        .then(data => {
+          setDepartments(data.map(department => ({ value: department.employee_department, label: department.employee_department })));
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching departments:', error);
+          setLoading(false);
+        });
     }, []);
+
+    const handleCreateOption = (inputValue) => {
+        // You can handle the creation of a new option here
+        const newValue = { value: inputValue.toLowerCase(), label: inputValue };
+        setDepartments([...departments, newValue]);
+        // You may also want to send a request to your server to create the option
+      };
     //--------------end for combobox----------
 
     const [it, setit] = useState(true)
@@ -90,6 +97,7 @@ function CompanyEmployees() {
         setdesign(!design)
 
     };
+    
     return (
         <div className=' px-8 py-4'>
             <div className='flex justify-between'>
@@ -343,45 +351,22 @@ function CompanyEmployees() {
                                     value={employeeInfo.employee_department}
                                     className='signup-input border border-black-950 h-8 ml-2' /> */}
                                     {/* //--------------for combobox---------- */}
-                                    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {value ? frameworks.find((framework) => framework.employee_department === value)?.label : "Select department..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search department..." />
-          <CommandEmpty>No department found.</CommandEmpty>
-          <CommandGroup>
-            {frameworks.map((framework) => (
-              <CommandItem
-                key={framework.employee_department}
-                value={framework.employee_department}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === framework.employee_department ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {framework.employee_department}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+                                    <div>
+                                    {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <CreatableSelect
+          isClearable
+          options={departments}
+          onChange={(selectedOption) => {
+            setEmployeeInfo((prevState) => ({
+              ...prevState,
+              employee_department: selectedOption ? selectedOption.value : '',
+            }));
+          }}
+        />
+      )}
+    </div>   
                                 </label>
                                 <div onClick={handleEmployeeSubmit} className='self-end bg-primary_blue px-3 py-2 max-h-max text-xs rounded-lg text-text_white_primary_color cursor-pointer ml-20 whitespace-nowrap' >Add employee</div>
                             </div>

@@ -6,6 +6,9 @@ import Cookies from "js-cookie";
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 
+// for create and select box
+import CreatableSelect from 'react-select/creatable';
+
 
 
 function CompanyMain() {
@@ -13,8 +16,17 @@ function CompanyMain() {
     const access_token = Cookies.get('access_token')
     const [jobpostmodal, setJobpostModal] = useState(false);
     const [companydetails, setCompanydetails] = useState([])
-    const [tags, setTags] = useState([]); 
+    const [tags, setTags] = useState([]);
+    const [categories, setCategories] = useState([]); 
     const [skillInputValue, setskillInputValue] = useState('');
+
+    //--------------for create and select box----------
+
+    
+
+    //--------------end for create and select box----------
+
+
     console.log(companydetails, "sss")
     const closemodal = () => {
         setJobpostModal(false);
@@ -32,6 +44,7 @@ function CompanyMain() {
     const [jobData, setJobData] = useState({
         job_title: '',
         job_description: '',
+        job_category: '',
         qualifications_requirements: '',
         location: '',
         mode_of_work: '',
@@ -48,6 +61,24 @@ function CompanyMain() {
         setJobData({ ...jobData, [name]: value });
         console.log(jobData)
     };
+    const handleJobCategoryChange = (selectedOption) => {
+        const selectedCategory = selectedOption ? selectedOption.value : null; // Directly set the selected value
+        setJobData(prevState => ({
+            ...prevState,
+            job_category: selectedCategory
+        }));
+    };
+
+    // const handleChangeCategory = selectedOptions => {
+    //     // Ensure selectedOptions is an array
+    //     const optionsArray = Array.isArray(selectedOptions) ? selectedOptions : [selectedOptions];
+    
+    //     // Map over the optionsArray to get the IDs
+    //     const categoryIds = optionsArray.map(option => option.value);
+    //     setJobData(prevData => ({ ...prevData, job_category: categoryIds }));
+    //     console.log(jobData);
+    // };
+
     // const keywordsTagsArray = jobData.tags.split(',').map(tagId => parseInt(tagId, 10));
     // const tagsArray = jobData.tags.split(',').map(tag => tag.trim()); // Split by comma and trim whitespace
     // const dataToSend = {
@@ -134,6 +165,17 @@ function CompanyMain() {
         setTags(updatedTags);
     };
       
+
+    // const GetJobCategory = () =>{
+    //     MakeApiRequest('get', `${config.baseUrl}administrator/job-category/`, headers)
+    //         .then(response => {
+    //             console.log(response)
+    //             console.log("inside the category fetch");
+    //             setCategories(response)
+    //         })
+    //         .catch(error => {
+    //         });
+    // }
     
     
 
@@ -169,7 +211,23 @@ function CompanyMain() {
     }
     useEffect(() => {
         GetCompanyDetails()
+        const fetchData = async () => {
+            try {
+                const response = await MakeApiRequest('get', `${config.baseUrl}administrator/job-category/`, headers);
+                setCategories(response);
+            } catch (error) {
+                console.error("Error fetching job categories:", error);
+            }
+        };
+
+        fetchData();
     }, [])
+    console.log(categories, "categories");
+
+    const options = categories.map(category => ({
+        value: category.category_name,
+        label: category.category_name
+    }));
 
     return (
         <div className='px-7 pt-10'>
@@ -225,6 +283,14 @@ function CompanyMain() {
                                     className="h-16 text-sm font-thin bg-gray-200 p-2 rounded-lg"
                                     placeholder="Enter the job description"
                                 />
+                            </label>
+                            <label className="flex flex-col font-bold mt-3">
+                              Job Category
+                             <CreatableSelect
+                                 isClearable
+                                 options={options}
+                                 onChange={handleJobCategoryChange}
+                             />
                             </label>
 
                             <label className="flex flex-col font-bold mt-3">
