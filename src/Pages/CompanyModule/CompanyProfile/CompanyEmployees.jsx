@@ -10,13 +10,41 @@ import MakeApiRequest from "../../../Functions/AxiosApi";
 import config from "../../../Functions/config";
 import Cookies from "js-cookie";
 import CreatableSelect from 'react-select/creatable';
+import { Settings } from "lucide-react";
 const CompanyEmployees = () => {
   // function CompanyEmployees() {
   const user_id = Cookies.get("user_id");
   const access_token = Cookies.get("access_token");
   const [addemployeemodal, setaddemployeemodal] = useState(false);
+  const [employees, setEmployees] = useState([]); //test
+  const [selectedDepartment, setSelectedDepartment] = useState('');//test
+  const fetchEmployees =() => {//test
+    fetch(`http://127.0.0.1:8000/company/company/employee/${user_id}/`) //testing with manuel api
+      .then(response => response.json())
+      .then(data => {
+        setEmployees(data);
+        console.log(data, "employee")
+      })
+      .catch(error => {
+        console.error('Error fetching employee data:', error);
+      });
+  } ;
 
-  
+  useEffect(() => {
+    fetchEmployees(); 
+  }, []);
+
+  // Group employees by department
+  const groupedEmployees = employees.reduce((acc, employee) => {
+    employee.department_names.forEach(department => {
+      if (!acc[department]) {
+        acc[department] = [];
+      }
+      acc[department].push(employee);
+    });
+    return acc;
+  }, {});//test
+
 
   const closemodal = () => {
     setaddemployeemodal(false);
@@ -54,6 +82,16 @@ const CompanyEmployees = () => {
       };
       console.log(departments, "depatrt")
   
+  //test
+  const handleDepartmentChange = (event) => {
+    setSelectedDepartment(event.target.value);
+  };
+
+  const filteredEmployees = selectedDepartment
+  ? employees.filter(employee => employee.department_names.includes(selectedDepartment))
+  : employees;
+
+  //test    
 
   const [it, setit] = useState(true);
   const [sales, setsales] = useState(false);
@@ -80,9 +118,18 @@ const CompanyEmployees = () => {
       .then((response) => {
         console.log(response);
         // GetEmployeeDetailList()
+        setaddemployeemodal(false);
+        fetchEmployees();
       })
+     
       .catch((error) => {});
+      
   };
+
+  //trying prev
+  // const handleDepartmentClick = (department) => {
+  //   setSelectedDepartment(selectedDepartment === department ? '' : department);
+  // };
 
   // function HandleEmployeeInfo(e) {
   //   const { name, value } = e.target;
@@ -108,6 +155,28 @@ const CompanyEmployees = () => {
       }));
     }
   }
+//test
+  const handleDropdownChange = (e, department) => {
+    const selectedEmployeeId = e.target.value;
+    const departmentDiv = document.getElementById(`department-${department}`);
+  
+
+
+
+    // Hide all employee details divs
+    const allDepartmentDivs = document.querySelectorAll('[id^="department-"]');
+    allDepartmentDivs.forEach(div => {
+      div.classList.add('hidden');
+    });
+  
+    // Show the selected department's employee details div
+    if (selectedEmployeeId) {
+      departmentDiv.classList.remove('hidden');
+    } else {
+      departmentDiv.classList.add('hidden');
+    }
+  };
+  
   
 
   const handleIT = () => {
@@ -119,6 +188,18 @@ const CompanyEmployees = () => {
   const handleDesign = () => {
     setdesign(!design);
   };
+  const  handleFaArrow = (depart) => {
+   if (selectedDepartment === depart)
+   {
+    selectedDepartment ? setSelectedDepartment(null) :
+    setSelectedDepartment(depart)
+   }
+   else{
+    setSelectedDepartment(depart)
+   }
+     
+  }
+
   return (
     <div className=" px-8 py-4">
       <div className="flex justify-between">
@@ -132,7 +213,135 @@ const CompanyEmployees = () => {
           Add Employees
         </div>
       </div>
-      <div className="mt-5">
+      {/* tring the arrow key prev */}
+
+      {/* <div > needed
+        <label htmlFor="department">Select a department:</label>
+        <select id="department" onChange={(e) => setSelectedDepartment(e.target.value)}>
+          <option value="">All</option>
+          {departments.map(department => (
+            <option  key={department.label} value={department.label}>{department.label}</option>
+          ))}
+        </select>
+      </div> */}
+
+      <div>
+        {departments.map(department => (
+          <div key={department.label}>
+            <div  className=" select-none  border-b-2 border-gray-300 mt-5" >
+            
+            {department.label}{" "}
+           
+            < FontAwesomeIcon onClick={() => handleFaArrow(department.label)} icon={selectedDepartment === department.label ? faArrowAltCircleDown : faArrowAltCircleRight} />
+             
+            
+            </div>
+            {selectedDepartment === department.label && (
+              <ul className="flex flex-wrap">
+                {employees.map(employee => (
+                  employee.department_names.includes(department.label) && (
+                    <li key={employee.id}>
+                      <div className="flex px-10 py-2 flex-wrap gap-10 ">
+                      <Link to={"/company/employeedetails"}>
+           <div className='bg-primary_white flex px-3 py-2 pr-14 rounded-xl gap-2 shadow-md relative cursor-pointer'>
+           <div className='w-20 h-20 rounded-lg -ml-5'>
+            
+             <img src={employeeprofile} alt={employee.employee_name} className='object-fill' />
+           </div>
+           <div className='flex flex-col'>
+             <div className='text-base font-semibold'>{employee.employee_name}</div>
+             <div className='text-[10px] font-thin'>{employee.employee_position}</div>
+             
+             <div className='flex flex-col'>
+               
+               <div className='text-[8px] text-green-600'>Matches Your Job Description</div>
+               <div className='text-[8px] bg-background_grey_color px-1 rounded-lg w-min mt-1'>Remote</div>
+             </div>
+           </div>
+           <div className='text-button_primary_color absolute top-1 right-3'></div>
+         </div>
+           </Link>
+           </div>
+                    </li>
+                  )
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      {/* trying end */}
+      {/* test 2 start on selecting a department on the dropodown employees of that department will be listed*/}
+      {/* <div>
+      <label htmlFor="department">Select a department:</label>
+      <select id="department" onChange={handleDepartmentChange}>
+        <option value="">All</option>
+        {departments.map(department => (
+          <option key={department.label} value={department.label}>{department.label}{console.log(department.label,"inside")}</option>
+        ))}
+      </select>
+
+      <ul>
+        {filteredEmployees.map(employee => (
+         <div className='flex px-10 py-2 flex-wrap gap-10 '>
+         <Link to={"/company/employeedetails"}>
+           <div className='bg-primary_white flex px-3 py-2 pr-14 rounded-xl gap-2 shadow-md relative cursor-pointer'>
+           <div className='w-20 h-20 rounded-lg -ml-5'>
+            
+             <img src={employeeprofile} alt={employee.employee_name} className='object-fill' />
+           </div>
+           <div className='flex flex-col'>
+             <div className='text-base font-semibold'>{employee.employee_name}</div>
+             <div className='text-[10px] font-thin'>{employee.employee_position}</div>
+             
+             <div className='flex flex-col'>
+               
+               <div className='text-[8px] text-green-600'>Matches Your Job Description</div>
+               <div className='text-[8px] bg-background_grey_color px-1 rounded-lg w-min mt-1'>Remote</div>
+             </div>
+           </div>
+           <div className='text-button_primary_color absolute top-1 right-3'></div>
+         </div>
+           </Link>
+           </div>
+        ))}
+      </ul>
+    </div> */}
+      {/* test 2 ends */}
+    
+       {/* <div>
+      {Object.entries(groupedEmployees).map(([department, employees]) => (
+        <div key={department}>
+          <h2>{department}</h2>
+          {employees.map(employee => (
+            <div className='flex px-10 py-2 flex-wrap gap-10 '>
+           <Link to={"/company/employeedetails"}>
+             <div className='bg-primary_white flex px-3 py-2 pr-14 rounded-xl gap-2 shadow-md relative cursor-pointer'>
+             <div className='w-20 h-20 rounded-lg -ml-5'>
+              
+               <img src={employeeprofile} alt={employee.employee_name} className='object-fill' />
+             </div>
+             <div className='flex flex-col'>
+               <div className='text-base font-semibold'>{employee.employee_name}</div>
+               <div className='text-[10px] font-thin'>{employee.employee_position}</div>
+               
+               <div className='flex flex-col'>
+                 
+                 <div className='text-[8px] text-green-600'>Matches Your Job Description</div>
+                 <div className='text-[8px] bg-background_grey_color px-1 rounded-lg w-min mt-1'>Remote</div>
+               </div>
+             </div>
+             <div className='text-button_primary_color absolute top-1 right-3'></div>
+           </div>
+             </Link>
+             </div>
+          ))}
+        </div>
+      ))}
+    </div> */}
+      {/* test */}
+      {/* <div className="mt-5">
         <div
           className=" select-none  border-b-2 border-gray-300"
           onClick={handleIT}
@@ -159,9 +368,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -182,9 +391,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -205,9 +414,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -228,9 +437,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -270,9 +479,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -293,9 +502,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -316,9 +525,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -339,9 +548,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -381,9 +590,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -404,9 +613,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -427,9 +636,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -450,9 +659,9 @@ const CompanyEmployees = () => {
                   <div className=" text-base font-semibold">
                     Name of Employee
                   </div>
-                  <div className=" text-[10px] font-thin">Job Role</div>
+                  <div className=" text-[10px] font-thin">Job Role</div> */}
                   {/* <div className=' text-xs font-semibold'>₹180000 - ₹400000</div> */}
-                  <div className=" flex flex-col">
+                  {/* <div className=" flex flex-col">
                     <div className=" text-[8px] text-green-600">
                       Matches Your Job Description
                     </div>
@@ -466,7 +675,7 @@ const CompanyEmployees = () => {
             </Link>
           </div>
         )}
-      </div>
+      </div> */}
       {addemployeemodal && (
         <div className="" onClick={closemodal}>
           <div className="absolute top-0 left-0 h-full bg-neutral-700/70 w-full flex justify-center items-center">
