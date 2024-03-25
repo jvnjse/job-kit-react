@@ -19,11 +19,11 @@ const CompanyEmployees = () => {
   const [employees, setEmployees] = useState([]); //test
   const [selectedDepartment, setSelectedDepartment] = useState('');//test
   const fetchEmployees =() => {//test
-    fetch(`http://127.0.0.1:8000/company/company/employee/${user_id}/`) //testing with manuel api
-      .then(response => response.json())
-      .then(data => {
-        setEmployees(data);
-        console.log(data, "employee")
+    MakeApiRequest('get', `${config.baseUrl}company/company/employee/${user_id}/`) //testing with manuel api
+     
+      .then(response => {
+        setEmployees(response);
+        console.log(response, "employee")
       })
       .catch(error => {
         console.error('Error fetching employee data:', error);
@@ -34,16 +34,16 @@ const CompanyEmployees = () => {
     fetchEmployees(); 
   }, []);
 
-  // Group employees by department
-  const groupedEmployees = employees.reduce((acc, employee) => {
-    employee.department_names.forEach(department => {
-      if (!acc[department]) {
-        acc[department] = [];
-      }
-      acc[department].push(employee);
-    });
-    return acc;
-  }, {});//test
+  // // Group employees by department
+  // const groupedEmployees = employees.reduce((acc, employee) => {
+  //   employee.department_names.forEach(department => {
+  //     if (!acc[department]) {
+  //       acc[department] = [];
+  //     }
+  //     acc[department].push(employee);
+  //   });
+  //   return acc;
+  // }, {});//test
 
 
   const closemodal = () => {
@@ -62,10 +62,11 @@ const CompanyEmployees = () => {
     const [loading, setLoading] = useState(true);
   
     useEffect(() => {
-      fetch('http://127.0.0.1:8000/company/department/')
-        .then(response => response.json())
-        .then(data => {
-          setDepartments(data.map(department => ({ value: department.name, label: department.name })));
+      MakeApiRequest('get', `${config.baseUrl}company/department/`, headers)
+      .then(response => {
+          console.log(response)
+       
+          setDepartments(response.map(department => ({ value: department.name, label: department.name })));
           setLoading(false);
         })
         .catch(error => {
@@ -74,12 +75,12 @@ const CompanyEmployees = () => {
         });
     }, []);
 
-    const handleCreateOption = (inputValue) => {
-        // You can handle the creation of a new option here
-        const newValue = { value: inputValue.toLowerCase(), label: inputValue };
-        setDepartments([...departments, newValue]);
-        // You may also want to send a request to your server to create the option
-      };
+    // const handleCreateOption = (inputValue) => {
+    //     // You can handle the creation of a new option here
+    //     const newValue = { value: inputValue.toLowerCase(), label: inputValue };
+    //     setDepartments([...departments, newValue]);
+    //     // You may also want to send a request to your server to create the option
+    //   };
       console.log(departments, "depatrt")
   
   //test
@@ -238,7 +239,9 @@ const CompanyEmployees = () => {
             </div>
             {selectedDepartment === department.label && (
               <ul className="flex flex-wrap">
-                {employees.map(employee => (
+                 
+                {employees && employees.length > 0  ? ( 
+                  employees.map(employee => (
                   employee.department_names.includes(department.label) && (
                     <li key={employee.id}>
                       <div className="flex px-10 py-2 flex-wrap gap-10 ">
@@ -261,10 +264,14 @@ const CompanyEmployees = () => {
            <div className='text-button_primary_color absolute top-1 right-3'></div>
          </div>
            </Link>
-           </div>
+           </div> 
                     </li>
                   )
-                ))}
+                ))): (
+                <div> No Employees in this department </div>
+                )
+                }
+                
               </ul>
             )}
           </div>

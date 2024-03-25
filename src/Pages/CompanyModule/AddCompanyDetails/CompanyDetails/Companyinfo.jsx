@@ -11,10 +11,11 @@ import Cookies from "js-cookie";
 
 function Companyinfo() {
     const user_id = Cookies.get('user_id')
+    console.log(user_id)
     const access_token = Cookies.get('access_token')
     const [file, setFile] = useState();
     const [viewfile, setViewFile] = useState();
-    const [details, setDetails] = useState(true);
+    const [details, setDetails] = useState(false);
     const [companyinfo, setCompanyinfo] = useState({
         company_user_id: user_id,
         company_name: "",

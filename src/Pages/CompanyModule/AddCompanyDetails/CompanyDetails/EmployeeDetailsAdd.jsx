@@ -32,10 +32,9 @@ function EmployeeDetailsAdd() {
     const [loading, setLoading] = useState(true);
   
     useEffect(() => {
-      fetch('http://127.0.0.1:8000/company/department/')
-        .then(response => response.json())
-        .then(data => {
-          setDepartments(data.map(department => ({ value: department.name, label: department.name })));
+     MakeApiRequest('get', `${config.baseUrl}company/company/get/department/${user_id}/`)   
+        .then(response => {
+          setDepartments(response.map(department => ({ value: department.name, label: department.name })));
           setLoading(false);
         })
         .catch(error => {

@@ -9,28 +9,53 @@ import config from '../../../../Functions/config'
 import MakeApiRequest from '../../../../Functions/AxiosApi'
 import Cookies from "js-cookie";
 
-
+//have an issue user_id vs company id  
 function CompanyDetails() {
     const user_id = Cookies.get('user_id')
+    console.log(user_id,"scetor page")
     const access_token = Cookies.get('access_token')
     const [file, setFile] = useState();
-    const [details, setDetails] = useState(true);
-    const [selectedCompanyType, setSelectedCompanyType] = useState(null);
-    const [selectedCompanyDepartment, setSelectedCompanyDepartment] = useState(null);
+    const [details, setDetails] = useState(true );
+    // const [selectedCompanyType, setSelectedCompanyType] = useState(null);
+    // const [selectedCompanyDepartment, setSelectedCompanyDepartment] = useState(null);
     const [companyTypes, setCompanyTypes] = useState([]);
     const [companyDepartments, setCompanyDepartments] = useState([]);
     const [rows, setRows] = useState([{ companyType: null, companyDepartments: null }]);
+    
 
     useEffect(() => {
-        setCompanyTypes([{ label: 'Type A' }, { label: 'Type B', value: 'type_b' }, { label: 'Type C', value: 'type_c' }]);
-        setCompanyDepartments([{ label: 'HR', value: 'hr' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }]);
+        // setCompanyTypes([{ label: 'Type A' }, { label: 'Type B', value: 'type_b' }, { label: 'Type C', value: 'type_c' }]);
+        // setCompanyDepartments([{ label: 'HR', value: 'hr' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }]);
+        MakeApiRequest('get', `${config.baseUrl}company/get/sector/`, headers)
+        .then(response => {
+            console.log(response,"sectors")
+         
+            setCompanyTypes(response.map(sector => ({ value: sector, label: sector})));
+            // setLoading(false);
+          })
+          .catch(error => {
+            console.error('Error fetching departments:', error);
+            // setLoading(false);
+          });
+        MakeApiRequest('get', `${config.baseUrl}company/department/`, headers)
+        .then(response => {
+            console.log(response)
+         
+            setCompanyDepartments(response.map(department => ({ value: department.name, label: department.name })));
+            // setLoading(false);
+          })
+          .catch(error => {
+            console.error('Error fetching departments:', error);
+            // setLoading(false);
+          });
     }, []);
+    console.log(companyTypes, "sectors after labeling")
     function HandleNextDetails() {
         setDetails(false)
 
     }
-    console.log(selectedCompanyType)
-    console.log(selectedCompanyDepartment)
+    // console.log(selectedCompanyType, "check2")
+    // console.log(selectedCompanyDepartment,"check1")
 
     function handleChange(e) {
         console.log(e.target.files);
@@ -62,38 +87,87 @@ function CompanyDetails() {
         'Authorization': `Bearer ${access_token}`
     }
     const SubmitSecDep = () => {
-        const userData = {
-            user_id: user_id,
-            sectors: [],
+        const requestData = {
+            company_user_id: user_id,
+            sector_name: "",
             departments: [],
         };
+        const headers = {
+            'Authorization': `Bearer ${access_token}`
+        }
+    
+        // rows.forEach(row => {
+        //     if (row.companyType && row.companyDepartments) {
+        //         const sectorName = row.companyType.label;
+        //         const departmentNames = row.companyDepartments.map(dep => dep.label);
+    
+        //         if (requestData.sector_name !== sectorName) {
+        //             requestData.sector_name = sectorName;
+        //         }
+    
+        //         departmentNames.forEach(departmentName => {
+        //             requestData.departments.push(departmentName);
+        //         });
+        //     }
+        // });
 
         rows.forEach(row => {
             if (row.companyType && row.companyDepartments) {
-                const sectorName = row.companyType.label;
-                const departmentNames = row.companyDepartments.map(dep => dep.label);
-
-                if (!userData.sectors.includes(sectorName)) {
-                    userData.sectors.push(sectorName);
-                }
-
-                departmentNames.forEach(departmentName => {
-                    userData.departments.push({
-                        sector_name: sectorName,
-                        department_name: departmentName,
-                    });
-                });
-            }
-        });
-        MakeApiRequest('post', `${config.baseUrl}company/update-sectors-and-departments/`, headers, userData)
+                const requestData = {
+                    company_user_id: user_id,
+                    sector_name: row.companyType.label,
+                    departments: row.companyDepartments.map(dep => dep.label),
+                };
+    
+        MakeApiRequest('post', `${config.baseUrl}company/company/post/sector/`, headers, requestData)
             .then(response => {
-                console.log(response)
+                console.log(response, "posted successfully")
                 HandleNextDetails()
             })
             .catch(error => {
+                console.error('Error posting data:', error);
             });
 
+        }
+    })  
+        
     }
+    
+
+    //  const SubmitSecDep = () => {
+    //     const userData = {
+    //         company_user_id: user_id,
+    //         sector_name: selectedCompanyType,
+    //         departments: selectedCompanyDepartment,
+    //     };
+
+    //     rows.forEach(row => {
+    //         if (row.companyType && row.companyDepartments) {
+    //             const sectorName = row.companyType.label;
+    //             const departmentNames = row.companyDepartments.map(dep => dep.label);
+
+    //             if (!userData.sectors.includes(sectorName)) {
+    //                 userData.sectors.push(sectorName);
+    //             }
+
+    //             departmentNames.forEach(departmentName => {
+    //                 userData.departments.push({
+    //                     sector_name: sectorName,
+    //                     departments: departmentName,
+    //                 });
+    //             });
+    //         }
+    //     });
+
+    //     MakeApiRequest('post', `${config.baseUrl}company/company/post/sector/`, headers, userData)
+    //         .then(response => {
+    //             console.log(response, "posted sucessfully")
+    //             HandleNextDetails()
+    //         })
+    //         .catch(error => {
+    //         });
+
+    // }
     return (<>
         {details ?
             <div>
