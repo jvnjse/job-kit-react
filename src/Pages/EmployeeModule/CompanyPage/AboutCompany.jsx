@@ -10,7 +10,7 @@ function AboutCompany() {
             <div className=' text-lg font-bold mt-6'>Contact us</div>
             <div className=' flex gap-6'>
                 <div className=' font-semibold'>Phone: <span className=' font-normal'>5217358288</span></div>
-                <div className=' font-semibold'>Website : <a target='_blank' className=' font-normal text-blue-500' href=' '>www.website.co</a></div>
+                <div className=' font-semibold'>Website : <a target='_blank' className=' font-normal text-blue-500' href=' '>www.website.com</a></div>
             </div>
             <div className=' text-lg font-bold mt-6'>Socials</div>
             <div className=' flex gap-5 text-2xl mt-2'>

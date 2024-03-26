@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import profileimage from "../../../Assets/Images/profileimage.png"
 import Cookies from "js-cookie";
+import Creatable from 'react-select/creatable';//add
+import { faArrowRight, faUpload } from '@fortawesome/free-solid-svg-icons'//added
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 
@@ -12,13 +14,19 @@ function CompanyMain() {
     const user_id = Cookies.get('user_id')
     const access_token = Cookies.get('access_token')
     const [jobpostmodal, setJobpostModal] = useState(false);
+    const [sectormodal, setSectorModal] = useState(false); //adding-------------------
     const [companydetails, setCompanydetails] = useState([])
     const [tags, setTags] = useState([]); 
     const [skillInputValue, setskillInputValue] = useState('');
     console.log(companydetails, "sss")
     const closemodal = () => {
         setJobpostModal(false);
+        setSectorModal(false);//adding----------
     };
+
+    const handlesectormodal = () => {
+        setSectorModal(true);
+    }
 
     const handlejobPostmodal = () => {
         setJobpostModal(true);
@@ -71,7 +79,110 @@ function CompanyMain() {
             .catch(error => {
             });
     }
+
+
+    // for sector start---------------------------------------------------------
+    const [companyTypes, setCompanyTypes] = useState([]);
+    const [companyDepartments, setCompanyDepartments] = useState([]);
+    const [rows, setRows] = useState([{ companyType: null, companyDepartments: null }]);
+    useEffect(() => {
+        // setCompanyTypes([{ label: 'Type A' }, { label: 'Type B', value: 'type_b' }, { label: 'Type C', value: 'type_c' }]);
+        // setCompanyDepartments([{ label: 'HR', value: 'hr' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }]);
+        MakeApiRequest('get', `${config.baseUrl}company/get/sector/`, headers)
+        .then(response => {
+            console.log(response,"sectors")
+         
+            setCompanyTypes(response.map(sector => ({ value: sector, label: sector})));
+            // setLoading(false);
+          })
+          .catch(error => {
+            console.error('Error fetching departments:', error);
+            // setLoading(false);
+          });
+        MakeApiRequest('get', `${config.baseUrl}company/department/`, headers)
+        .then(response => {
+            console.log(response)
+         
+            setCompanyDepartments(response.map(department => ({ value: department.name, label: department.name })));
+            // setLoading(false);
+          })
+          .catch(error => {
+            console.error('Error fetching departments:', error);
+            // setLoading(false);
+          });
+    }, []);
+    console.log(companyTypes, "sectors after labeling")
+    // function HandleNextDetails() {
+    //     setDetails(false)
+
+    // }
+    // console.log(selectedCompanyType, "check2")
+    // console.log(selectedCompanyDepartment,"check1")
+
+    // function handleSectorChange(e) {
+    //     console.log(e.target.files);
+    //     setFile(URL.createObjectURL(e.target.files[0]));
+    // }
+    const createOption = (inputValue) => ({
+        label: inputValue,
+        value: inputValue,
+    });
+
+    const addNewRow = () => {
+        setRows([...rows, { companyType: null, companyDepartments: null }]);
+    };
+    const handleCompanyTypeChange = (selectedOption, rowIndex) => {
+        const updatedRows = [...rows];
+        updatedRows[rowIndex].companyType = selectedOption;
+        setRows(updatedRows);
+    };
+
+    const handleCompanyDepartmentsChange = (selectedOptions, rowIndex) => {
+        const updatedRows = [...rows];
+        updatedRows[rowIndex].companyDepartments = selectedOptions;
+        setRows(updatedRows);
+    };
+
+    console.log(rows)
+
    
+    const SubmitSecDep = () => {
+        closemodal()
+        const requestData = {
+            company_user_id: user_id,
+            sector_name: "",
+            departments: [],
+        };
+        const headers = {
+            'Authorization': `Bearer ${access_token}`
+        }
+    
+        
+
+        rows.forEach(row => {
+            if (row.companyType && row.companyDepartments) {
+                const requestData = {
+                    company_user_id: user_id,
+                    sector_name: row.companyType.label,
+                    departments: row.companyDepartments.map(dep => dep.label),
+                };
+    
+        MakeApiRequest('post', `${config.baseUrl}company/company/post/sector/`, headers, requestData)
+            .then(response => {
+                console.log(response, "posted successfully")
+                // HandleNextDetails()
+            })
+            .catch(error => {
+                console.error('Error posting data:', error);
+            });
+
+        }
+    })  
+        
+    }
+   // end----------------------------------------------------------
+
+
     //  to handle the tag in skill-----------------------------------------
     //----------------------------------------------------------------------------
     // const handleInputKeyPress = (event) => {
@@ -187,7 +298,8 @@ function CompanyMain() {
             <div className=' bg-primary_blue px-3 py-2 rounded-xl w-[130px] text-sm text-text_white_primary_color mt-3 cursor-pointer whitespace-nowrap ' onClick={handlejobPostmodal}>Post a New Job</div>
             <div className=' text-lg font-bold mt-3'>About Company</div>
             <div className=' text-sm w-3/5 leading-4'>Lorem ipsum dolor sit amet consectetur. Volutpat et vivamus amet feugiat et nisi vulputate nullam cras. Sem quis dui metus diam in elit sollicitudin nec. In euismod justo sodales suscipit id duis.</div>
-            <div className=' text-lg font-bold mt-3'>Add Company Working Sector <FontAwesomeIcon icon={faPlusCircle} /></div>
+            <div className=' text-lg font-bold mt-3'>Add Company Working Sector <FontAwesomeIcon onClick={handlesectormodal} icon={faPlusCircle} /></div>
+             {/* i will be working in ------------------------------------------------------------------------------------------------------*/}
             <div className='flex gap-4'>
                 {companydetails.company_sectors && companydetails.company_sectors.map((sector) => (
                     // <div></div>
@@ -347,6 +459,72 @@ function CompanyMain() {
                     </div>
                 </div>
             )}
+             {sectormodal && (
+                <div className="" onClick={closemodal}>
+                     <div className="absolute top-0 left-0 bg-neutral-700/70 w-full flex justify-center py-32">
+                     <div className=' w-9/12 bg-white rounded-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
+                     <div className=' text-center text-2xl font-semibold text-primary_blue'>Company Sectors and Departments</div>
+                <div className=' flex justify-evenly pt-4 max-sm:flex-col-reverse max-sm:px-5'>
+                    <div>
+                        <div className='flex flex-col'>
+                            {rows.map((row, index) => (
+                                <div className='flex w-full gap-5'>
+                                    <label className='flex flex-col gap-1 text-xs mt-4'>
+                                        Company Type
+                                        <Creatable
+                                            value={row.companyType}
+                                            onChange={(selectedOption) => handleCompanyTypeChange(selectedOption, index)}
+                                            options={companyTypes}
+                                        />
+                                    </label>
+                                    <label className='flex flex-col gap-1 text-xs mt-4'>
+                                        Company Departments
+                                        <Creatable
+                                            value={row.companyDepartments}
+                                            onChange={(selectedOptions) => handleCompanyDepartmentsChange(selectedOptions, index)}
+                                            options={companyDepartments}
+                                            isMulti
+                                        />
+                                    </label>
+                                </div>
+                            ))}
+                            <button className='bg-primary_blue text-white w-10 rounded-lg self-end mt-3' onClick={addNewRow}>+</button>
+
+                        </div>
+                        {/* <label className='flex flex-col  gap-1 text-xs mt-4'>Business Activity
+                            <input
+                                type='text'
+                                className='signup-input border border-black-950 w-64 h-16 ml-2' />
+                        </label> */}
+                        {/* <label className='flex flex-col  gap-1 text-xs mt-4'>Company Website
+                            <input
+                                type='text'
+                                className='signup-input border border-black-950 w-64 h-8 ml-2' />
+                        </label> */}
+                        <div className="continue-btn float-right px-5 py-2 mt-6 " onClick={SubmitSecDep}>Add  <FontAwesomeIcon icon={faArrowRight} className='text-blue-50' color='#ffffff' /></div>
+                    </div>
+                    {/* <div>
+                        <label className=' flex  flex-col  items-start rounded-xl bg-gray-200 px-10 py-10 max-sm:p-0'>
+                            Choose a Valid File for Verification
+                            <div>
+                                <FontAwesomeIcon className='text-6xl' icon={faUpload} />
+                            </div>
+                            <div className=' mt-5'>
+                                <input
+                                    type="file"
+                                    title=""
+                                    className='choose-file-box-company-information'
+                                    id=""
+                                    accept="application/pdf" onChange={handleChange} />
+                            </div>
+                        </label>
+                    </div> */}
+                </div>
+            </div>
+                    </div>
+                    </div>
+                   
+             )}
         </div>
     )
 }

@@ -15,7 +15,7 @@ function CompanyDetails() {
     console.log(user_id,"scetor page")
     const access_token = Cookies.get('access_token')
     const [file, setFile] = useState();
-    const [details, setDetails] = useState(true );
+    const [details, setDetails] = useState(false );
     // const [selectedCompanyType, setSelectedCompanyType] = useState(null);
     // const [selectedCompanyDepartment, setSelectedCompanyDepartment] = useState(null);
     const [companyTypes, setCompanyTypes] = useState([]);
