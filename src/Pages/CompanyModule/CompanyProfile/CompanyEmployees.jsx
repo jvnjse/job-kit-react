@@ -127,19 +127,6 @@ const CompanyEmployees = () => {
       
   };
 
-  //trying prev
-  // const handleDepartmentClick = (department) => {
-  //   setSelectedDepartment(selectedDepartment === department ? '' : department);
-  // };
-
-  // function HandleEmployeeInfo(e) {
-  //   const { name, value } = e.target;
-  //   setEmployeeInfo((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // }
-
   function HandleEmployeeInfo(e) {
     const { name, value } = e.target;
     if (name === "employee_department") {

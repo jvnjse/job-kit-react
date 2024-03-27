@@ -10,6 +10,7 @@ import config from '../../../Functions/config';
 
 
 
+
 function CompanyMain() {
     const user_id = Cookies.get('user_id')
     const access_token = Cookies.get('access_token')
@@ -147,7 +148,9 @@ function CompanyMain() {
 
    
     const SubmitSecDep = () => {
+       
         closemodal()
+        
         const requestData = {
             company_user_id: user_id,
             sector_name: "",
@@ -170,6 +173,7 @@ function CompanyMain() {
         MakeApiRequest('post', `${config.baseUrl}company/company/post/sector/`, headers, requestData)
             .then(response => {
                 console.log(response, "posted successfully")
+                GetCompanyDetails()
                 // HandleNextDetails()
             })
             .catch(error => {
@@ -183,41 +187,7 @@ function CompanyMain() {
    // end----------------------------------------------------------
 
 
-    //  to handle the tag in skill-----------------------------------------
-    //----------------------------------------------------------------------------
-    // const handleInputKeyPress = (event) => {
-    //     if ((event.key === 'Enter' || event.key === ',') ) {
-    //         event.preventDefault();
-    
-    //         const newTag = jobData.tags.trim();
-    //         if (newTag !== '') {
-    //             const existingTag = tagsArray.find(tag => tag.toLowerCase() === newTag.toLowerCase());
-    
-    //             if (!existingTag) {
-    //                 setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
-    //             }
-    
-    //             setJobData({ ...jobData, tags: '' });
-    //         }
-    //     }
-    // };
-
-    // const handleInputKeyPress = (event) => {
-    //     // if (event.key === 'Enter' || event.key === ',') {
-    //     //   event.preventDefault();
-      
-    //       const newTag = jobData.tags.trim();
-    //       if (newTag !== '') {
-    //         const existingTag = tagsArray.find((tag) => tag.toLowerCase() === newTag.toLowerCase());
-      
-    //         if (!existingTag) {
-    //             setJobData({ ...jobData, tags: [...tagsArray, newTag].join(',') });
-    //         }
-      
-    //         setJobData({ ...jobData, tags: '' });
-    //       }
-    //     // }
-    //   };
+   
 
     const handleSkillInputChange = (event) => {
         setskillInputValue(event.target.value);
@@ -254,19 +224,7 @@ function CompanyMain() {
     
 
     const GetCompanyDetails = () => {
-        // MakeApiRequest('get', `${config.baseUrl}/skills/`, headers)  // Fetch all skills
-        // .then(skillResponse => {
-        //     const skillsMap = skillResponse.reduce((map, skill) => {
-        //         map[skill.id] = skill;
-        //         return map;
-        //     }, {});
-
-        //     const skills = keywordsTagsArray.map(tagId => skillsMap[tagId]);
-
-        //     const dataToSendWithSkills = {
-        //         ...dataToSend,
-        //         keywords_tags: skills,
-        //     };
+       
         MakeApiRequest('get', `${config.baseUrl}company/company/${user_id}/`, headers)
             .then(response => {
                 console.log(response)
@@ -459,9 +417,9 @@ function CompanyMain() {
                     </div>
                 </div>
             )}
-             {sectormodal && (
+             {sectormodal && ( //issue with styling----------------------------------------------------------------------------------------
                 <div className="" onClick={closemodal}>
-                     <div className="absolute top-0 left-0 bg-neutral-700/70 w-full flex justify-center py-32">
+                     <div className="absolute top-0 left-0  bg-neutral-700/70 w-full  flex justify-center py-32">
                      <div className=' w-9/12 bg-white rounded-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
                      <div className=' text-center text-2xl font-semibold text-primary_blue'>Company Sectors and Departments</div>
                 <div className=' flex justify-evenly pt-4 max-sm:flex-col-reverse max-sm:px-5'>

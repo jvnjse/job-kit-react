@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import Cookies from 'js-cookie';
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -17,6 +18,7 @@ function CompanyJobs() {
     const [companydetails, setCompanydetails] = useState([])
     const [selectedJobId, setSelectedJobId] = useState(null);
     const [job, setJob] = useState([])
+    const navigate = useNavigate()
     const closemodal = () => {
         setJobpostModal(false);
         resetJobData()
@@ -31,7 +33,7 @@ function CompanyJobs() {
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
-    //---------------------adding-----------------------
+   
     const [jobData, setJobData] = useState({
         job_title: '',
         job_description: '',
@@ -44,17 +46,7 @@ function CompanyJobs() {
        // tags: '', //keywords_tags given earlier which were not accepted in the backend
     });
 
-    // const tagsArray = jobData.tags ? jobData.tags.split(',').map(tag => tag.trim()) : []; // Split by comma and trim whitespace
-    // const dataToSend = jobData ? {
-    //     ...jobData,
-    //     tags: tagsArray,
-    //     user: 1,
-    // } : {};
-    // const dataToSend = {
-    //     ...jobData,
-    //     tags: tagsArray,
-    //     user: 1,
-    // };
+ 
 
 
 
@@ -96,6 +88,11 @@ function CompanyJobs() {
             console.log(jobData,"data")
     }, []);
      //----------------------------------------------------------------------
+
+     const  handleNavigation =  (id)=>{
+           navigate(`/employee/company/${id}`)
+     }
+
   //--------------------------------------------------------------------------
   // creating
   const HandleEdit = (jobId) => {
@@ -303,7 +300,14 @@ const handleTagRemove = (tagIndex) => {
           <div className='flex flex-col  w-[250px]'>
             {console.log("in return")}
             <div className='text-base font-semibold'>{job.job_title}</div>
-            <div className='text-[12px] font-thin'>{companydetails.company_name} </div>
+            <div className='text-[12px] font-thin hover:underline' 
+             onClick={() => handleNavigation(companydetails.company_user_id)}>
+                 {companydetails.company_name} 
+                 </div>
+                  {/* <div className='text-[12px] font-thin' 
+                  onClick={ handleNavigation}>
+                {companydetails.company_name} 
+                </div> */}
             <div className='font-thin text-[10px]'>{job.location}</div>
             <div className='font-thin text-[10px]'>{job.mode_of_work}</div>
             <div className='flex gap-2 mt-1'>

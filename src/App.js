@@ -71,7 +71,9 @@ function App() {
               path="/employee/employee-profile"
               element={<Employeeprofile />}
             />
-            <Route path="/employee/company" element={<Companydetail />}></Route>
+            {/* <Route path="/employee/company" element={<Companydetail />}></Route> */}
+            <Route path="/employee/company/:id" element={<Companydetail />} />
+
             {/* COMPANY LINKS */}
             <Route path="/company" element={<CompanyHome />} />
             <Route path="/company/company-details" element={<AddDetails />} />
