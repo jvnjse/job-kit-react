@@ -417,10 +417,10 @@ function CompanyMain() {
                     </div>
                 </div>
             )}
-             {sectormodal && ( //issue with styling----------------------------------------------------------------------------------------
+             {/* {sectormodal && ( //issue with styling----------------------------------------------------------------------------------------
                 <div className="" onClick={closemodal}>
                      <div className="absolute top-0 left-0  bg-neutral-700/70 w-full  flex justify-center py-32">
-                     <div className=' w-9/12 bg-white rounded-lg py-5 px-14 max-sm:w-full' onClick={stopPropagation}>
+                     <div className=' w-9/12 bg-white rounded-lg py-5 px-14  max-sm:w-full' onClick={stopPropagation}>
                      <div className=' text-center text-2xl font-semibold text-primary_blue'>Company Sectors and Departments</div>
                 <div className=' flex justify-evenly pt-4 max-sm:flex-col-reverse max-sm:px-5'>
                     <div>
@@ -449,40 +449,49 @@ function CompanyMain() {
                             <button className='bg-primary_blue text-white w-10 rounded-lg self-end mt-3' onClick={addNewRow}>+</button>
 
                         </div>
-                        {/* <label className='flex flex-col  gap-1 text-xs mt-4'>Business Activity
-                            <input
-                                type='text'
-                                className='signup-input border border-black-950 w-64 h-16 ml-2' />
-                        </label> */}
-                        {/* <label className='flex flex-col  gap-1 text-xs mt-4'>Company Website
-                            <input
-                                type='text'
-                                className='signup-input border border-black-950 w-64 h-8 ml-2' />
-                        </label> */}
+                       
                         <div className="continue-btn float-right px-5 py-2 mt-6 " onClick={SubmitSecDep}>Add  <FontAwesomeIcon icon={faArrowRight} className='text-blue-50' color='#ffffff' /></div>
                     </div>
-                    {/* <div>
-                        <label className=' flex  flex-col  items-start rounded-xl bg-gray-200 px-10 py-10 max-sm:p-0'>
-                            Choose a Valid File for Verification
-                            <div>
-                                <FontAwesomeIcon className='text-6xl' icon={faUpload} />
-                            </div>
-                            <div className=' mt-5'>
-                                <input
-                                    type="file"
-                                    title=""
-                                    className='choose-file-box-company-information'
-                                    id=""
-                                    accept="application/pdf" onChange={handleChange} />
-                            </div>
-                        </label>
-                    </div> */}
+                   
                 </div>
             </div>
                     </div>
                     </div>
                    
-             )}
+             )} */}
+             {sectormodal && (
+    <div className="fixed top-0 left-0 w-full h-full bg-neutral-700/70 flex justify-center items-center" onClick={closemodal}>
+        <div className="relative w-full max-w-screen-sm bg-white rounded-lg py-5 px-14 max-sm:w-full" onClick={stopPropagation}>
+            <div className="text-center text-2xl font-semibold text-primary_blue">Company Sectors and Departments</div>
+            <div className="flex flex-col gap-4 pt-4">
+                {rows.map((row, index) => (
+                    <div key={index} className="flex w-full gap-5">
+                        <label className="flex flex-col gap-1 text-xs mt-4">
+                            Company Type
+                            <Creatable
+                                value={row.companyType}
+                                onChange={(selectedOption) => handleCompanyTypeChange(selectedOption, index)}
+                                options={companyTypes}
+                            />
+                        </label>
+                        <label className="flex flex-col gap-1 text-xs mt-4">
+                            Company Departments
+                            <Creatable
+                                value={row.companyDepartments}
+                                onChange={(selectedOptions) => handleCompanyDepartmentsChange(selectedOptions, index)}
+                                options={companyDepartments}
+                                isMulti
+                            />
+                        </label>
+                    </div>
+                ))}
+                <button className="bg-primary_blue text-white w-10 rounded-lg self-end mt-3" onClick={addNewRow}>+</button>
+            </div>
+            <div className="continue-btn float-right px-5 py-2 mt-6" onClick={SubmitSecDep}>Add <FontAwesomeIcon icon={faArrowRight} className="text-blue-50" color="#ffffff" /></div>
+        </div>
+    </div>
+)}
+
         </div>
     )
 }

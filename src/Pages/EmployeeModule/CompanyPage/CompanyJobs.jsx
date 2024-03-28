@@ -49,7 +49,7 @@ function CompanyJobs({ id }) {
                 <div className=' text-button_primary_color absolute top-1 right-2'><FontAwesomeIcon icon={faBookmark} /></div>
             </div> 
              ))}
-            <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
+            {/* <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
                 <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                     <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
                 </div>
@@ -93,7 +93,7 @@ function CompanyJobs({ id }) {
                     </div>
                 </div>
                 <div className=' text-button_primary_color absolute top-1 right-2'><FontAwesomeIcon icon={faBookmark} /></div>
-            </div>
+            </div> */}
         </div>
     )
 }

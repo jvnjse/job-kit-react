@@ -62,11 +62,12 @@ const CompanyEmployees = () => {
     const [loading, setLoading] = useState(true);
   
     useEffect(() => {
-      MakeApiRequest('get', `${config.baseUrl}company/department/`, headers)
+      // MakeApiRequest('get', `${config.baseUrl}company/department/`, headers)
+      MakeApiRequest('get', `${config.baseUrl}company/company/get/department/${user_id}/`, headers)
       .then(response => {
-          console.log(response)
+          console.log(response,"response")
        
-          setDepartments(response.map(department => ({ value: department.name, label: department.name })));
+          setDepartments(response.map(response => ({ value: response, label: response})));
           setLoading(false);
         })
         .catch(error => {
@@ -167,15 +168,15 @@ const CompanyEmployees = () => {
   
   
 
-  const handleIT = () => {
-    setit(!it);
-  };
-  const handleSales = () => {
-    setsales(!sales);
-  };
-  const handleDesign = () => {
-    setdesign(!design);
-  };
+  // const handleIT = () => {
+  //   setit(!it);
+  // };
+  // const handleSales = () => {
+  //   setsales(!sales);
+  // };
+  // const handleDesign = () => {
+  //   setdesign(!design);
+  // };
   const  handleFaArrow = (depart) => {
    if (selectedDepartment === depart)
    {
