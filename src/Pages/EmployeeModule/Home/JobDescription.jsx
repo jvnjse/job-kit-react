@@ -58,10 +58,10 @@ function JobDescription() {
                     </div>
                     <div className=' text-lg font-bold text-text_black_primary_color mt-4'>Related Jobs:</div>
                     <div className=' flex ml-12 gap-3 flex-wrap mt-2'>
+                        {/* <JobBox />
                         <JobBox />
                         <JobBox />
-                        <JobBox />
-                        <JobBox />
+                        <JobBox /> */}
                     </div>
                 </div>
                 <div className=' w-1/4 flex flex-col items-start pl-16'>

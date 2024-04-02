@@ -8,7 +8,7 @@ import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 import { useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 function JobDetail() {
     const [job, setJob] = useState([])

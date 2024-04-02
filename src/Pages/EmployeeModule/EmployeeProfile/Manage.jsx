@@ -1,22 +1,79 @@
-import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import MakeApiRequest from '../../../Functions/AxiosApi';
+import config from '../../../Functions/config';
+import Cookies from 'js-cookie';
+import React, { useEffect, useState } from 'react'
 
 function Manage(props) {
     const closetoggleBox = props.closetoggleBox
+    const user_id = Cookies.get('user_id')
+    const access_token = Cookies.get('access_token')
+    const [categories, setCategories] = useState([]);
+    const [employeeData, setEmployeeData] = useState({});
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const navigate = useNavigate()
+
+    const headers = {
+        'Authorization': `Bearer ${access_token}`
+    }
+
+    
+
+
+    
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch employee data
+                const response = await MakeApiRequest('get', `${config.baseUrl}employee/employee/${user_id}/`, headers);
+                console.log(response);
+                setEmployeeData(response);
+
+                // Fetch categories
+                const categoryResponse = await MakeApiRequest('get', `${config.baseUrl}administrator/job-category/`, headers);
+                setCategories(categoryResponse);
+
+                // Set the selected category to the employee's job category ID
+                
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, [user_id]);
+    console.log(employeeData, "emplpoyeeData"); 
+
+     const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await MakeApiRequest('post', `${config.baseUrl}employee/create-job-category/`, headers, { category_id: selectedCategory });
+            console.log(response);
+            navigate(`/homejobs?category=${selectedCategory}`);
+        } catch (error) {
+            console.error("Error updating job category:", error);
+        }
+    };
+    console.log(selectedCategory, "Selected category");
 
     return (
         <div onClick={closetoggleBox} className='px-5'>
             <div className='font-bold mt-5'>Your current Job Search Category </div>
-            <div className=' px-3 py-2 bg-gray-300 w-[200px] border border-gray-950 rounded-xl'>IT & Web Development</div>
-            <div className=' font-bold mt-4'>Change your Job Category</div>
-            <div className='flex gap-6'>
-                <select name="" id="" className=' px-3 py-2 bg-gray-300 w-[200px] border border-gray-950 rounded-xl'>
-                    <option value="">Category 1</option>
-                    <option value="">Category 2</option>
-                    <option value="">Category 3</option>
-                    <option value="">Category 4</option>
-                </select>
-                <div className=' self-end px-2 rounded-xl bg-primary_blue text-text_white_primary_color' >Submit</div>
+            <div className=' px-3 py-2 bg-gray-300 w-[200px] border border-gray-950 rounded-xl'>
+                {employeeData.job_category_name}
             </div>
+            <div className=' font-bold mt-4'>Change your Job Category</div>
+            <form onSubmit={handleSubmit}>
+                <div className='flex gap-6'>
+                    <select name="job_category" className='px-3 py-2 bg-gray-300 w-[200px] border border-gray-950 rounded-xl' onChange={(e) => setSelectedCategory(e.target.value)}>
+                    <option value="">Select a category</option>
+                        {categories.map(category => (
+                            <option key={category.id} value={category.id}>{category.category_name}</option>
+                        ))}
+                    </select>
+                    <button type="submit" className='self-end px-2 rounded-xl bg-primary_blue text-text_white_primary_color'>Submit</button>
+                </div>
+            </form>
             <div className='font-bold mt-5'>Request for a New Job</div>
             <div className=' flex items-end'>
                 <textarea type="text" placeholder='Type the reason for job change' className='p-2' />

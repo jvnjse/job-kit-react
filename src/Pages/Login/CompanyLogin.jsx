@@ -70,7 +70,13 @@ function CompanyLogin() {
                 console.log(response)
                 Cookies.set("user_id", response.user_id, { expires: 5 });
                 Cookies.set("access_token", response.access_token, { expires: 5 });
-                window.location.href = "/company/profile";
+                // window.location.href = "/company/profile";
+                  // Check the user type and redirect accordingly
+                if (response.user === "company") {
+                    window.location.href = "/company/profile";
+                } else {
+                    window.location.href = "/employee/employee-profile";
+                }
 
             })
             .catch((error) => {
@@ -100,7 +106,7 @@ function CompanyLogin() {
                     <div className="login-form-container flex flex-col items-center px-14 py-5 ">
                         <div className='w-full text-left text-2xl font-semibold' >{loginbox ? "Sign Up" : "Sign In"}</div>
                         <label className='flex flex-col'>{loginbox ? "Email" : "Email or Username"}
-                            <input type='text' className='signup-input border border-black-950 w-64 h-8 ' onChange={(e) => { setEmail(e.target.value) }} />
+                            <input type='text' className='signup-input border border-black-950 w-64 h-8 ' name='email'  value={email || ''} onChange={(e) => { setEmail(e.target.value.toLowerCase()) }} />
                         </label>
                         {loginbox && <div>
                             <label className='flex flex-col'>User name
