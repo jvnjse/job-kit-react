@@ -31,6 +31,7 @@ function Home() {
     const fetchData = async () => {
       try {
         const response = await MakeApiRequest('get', `${config.baseUrl}company/jobs-by-category-and-skills/?category_id=${category}`, headers);
+        console.log(response);
         setCategoryJobs(response);
         setError(null); // Reset error state on successful response
       } catch (error) {
@@ -43,8 +44,8 @@ function Home() {
 
   const doubleClickTimeout = useRef(null);
 
-  const handleJobBoxDoubleClick = () => {
-    navigate('/employee/jobdetails');
+  const handleJobBoxDoubleClick = (jobId) => {
+    navigate(`/employee/jobdetails/?id=${jobId}`);
   };
 
   const handleJobBoxClick = () => {
@@ -88,13 +89,13 @@ function Home() {
             <div className="text-center">No jobs available</div>
           ) : (
             categoryjobs.map(job => (
-              <JobBox key={job.id} job={job} click={handleBoxClick}/>
+              <JobBox key={job.id} job={job} click={handleBoxClick} onDoubleClick={() => handleJobBoxDoubleClick(job.id)}/>
             ))
           )}
         </div>
       </div>
       {jobdetailmodal && (
-        <div className="flex justify-center" onClick={closemodal}>
+        <div className="flex justify-center" onClick={closemodal} >
           <div className="absolute top-0 bg-neutral-700/70 w-full flex justify-center">
             <JobDescription />
           </div>

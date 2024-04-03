@@ -66,7 +66,7 @@ function App() {
               path="/employee/employee-details"
               element={<EmployeeDetails1 />}
             />
-            <Route path="/employee/jobdetails" element={<JobDetail />} />
+             <Route path="/employee/jobdetails" element={<JobDetail />} />
             <Route
               path="/employee/employee-profile"
               element={<Employeeprofile />}
