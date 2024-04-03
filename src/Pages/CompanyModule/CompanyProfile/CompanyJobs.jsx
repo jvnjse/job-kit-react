@@ -7,13 +7,17 @@ import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 import { useNavigate } from 'react-router-dom';
 
+// for create and select box
+import CreatableSelect from 'react-select/creatable';
+
 
 
 function CompanyJobs() {
     const [jobpostmodal, setJobpostModal] = useState(false);
     const user_id = Cookies.get('user_id')
     const access_token = Cookies.get('access_token')
-    const [tags, setTags] = useState([]); 
+    const [tags, setTags] = useState([]);
+    const [categories, setCategories] = useState([]); 
     const [skillInputValue, setskillInputValue] = useState('');
     const [companydetails, setCompanydetails] = useState([])
     const [selectedJobId, setSelectedJobId] = useState(null);
@@ -37,6 +41,7 @@ function CompanyJobs() {
     const [jobData, setJobData] = useState({
         job_title: '',
         job_description: '',
+        job_category: '',
         qualifications_requirements: '',
         location: '',
         mode_of_work: '',
@@ -72,6 +77,13 @@ function CompanyJobs() {
         setJobData({ ...jobData, [name]: value });
         console.log(jobData)
     };
+    const handleJobCategoryChange = (selectedOption) => {
+        const selectedCategory = selectedOption ? selectedOption.value : null; // Directly set the selected value
+        setJobData(prevState => ({
+            ...prevState,
+            job_category: selectedCategory
+        }));
+    };
 
     useEffect(() => {
         MakeApiRequest('get', `${config.baseUrl}company/post/job/${user_id}/`, headers)
@@ -86,7 +98,22 @@ function CompanyJobs() {
                 console.log(error)
             });
             console.log(jobData,"data")
+            const fetchData = async () => {
+                try {
+                    const response = await MakeApiRequest('get', `${config.baseUrl}administrator/job-category/`, headers);
+                    setCategories(response);
+                } catch (error) {
+                    console.error("Error fetching job categories:", error);
+                }
+            };
+    
+            fetchData();
     }, []);
+
+    const options = categories.map(category => ({
+        value: category.category_name,
+        label: category.category_name
+    }));
      //----------------------------------------------------------------------
 
      const  handleNavigation =  (id)=>{
@@ -141,6 +168,7 @@ function CompanyJobs() {
     setJobData({
         job_title: '',
         job_description: '',
+        job_category: '',
         qualifications_requirements: '',
         location: '',
         mode_of_work: '',
@@ -417,6 +445,16 @@ const handleTagRemove = (tagIndex) => {
                                     placeholder="Enter the job description"
                                 />
                             </label>
+                            <label className="flex flex-col font-bold mt-3">
+                              Job Category
+                             <CreatableSelect
+                                 isClearable
+                                 options={options}
+                                //  value={options.value}
+                                 onChange={handleJobCategoryChange}
+                             />
+                            </label>
+                            {console.log(jobData.job_category,"clg")}
 
                             <label className="flex flex-col font-bold mt-3">
                                 Qualifications & Requirements:

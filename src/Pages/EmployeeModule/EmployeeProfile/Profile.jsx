@@ -22,6 +22,8 @@ function Profile(props) {
     const [educationdata, setEducationdata] = useState()
     const [addexperience, setAddexperience] = useState(false)
     const [addeducation, setAddeducation] = useState(false)
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [addskills, setAddskills] = useState(false)
     const [imageurl, setImageurl] = useState()
     const [addedskills, setSddedskills] = useState()
@@ -71,10 +73,23 @@ function Profile(props) {
 
     }
 
+    const GetCategory = async () => {
+        try {
+            // Fetch categories
+            const categoryResponse = await MakeApiRequest('get', `${config.baseUrl}administrator/job-category/`, headers);
+            setCategories(categoryResponse);
+
+         
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
     useEffect(() => {
         GetEmployee()
         GetExperience()
         GetEducation()
+        GetCategory()
     }, [])
 
     const stopPropagation = (e) => {

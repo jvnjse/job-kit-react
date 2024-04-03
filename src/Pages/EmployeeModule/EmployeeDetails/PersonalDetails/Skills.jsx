@@ -5,6 +5,7 @@ import successicon from "../../../../Assets/Images/success.png"
 import MakeApiRequest from '../../../../Functions/AxiosApi';
 import Cookies from "js-cookie";
 import config from '../../../../Functions/config';
+import Select from 'react-select';
 
 
 function Skills() {
@@ -13,16 +14,35 @@ function Skills() {
     const [tags, setTags] = useState([]);
     const [success, setSuccess] = useState(false)
     const [inputValue, setInputValue] = useState('');
+    const [jobCategories, setJobCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     useEffect(() => {
-        if (success) {
-            const redirectTimer = setTimeout(() => {
-                window.location.href = "/employee/employee-profile";
-            }, 5000);
+        const fetchData = async () => {
+            try {
+                const response1 = await MakeApiRequest('get', `${config.baseUrl}administrator/job-category/`);
+                setJobCategories(response1);
+                console.log(response1, "categories");
 
-            return () => clearTimeout(redirectTimer);
-        }
+                if (success) {
+                    const redirectTimer = setTimeout(() => {
+                        window.location.href = "/employee/employee-profile";
+                    }, 5000);
+                    return () => clearTimeout(redirectTimer);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
     }, [success]);
+
+    const options = jobCategories.map(category => ({
+        value: category.id,
+        label: category.category_name
+    }));
+
+
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
     };
@@ -48,6 +68,8 @@ function Skills() {
         const updatedTags = tags.filter((_, index) => index !== tagIndex);
         setTags(updatedTags);
     };
+
+    console.log(user_id, "userid");
 
 
     const headers = {
@@ -98,6 +120,20 @@ function Skills() {
             </div>
             <button type='submit' className="continue-btn  px-5 py-2 float-right">Continue &nbsp;&nbsp;<FontAwesomeIcon icon={faArrowRight} color='white' />
             </button>
+        </form>
+        <form  className=' flex flex-col items-center mt-10'>
+        <div className=' text-center text-2xl font-bold'>Job Category</div>
+        <div className="w-[300px] text-base font-semibold flex flex-col gap-1 mt-3">
+            Select your job Category
+            <Select className='mt-4'
+                    isClearable
+                    options={options}
+                    placeholder="Select a category"
+                />
+                <button type='submit' className="continue-btn  px-5 py-2 float-right">Continue &nbsp;&nbsp;<FontAwesomeIcon icon={faArrowRight} color='white' />
+                </button>
+                </div>
+        
         </form>
         {success &&
             <div className='success-bg-main absolute w-full h-full top-0 flex justify-center items-center '>
