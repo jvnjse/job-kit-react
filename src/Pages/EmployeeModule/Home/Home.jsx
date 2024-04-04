@@ -45,7 +45,7 @@ function Home() {
   const doubleClickTimeout = useRef(null);
 
   const handleJobBoxDoubleClick = (jobId) => {
-    navigate(`/employee/jobdetails/?id=${jobId}`);
+    navigate(`/employee/jobdetails/?id=${jobId}/`);
   };
 
   const handleJobBoxClick = () => {
@@ -89,7 +89,7 @@ function Home() {
             <div className="text-center">No jobs available</div>
           ) : (
             categoryjobs.map(job => (
-              <JobBox key={job.id} job={job} click={handleBoxClick} onDoubleClick={() => handleJobBoxDoubleClick(job.id)}/>
+              <JobBox key={job.id} job={job}  click={() => handleJobBoxDoubleClick(job.id)}/>
             ))
           )}
         </div>

@@ -26,8 +26,11 @@ function JobDetail() {
     }
 
     const fetchJobDetails = () => {
+        const headers = {
+            'Authorization': `Bearer ${access_token}`
+        }
         
-        MakeApiRequest('get', `${config.baseUrl}company/get/job/${id}`, headers)
+        MakeApiRequest('get',`${config.baseUrl}company/get/job/${id}`,headers)
             .then(jobResponse => {
                 console.log(jobResponse, "getting the job data");
                 setJob(jobResponse[0]);
@@ -39,6 +42,9 @@ function JobDetail() {
     };
 
     const fetchCompanyDetails = (companyId) => {
+        const headers = {
+            'Authorization': `Bearer ${access_token}`
+        }
 
 
         MakeApiRequest('get', `${config.baseUrl}company/company/${companyId}/`, headers)
@@ -70,7 +76,7 @@ function JobDetail() {
     useEffect(() => {
         fetchJobDetails();
         fetchRelatedJobs();
-    }, [id]);
+    }, []);
 
     
 
