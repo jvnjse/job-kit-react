@@ -131,6 +131,7 @@ function JobDetail() {
             {tag}
         </div>
     ))}
+    {/* skills */}
 </div>
 
 
