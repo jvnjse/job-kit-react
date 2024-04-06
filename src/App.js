@@ -71,19 +71,16 @@ function App() {
               path="/employee/employee-profile"
               element={<Employeeprofile />}
             />
-<<<<<<< HEAD
-            {/* <Route path="/employee/company" element={<Companydetail />}></Route> */}
+            
             <Route path="/employee/company/:id" element={<Companydetail />} />
 
-=======
             <Route path="/homejobs" element={<Home />} />
-            <Route path="/employee/company" element={<Companydetail />}></Route>
->>>>>>> 3ac3378855c5556639c458c45b59c0053394a7b9
+            
             {/* COMPANY LINKS */}
             <Route path="/company" element={<CompanyHome />} />
             <Route path="/company/company-details" element={<AddDetails />} />
             <Route
-              path="/company/employeedetails"
+              path="/company/employeedetails/:id"
               element={<EmployeeDescription />}
             />
             <Route path="/company/profile" element={<CompanyProfile />} />

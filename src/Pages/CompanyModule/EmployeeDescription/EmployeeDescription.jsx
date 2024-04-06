@@ -7,17 +7,22 @@ import Nav from '../../EmployeeModule/Nav/Nav';
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import Cookies from "js-cookie";
 import config from '../../../Functions/config';
+import { useParams } from 'react-router-dom';
+
 
 
 function EmployeeDescription() {
-    const user_id = Cookies.get('user_id')
+    // const user_id = Cookies.get('user_id')
+   
     const access_token = Cookies.get('access_token')
+    let { id } = useParams();
     const [employeepersonalData, setEmployeePersonalData] = useState()
     const [skills, setSkills] = useState()
     const [experienceData, setExperienceData] = useState()
     const [educationdata, setEducationdata] = useState()
     const [addedskills, setSddedskills] = useState()
     const [imageurl, setImageurl] = useState()
+    console.log(id, "id")
    
     const headers = {
         "Content-Type": "application/json",
@@ -25,11 +30,15 @@ function EmployeeDescription() {
     }
 
     const GetEmployee = () => {
-        MakeApiRequest('get', `${config.baseUrl}employee/employee/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}employee/employee-personal/${id}/`, headers)
             .then(response => {
                 // Handle the API response
                 console.log(response, "data")
                 setEmployeePersonalData(response)
+
+                GetExperience(response.user_id)
+                GetEducation(response.user_id)
+                console.log(response.user_id,"res")
                 setSkills(response.skills)
                 setImageurl(config.baseUrl + response.profile_image)
                 setSddedskills(response.skills)
@@ -38,8 +47,9 @@ function EmployeeDescription() {
                 console.log(error)
             });
     }
-    const GetExperience = () => {
-        MakeApiRequest('get', `${config.baseUrl}employee/employee/experience/?id=${user_id}`, headers)
+
+    const GetExperience = (user_id) => {
+        MakeApiRequest('get', `${config.baseUrl}employee/employee-experience/${user_id}/`, headers)
             .then(response => {
                 console.log(response, "exp")
                 setExperienceData(response)
@@ -49,8 +59,8 @@ function EmployeeDescription() {
                 console.log(error)
             });
     }
-    const GetEducation = () => {
-        MakeApiRequest('get', `${config.baseUrl}employee/employee/education/?user_id=${user_id}`, headers)
+    const GetEducation = (user_id) => {
+        MakeApiRequest('get', `${config.baseUrl}employee/employee-education/${user_id}/`, headers)
             .then(response => {
                 console.log(response,"edu")
                 setEducationdata(response)
@@ -64,8 +74,8 @@ function EmployeeDescription() {
 
     useEffect(() => {
         GetEmployee()
-        GetExperience()
-        GetEducation()
+        // GetExperience()
+        // GetEducation()
     }, [])
 
     return (<>
@@ -76,7 +86,9 @@ function EmployeeDescription() {
                     <img src={profileimage} alt="" className=' object-cover mix-blend-multiply' />
                 </div>
                 <div className="flex flex-col flex-1">
-                    <div className=' text-2xl font-semibold text-text_black_primary_color'>{employeepersonalData.full_name}</div>
+                    {/* <div className=' text-2xl font-semibold text-text_black_primary_color'>{employeepersonalData.full_name}</div> */}
+                    <div className=' text-2xl font-semibold text-text_black_primary_color'>{employeepersonalData && employeepersonalData.full_name}</div>
+
                     <div className=' text-base font-medium text-text_black_primary_color'>Job Profile</div>
                     <div className=' text-xs font-extralight text-text_black_primary_color'>Lorem ipsum dolor sit amet consectetur. Sed tincidunt viverra eget amet a cursus sed condimentum dictum.</div>
 
@@ -97,7 +109,7 @@ function EmployeeDescription() {
                 </div>
                 <div>
                     <div>Phone</div>
-                    <div>{employeepersonalData.mobile}</div>
+                    <div>{employeepersonalData && employeepersonalData.mobile}</div>
                 </div>
                 <div>
                     <div>Location</div>

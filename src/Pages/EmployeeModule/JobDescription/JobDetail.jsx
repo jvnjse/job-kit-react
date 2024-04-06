@@ -9,21 +9,40 @@ import config from '../../../Functions/config';
 import { useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Link } from "react-router-dom";
+// import { jwtDecode } from "jwt-decode";
 
 function JobDetail() {
     const [job, setJob] = useState([])
     const [jobs, setJobs] = useState([])
+    const [enroll, setEnroll] = useState("Enroll")
     const user_id = Cookies.get('user_id')
+    console.log(user_id, "got the id")
+    const[companyid, setCompanyId] = useState("")
     const access_token = Cookies.get('access_token')
+
     const location = useLocation();
-    const jobId = new URLSearchParams(location.search).get('id');
+    const jobId = new URLSearchParams(location.search).get('id').replace(/\/$/, '');
     const [companydetails, setCompanydetails] = useState([])
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
+    
+    const GetJobDetails = () => {
+        MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}/`, headers)
+        .then(response => {
+            console.log(response, "getting the data");
+            setJob(response[0])
+            setCompanyId(response[0].company_user_id)
+            console.log(response[0].company_user_id, "cmpnyid")                                                                                             
+            })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
     const GetCompanyDetails = () => {
         
-        MakeApiRequest('get', `${config.baseUrl}company/company/${user_id}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/company/${companyid}/`, headers)
             .then(response => {
                 console.log(response)
                 setCompanydetails(response[0])
@@ -33,22 +52,19 @@ function JobDetail() {
             .catch(error => {
             });
     }
-        useEffect(() => {
-            GetCompanyDetails()
-        }, [])
     useEffect(() => {
-        MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}`, headers)
-        .then(response => {
-            console.log(response, "getting the data");
-            setJob(response[0])
-            })
-        .catch(error => {
-            console.log(error);
-        });
-    }, []);
+        GetJobDetails()
+            
+                if (companyid) {
+                    GetCompanyDetails()
+                    GetRelatedJob()
+                }
+            
+    }, [companyid])
+       
 
-    useEffect(() => {
-        MakeApiRequest('get', `${config.baseUrl}company/post/job/${user_id}/`, headers)
+    const GetRelatedJob = () => {
+        MakeApiRequest('get', `${config.baseUrl}company/post/job/${companyid}/`, headers)
             .then(response => {
                 console.log(response)
                 setJobs(response.slice(0, 4)); // Limiting to four elements
@@ -60,7 +76,35 @@ function JobDetail() {
                 console.log(error)
             });
             console.log(jobs,"data")
-    }, []);
+    }
+    // const data = useState({
+    //     user:user_id,
+    //     applied_job_id:jobId
+    // })
+    // console.log(data, "before")
+   //-------------------
+   const Applyjob = () => {
+
+     const data = {
+         user: user_id,
+         applied_job_id: jobId
+     };
+    console.log(data, "post data")
+    MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+    .then(response => {
+        console.log(response, "applied job succesfully");
+        setEnroll("Enrolled")                                                                                        
+        })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
+//-------------------
+    const handleEnroll = () => {
+        console.log("enrolled")
+        Applyjob()
+    }
 
     return (
         <div>
@@ -219,7 +263,7 @@ function JobDetail() {
                         </div>
                     </div>
                     <div className=' w-1/4 flex flex-col items-start pl-16 max-sm:pl-5'>
-                        <div className=' w-20 rounded-md bg-primary_blue tracking-widest text-text_white_primary_color text-center'>Enroll</div>
+                        <div onClick={handleEnroll} className=' w-20 rounded-md bg-primary_blue tracking-widest cursor-pointer text-text_white_primary_color text-center'>{enroll}</div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>Posted Date</div>
                         <div className=' text-xs font-thin ml-3 mt-2 flex gap-2 text-text_black_primary_color'><FontAwesomeIcon icon={faCalendar} className='text-base' />12 May, 2023</div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>End Date</div>

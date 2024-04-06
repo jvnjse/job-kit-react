@@ -43,8 +43,8 @@ function Home() {
 
   const doubleClickTimeout = useRef(null);
 
-  const handleJobBoxDoubleClick = () => {
-    navigate('/employee/jobdetails');
+  const handleJobBoxDoubleClick = (id) => {
+    navigate(`/employee/jobdetails?id=${id}/`);
   };
 
   const handleJobBoxClick = () => {
@@ -55,13 +55,13 @@ function Home() {
     setJobDetailModal(false);
   };
 
-  const handleBoxClick = () => {
+  const handleBoxClick = (id) => {
     if (window.innerWidth < 1000) {
       navigate('/employee/jobdetails');
     } else {
       if (doubleClickTimeout.current) {
         clearTimeout(doubleClickTimeout.current);
-        handleJobBoxDoubleClick();
+        handleJobBoxDoubleClick(id);
       } else {
         doubleClickTimeout.current = setTimeout(() => {
           doubleClickTimeout.current = null;
@@ -88,7 +88,7 @@ function Home() {
             <div className="text-center">No jobs available</div>
           ) : (
             categoryjobs.map(job => (
-              <JobBox key={job.id} job={job} click={handleBoxClick}/>
+              <JobBox key={job.id} job={job} click={()=>{handleBoxClick(job.id)}}/>
             ))
           )}
         </div>
