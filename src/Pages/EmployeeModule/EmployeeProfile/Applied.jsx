@@ -11,11 +11,24 @@ function Applied(props) {
     const access_token = Cookies.get('access_token')
     const [job, setJob] = useState([])
     const user_id = Cookies.get('user_id')
+    const [savedJobs, setSavedJobs] = useState([]);
+
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
     useEffect(() => {
         GetAppliedjobs ()
+    }, []);
+
+    useEffect(() => {
+        // Make API request to fetch saved jobs for the user
+        fetchSavedJobsForUser(user_id)
+            .then(savedJobs => {
+                setSavedJobs(savedJobs);
+            })
+            .catch(error => {
+                console.error('Error fetching saved jobs:', error);
+            });
     }, []);
 
     const GetAppliedjobs = () => {
@@ -31,6 +44,24 @@ function Applied(props) {
             console.log(error)
         });
     }
+
+    const SaveJob = (jobId) => {
+
+        const data = {
+            user: user_id,
+            saved_job_id: jobId
+        };
+       console.log(data, "post data")
+       MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+       .then(response => {
+           console.log(response, "saved job succesfully");
+           setSavedJobs([...savedJobs, jobId]);
+           updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
+           })
+       .catch(error => {
+           console.log(error);
+       });
+   }
     const closetoggleBox = props.closetoggleBox
 
     return (
@@ -72,7 +103,7 @@ function Applied(props) {
                     <div className=' text-[8px] text-green-600'>Matches Your Skills</div>
                 </div>
             </div>
-            <div className=' text-button_primary_color absolute top-1 right-2'><FontAwesomeIcon icon={faBookmark} /></div>
+            <div onClick={()=>{SaveJob(job.id)}} className=' text-button_primary_color absolute top-1 right-2'><FontAwesomeIcon icon={faBookmark} /></div>
         </div> 
          ))}
             {/* <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
