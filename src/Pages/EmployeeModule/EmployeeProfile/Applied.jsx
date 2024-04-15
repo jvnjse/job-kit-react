@@ -15,41 +15,43 @@ function Applied(props) {
     const [job, setJob] = useState([])
     const user_id = Cookies.get('user_id')
     const [savedJobs, setSavedJobs] = useState([]);
-    const [isJobSaved, setIsJobSaved] = useState(false);
+    // const [isJobSaved, setIsJobSaved] = useState(false);
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
     useEffect(() => {
         console.log(savedJobs, "11"); 
         GetAppliedjobs ()
-        GetSavedjobs ()
+        // GetSavedjobs ()
     }, []);
 
-    const GetSavedjobs=() => {
-        // Make API request to fetch saved jobs for the user
-        MakeApiRequest('get', `${config.baseUrl}employee/get-saved-jobs/${user_id}/`, headers)
-            .then(response => {
-                console.log(response,"blah");
-                setSavedJobs(response);
-                console.log(response,"getsaved")
-                // job.forEach((job) => {
-                //     if (response.includes(job.id)) {
-                //         setIsJobSaved(true);
-                //     }
-                // });
-                let isSaved = false;
-                for (let i = 0; i < job.length; i++) {
-                    if (response.includes(job[i].id)) {
-                        isSaved = true;
-                        break;
-                    }
-                }
-                setIsJobSaved(isSaved);
-            })
-            .catch(error => {
-                console.error('Error fetching saved jobs:', error);
-            });
-    };
+    // const GetSavedjobs=() => {
+    //     // Make API request to fetch saved jobs for the user
+    //     MakeApiRequest('get', `${config.baseUrl}employee/get-saved-jobs/${user_id}/`, headers)
+    //         .then(response => {
+    //             console.log(response,"blah");
+    //             setSavedJobs(response);
+    //             console.log(response,"getsaved")
+    //             // job.forEach((job) => {
+    //             //     if (response.includes(job.id)) {
+    //             //         setIsJobSaved(true);
+    //             //     }
+    //             // });
+    //             // let isSaved = false;
+    //             // for (let i = 0; i < job.length; i++) {
+    //             //       console.log("inside for loop")
+    //             //     if (response.includes(job[i].id)) {
+    //             //         console.log("inside if for savedjob")
+    //             //         isSaved(true);
+    //             //         break;
+    //             //     }
+    //             // }
+    //             // setIsJobSaved(isSaved);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching saved jobs:', error);
+    //         });
+    // };
 
     const GetAppliedjobs = () => {
         MakeApiRequest('get', `${config.baseUrl}employee/get-applied-jobs/${user_id}/`, headers)
@@ -76,7 +78,7 @@ function Applied(props) {
        .then(response => {
            console.log(response, "saved job succesfully");
            setSavedJobs([...savedJobs, jobId]);
-           setIsJobSaved(true);
+        //    setIsJobSaved(true);
         //    updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
            })
        .catch(error => {
@@ -109,9 +111,9 @@ function Applied(props) {
     
 
         <div className=' flex flex-wrap gap-10 p-16' onClick={closetoggleBox}>
-        {job  &&
+        {/* {job  &&
   job.map((job) => (
-        <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
+        <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointe r '>
             <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                 <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
             </div>
@@ -125,7 +127,10 @@ function Applied(props) {
                 </div>
             </div>
             {console.log(savedJobs.includes(job.id),"checking")}
+            {console.log(job.id, "data type")}
+            {console.log(isJobSaved, "issaved")}
             {savedJobs.includes(job.id) ? (
+               
                                  <div className='text-button_primary_color absolute top-1 right-2'>
                                  <FontAwesomeIcon icon={isJobSaved ? solid : regular} onClick={() => SaveJob(job.id)} />
                              </div>
@@ -135,7 +140,40 @@ function Applied(props) {
                                 </div>
                             )}
         </div> 
-         ))}
+         ))} */}
+         {/* second try below */}
+         {job.map((job) => (
+    <div className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
+        <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
+            <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
+        </div>
+        <div className='flex flex-col'>
+            <div className='text-base font-semibold'>{job.job_title}</div>
+            <div className='text-[10px] font-thin'>Lorem ipsum dolor sit amet consectetur.</div>
+            <div className='text-xs font-semibold'>₹180000 - ₹400000</div>
+            <div className='flex gap-2'>
+                <div className='text-[8px] bg-background_grey_color px-1 rounded-lg'>{job.mode_of_work}</div>
+                <div className='text-[8px] text-green-600'>Matches Your Skills</div>
+            </div>
+        </div>
+      
+        {/* <div className='text-button_primary_color absolute top-1 right-2'> */}
+            {/* <FontAwesomeIcon
+               
+                icon={savedJobs.includes(job.id) ? solid : regular}
+                onClick={() => SaveJob(job.id)}
+            /> */}
+            <div className='text-button_primary_color absolute top-1 right-2'>
+    <FontAwesomeIcon
+        icon={job.is_saved ? solid : regular}
+        onClick={() => SaveJob(job.id)}
+    />
+</div>
+
+        {/* </div> */}
+    </div> 
+))}
+
            </div>
       
 

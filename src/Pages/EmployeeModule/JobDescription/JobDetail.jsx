@@ -1,7 +1,10 @@
 import React, { useState, useEffect} from 'react'
 import companylogo from "../../../Assets/Images/companylogo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBookmark, faCalendar, faShareFromSquare } from '@fortawesome/free-regular-svg-icons';
+import {  faCalendar, faShareFromSquare } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as regular} from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as solid} from '@fortawesome/free-solid-svg-icons';
+
 import { faInstagram, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import Nav from '../Nav/Nav';
 import MakeApiRequest from '../../../Functions/AxiosApi';
@@ -77,6 +80,25 @@ function JobDetail() {
             });
             console.log(jobs,"data")
     }
+
+    const SaveJob = (jobId) => {
+
+        const data = {
+            user: user_id,
+            saved_job_id: jobId
+        };
+       console.log(data, "post data")
+       MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+       .then(response => {
+           console.log(response, "saved job succesfully");
+        //    setSavedJobs([...savedJobs, jobId]);
+        //    setIsJobSaved(true);
+        //    updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
+           })
+       .catch(error => {
+           console.log(error);
+       });
+   }
     // const data = useState({
     //     user:user_id,
     //     applied_job_id:jobId
@@ -122,8 +144,11 @@ function JobDetail() {
                             <div className=' text-xs font-extralight text-text_black_primary_color'>{job.job_description}</div>
                             <div className='flex gap-3 text-xl'>
                                 <div className=' flex flex-col'>
-                                    <FontAwesomeIcon icon={faBookmark} />
-                                    <span className=' text-[9px]'>Share</span>
+                                <FontAwesomeIcon
+        icon={job.is_saved ? solid : regular}
+        onClick={() => SaveJob(job.id)}
+    />
+                                    <span className=' text-[9px]'>Save</span>
                                 </div>
                                 <div className=' flex flex-col'>
                                     <FontAwesomeIcon icon={faShareFromSquare} />

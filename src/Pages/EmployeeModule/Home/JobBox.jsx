@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./home.css";
 import companylogo from "../../../Assets/Images/companylogo.png"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBookmark as regular} from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as solid} from '@fortawesome/free-solid-svg-icons';
+import Cookies from 'js-cookie';
+import MakeApiRequest from '../../../Functions/AxiosApi';
+import config from '../../../Functions/config';
 
 function JobBox({ job, click }) {
     const { job_title, job_description, salary_range_from, salary_range_to, location, mode_of_work, tags } = job;
+    const access_token = Cookies.get('access_token')
+    const user_id = Cookies.get('user_id')
+    const [savedJobs, setSavedJobs] = useState([]);
+    const [isJobSaved, setIsJobSaved] = useState(false);
+    const headers = {
+        'Authorization': `Bearer ${access_token}`
+    }
+    const SaveJob = (jobId) => {
+
+        const data = {
+            user: user_id,
+            saved_job_id: jobId
+        };
+       console.log(data, "post data")
+       MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+       .then(response => {
+           console.log(response, "saved job succesfully");
+           setSavedJobs([...savedJobs, jobId]);
+           setIsJobSaved(true);
+        //    updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
+           })
+       .catch(error => {
+           console.log(error);
+       });
+   }
 
     return (
         <div className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer' onClick={click}>
@@ -25,8 +54,13 @@ function JobBox({ job, click }) {
                 </div>
             </div>
             <div className='text-button_primary_color absolute top-1 right-2'>
-                <FontAwesomeIcon icon={faBookmark} />
-            </div>
+                {console.log(job.id)}
+                {console.log(job.is_saved,"saved or not")}
+    <FontAwesomeIcon
+        icon={job.is_saved ? solid : regular}
+        onClick={() => SaveJob(job.id)}
+    />
+</div>
         </div>
     );
 }
