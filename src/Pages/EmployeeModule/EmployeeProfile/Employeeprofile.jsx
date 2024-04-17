@@ -5,6 +5,7 @@ import Appliedjob from './Applied';
 import Saved from './Saved';
 import Manage from './Manage';
 import Nav from '../Nav/Nav';
+import Searchjobs from './Searchjobs';
 
 function Employeeprofile() {
 
@@ -33,6 +34,7 @@ function Employeeprofile() {
                 {activeComponent === 'applied' && <Appliedjob closetoggleBox={closetoggleBox} />}
                 {activeComponent === 'saved' && <Saved closetoggleBox={closetoggleBox} />}
                 {activeComponent === 'manage' && <Manage closetoggleBox={closetoggleBox} />}
+                {activeComponent === 'search' && <Searchjobs closetoggleBox={closetoggleBox} />}
             </div>
         </div>
     </>
