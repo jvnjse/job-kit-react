@@ -3,8 +3,6 @@ import companylogo from "../../../Assets/Images/companylogo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookmark as regular} from '@fortawesome/free-regular-svg-icons';
 import { faBookmark as solid} from '@fortawesome/free-solid-svg-icons';
-
-
 import Cookies from 'js-cookie';
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
@@ -15,6 +13,7 @@ function Applied(props) {
     const [job, setJob] = useState([])
     const user_id = Cookies.get('user_id')
     const [savedJobs, setSavedJobs] = useState([]);
+    const navigate = useNavigate();
     // const [isJobSaved, setIsJobSaved] = useState(false);
     const headers = {
         'Authorization': `Bearer ${access_token}`
@@ -67,17 +66,36 @@ function Applied(props) {
         });
     }
 
+    const UnSaveJob = (jobId) => {
+        const data = {
+            user: user_id,
+            job_id: jobId
+        };
+        MakeApiRequest('post', `${config.baseUrl}employee/unsave-job/`, headers, data)
+            .then(response => {
+                console.log(response, "job unsaved successfully");
+                // Remove the unsaved job from the savedJobs state
+                setSavedJobs(savedJobs.filter(savedJobId => savedJobId !== jobId));
+                GetAppliedjobs () //rerendering to reflect the changes
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+    
+
     const SaveJob = (jobId) => {
 
         const data = {
             user: user_id,
-            saved_job_id: jobId
+            job_id: jobId
         };
        console.log(data, "post data")
-       MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+       MakeApiRequest('post', `${config.baseUrl}employee/post-saved-jobs/`,headers,data)
        .then(response => {
            console.log(response, "saved job succesfully");
            setSavedJobs([...savedJobs, jobId]);
+           GetAppliedjobs () //rerendering to reflect the changes
         //    setIsJobSaved(true);
         //    updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
            })
@@ -147,7 +165,7 @@ function Applied(props) {
         <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
             <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
         </div>
-        <div className='flex flex-col'>
+        <div onClick={() => navigate(`/employee/jobdetails?id=${job.id}/`)} className='flex flex-col'>
             <div className='text-base font-semibold'>{job.job_title}</div>
             <div className='text-[10px] font-thin'>Lorem ipsum dolor sit amet consectetur.</div>
             <div className='text-xs font-semibold'>₹180000 - ₹400000</div>
@@ -166,7 +184,7 @@ function Applied(props) {
             <div className='text-button_primary_color absolute top-1 right-2'>
     <FontAwesomeIcon
         icon={job.is_saved ? solid : regular}
-        onClick={() => SaveJob(job.id)}
+        onClick={() => job.is_saved ? UnSaveJob(job.id) : SaveJob(job.id)}
     />
 </div>
 

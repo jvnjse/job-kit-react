@@ -19,12 +19,14 @@ function JobDetail() {
     const [jobs, setJobs] = useState([])
     const [enroll, setEnroll] = useState("Enroll")
     const user_id = Cookies.get('user_id')
-    console.log(user_id, "got the id")
+    // console.log(user_id, "got the id")
     const[companyid, setCompanyId] = useState("")
     const access_token = Cookies.get('access_token')
 
     const location = useLocation();
-    const jobId = new URLSearchParams(location.search).get('id').replace(/\/$/, '');
+    const jobId =  new URLSearchParams(location.search).get('id').replace(/\/$/, '');
+    console.log(jobId,"jobid testing")
+
     const [companydetails, setCompanydetails] = useState([])
     const headers = {
         'Authorization': `Bearer ${access_token}`
@@ -35,6 +37,7 @@ function JobDetail() {
         .then(response => {
             console.log(response, "getting the data");
             setJob(response[0])
+
             setCompanyId(response[0].company_user_id)
             console.log(response[0].company_user_id, "cmpnyid")                                                                                             
             })
@@ -42,6 +45,8 @@ function JobDetail() {
             console.log(error);
         });
     }
+
+  
 
     const GetCompanyDetails = () => {
         
@@ -65,6 +70,9 @@ function JobDetail() {
             
     }, [companyid])
        
+    useEffect(() => {
+        setEnroll(job.is_applied ? "Enrolled" : "Enroll");
+    }, [job.is_applied]);
 
     const GetRelatedJob = () => {
         MakeApiRequest('get', `${config.baseUrl}company/post/job/${companyid}/`, headers)
@@ -85,10 +93,10 @@ function JobDetail() {
 
         const data = {
             user: user_id,
-            saved_job_id: jobId
+            job_id: jobId
         };
        console.log(data, "post data")
-       MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+       MakeApiRequest('post', `${config.baseUrl}employee/post-saved-jobs/`,headers,data)
        .then(response => {
            console.log(response, "saved job succesfully");
         //    setSavedJobs([...savedJobs, jobId]);
@@ -109,7 +117,7 @@ function JobDetail() {
 
      const data = {
          user: user_id,
-         applied_job_id: jobId
+         job_id: jobId
      };
     console.log(data, "post data")
     MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)

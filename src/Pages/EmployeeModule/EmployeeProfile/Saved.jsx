@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import companylogo from "../../../Assets/Images/companylogo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 import Cookies from 'js-cookie';
 import MakeApiRequest from '../../../Functions/AxiosApi';
@@ -13,7 +14,7 @@ function Saved(props) {
     const [job, setJob] = useState([])
     const user_id = Cookies.get('user_id')
     const [savedJobs, setSavedJobs] = useState([]);
-    
+    const navigate = useNavigate();
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
@@ -35,6 +36,23 @@ function Saved(props) {
             });
     };
 
+    const UnSaveJob = (jobId) => {
+        const data = {
+            user: user_id,
+            job_id: jobId
+        };
+        MakeApiRequest('post', `${config.baseUrl}employee/unsave-job/`, headers, data)
+            .then(response => {
+                console.log(response, "job unsaved successfully");
+                // Remove the unsaved job from the savedJobs state
+                setSavedJobs(savedJobs.filter(savedJobId => savedJobId !== jobId));
+                GetSavedjobs () //rerendering to reflect the changes 
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
     return (
         <div className=' flex flex-wrap gap-10 p-16' onClick={closetoggleBox}>
              <div className=' flex flex-wrap gap-10 p-16' onClick={closetoggleBox}>
@@ -44,7 +62,7 @@ function Saved(props) {
             <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
                 <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
             </div>
-            <div className='flex flex-col'>
+            <div onClick={() => navigate(`/employee/jobdetails?id=${job.id}/`)} className='flex flex-col'>
                 <div className=' text-base font-semibold'>{job.job_title}</div>
                 <div className=' text-[10px] font-thin'>Lorem ipsum dolor sit amet consectetur.</div>
                 <div className=' text-xs font-semibold'>₹180000 - ₹400000</div>
@@ -53,7 +71,7 @@ function Saved(props) {
                     <div className=' text-[8px] text-green-600'>Matches Your Skills</div>
                 </div>
             </div>
-            <div className=' text-button_primary_color absolute top-1 right-2'><FontAwesomeIcon icon={faBookmark} /></div>
+            <div className=' text-button_primary_color absolute top-1 right-2'><FontAwesomeIcon icon={faBookmark}  onClick={() =>  UnSaveJob(job.id) } /></div>
         </div> 
          ))}
             

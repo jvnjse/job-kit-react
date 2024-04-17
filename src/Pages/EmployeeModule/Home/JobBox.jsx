@@ -9,7 +9,7 @@ import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 
 function JobBox({ job, click }) {
-    const { job_title, job_description, salary_range_from, salary_range_to, location, mode_of_work, tags } = job;
+    const { job_title, job_description, salary_range_from, salary_range_to, location, mode_of_work, tags, is_saved } = job;
     const access_token = Cookies.get('access_token')
     const user_id = Cookies.get('user_id')
     const [savedJobs, setSavedJobs] = useState([]);
@@ -21,10 +21,10 @@ function JobBox({ job, click }) {
 
         const data = {
             user: user_id,
-            saved_job_id: jobId
+            job_id: jobId
         };
        console.log(data, "post data")
-       MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+       MakeApiRequest('post', `${config.baseUrl}employee/post-saved-jobs/`,headers,data)
        .then(response => {
            console.log(response, "saved job succesfully");
            setSavedJobs([...savedJobs, jobId]);
@@ -35,6 +35,23 @@ function JobBox({ job, click }) {
            console.log(error);
        });
    }
+
+   const UnSaveJob = (jobId) => {
+    const data = {
+        user: user_id,
+        job_id: jobId
+    };
+    MakeApiRequest('post', `${config.baseUrl}employee/unsave-job/`, headers, data)
+        .then(response => {
+            console.log(response, "job unsaved successfully");
+            // Remove the unsaved job from the savedJobs state
+            setSavedJobs(savedJobs.filter(savedJobId => savedJobId !== jobId));
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
 
     return (
         <div className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer' onClick={click}>
@@ -58,7 +75,7 @@ function JobBox({ job, click }) {
                 {console.log(job.is_saved,"saved or not")}
     <FontAwesomeIcon
         icon={job.is_saved ? solid : regular}
-        onClick={() => SaveJob(job.id)}
+        onClick={() => job.is_saved ? UnSaveJob(job.id) : SaveJob(job.id)}
     />
 </div>
         </div>

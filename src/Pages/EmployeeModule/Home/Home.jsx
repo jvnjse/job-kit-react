@@ -57,7 +57,7 @@ function Home() {
 
   const handleBoxClick = (id) => {
     if (window.innerWidth < 1000) {
-      navigate('/employee/jobdetails');
+      navigate(`/employee/jobdetails?id=${id}/`);//added
     } else {
       if (doubleClickTimeout.current) {
         clearTimeout(doubleClickTimeout.current);
