@@ -11,6 +11,7 @@ import Links from "./Links";
 import AdminMain from "./Pages/AdminModule/AdminMain";
 import CompanyLogin from "./Pages/Login/CompanyLogin";
 import VerifyOtpCompany from "./Pages/Verify-Otp/VerifyOtpCompany";
+import AdminLogin from "./Pages/Login/AdminLogin";
 
 const AddDetails = lazy(() =>
   import("./Pages/CompanyModule/AddCompanyDetails/AddDetails")
@@ -62,6 +63,7 @@ function App() {
             <Route path="/employee" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/company/login" element={<CompanyLogin />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/employee/employee-details"
               element={<EmployeeDetails1 />}
