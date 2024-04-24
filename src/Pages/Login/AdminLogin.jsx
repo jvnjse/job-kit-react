@@ -6,6 +6,26 @@ import Cookies from "js-cookie";
 import config from "../../Functions/config";
 
 const AdminLogin = () => {
+  const [emailOrUsername, setEmailOrUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    const data = {
+      email_or_username: emailOrUsername,
+      password: password
+    };
+
+    MakeApiRequest('POST', `${config.baseUrl}authentication/login/`, {}, data)
+      .then((response) => {
+        console.log(response);
+        Cookies.set("user_id", response.user_id, { expires: 5 });
+        Cookies.set("access_token", response.access_token, { expires: 5 });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="h-screen overflow-hidden">
       <div className="navbody w-screen p-2 flex justify-between item-center">
@@ -41,6 +61,8 @@ const AdminLogin = () => {
                 type="text"
                 className="signup-input border border-black-950 w-64 h-8 "
                 name="email"
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
               />
             </label>
 
@@ -49,9 +71,11 @@ const AdminLogin = () => {
               <input
                 type="password"
                 className="signup-input border border-black-950 w-64 h-8 "
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </label>
-            <div className="signup-btn text-center w-full cursor-pointer mt-4">
+            <div className="signup-btn text-center w-full cursor-pointer mt-4" onClick={handleLogin}>
               Login
             </div>
           </div>
@@ -62,3 +86,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+
