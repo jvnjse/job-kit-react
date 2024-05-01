@@ -4,10 +4,14 @@ import logoimage from "../../Assets/Images/logo.png";
 import MakeApiRequest from "../../Functions/AxiosApi";
 import Cookies from "js-cookie";
 import config from "../../Functions/config";
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
 
   const handleLogin = () => {
     const data = {
@@ -20,6 +24,7 @@ const AdminLogin = () => {
         console.log(response);
         Cookies.set("user_id", response.user_id, { expires: 5 });
         Cookies.set("access_token", response.access_token, { expires: 5 });
+        navigate('/admin');
       })
       .catch((error) => {
         console.log(error);
