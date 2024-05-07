@@ -6,6 +6,8 @@ import Saved from './Saved';
 import Manage from './Manage';
 import Nav from '../Nav/Nav';
 import Searchjobs from './Searchjobs';
+import Home from '../Home/Home';
+import { useNavigate } from 'react-router-dom';
 
 function Employeeprofile() {
 
@@ -24,11 +26,17 @@ function Employeeprofile() {
         setIsOpen(false);
     };
 
+    const navigate = useNavigate()
+
+    const handleLinkClickJob = () =>{
+        navigate('/homejobs')
+    }
+
 
     return (<>
         <Nav />
         <div className='flex'>
-            <SidePanel handleLinkClick={handleLinkClick} toggleBox={toggleBox} isOpen={isOpen} />
+            <SidePanel handleLinkClick={handleLinkClick} toggleBox={toggleBox} isOpen={isOpen} handleLinkClickJob={handleLinkClickJob} />
             <div className=' flex-1 h-screen overflow-hidden overflow-y-scroll '>
                 {activeComponent === 'profile' && <Profile closetoggleBox={closetoggleBox} />}
                 {activeComponent === 'applied' && <Appliedjob closetoggleBox={closetoggleBox} />}

@@ -39,8 +39,12 @@ function EmployerRequest() {
         })
     }
 
-    const handleReject = (is) => {
-        
+    const handleReject = (id) => {
+      MakeApiRequest('post',`${config.baseUrl}administrator/category-change-request/reject/${id}/`,headers)
+      .then((response) =>{
+          console.log(response);
+          fetchData();
+      })
     }
 
 

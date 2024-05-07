@@ -30,13 +30,13 @@ function Home() {
 
     const fetchData = async () => {
       try {
-        const response = await MakeApiRequest('get', `${config.baseUrl}company/jobs-by-category-and-skills/?category_id=${category}`, headers);
+        const response = await MakeApiRequest('get', `${config.baseUrl}company/jobs-by-category-and-skills/`, headers);
         console.log(response);
         setCategoryJobs(response);
         setError(null); // Reset error state on successful response
       } catch (error) {
         console.error("Error fetching job categories:", error);
-        setError(error.response.data.error); // Set error message from the response
+        setError(error.response.data.error); 
       }
     };
     fetchData();
@@ -80,10 +80,10 @@ function Home() {
   >
     <div className="flex flex-col">
       <Nav />
-      <Search />
+    
       {error && <div className="text-red-600 text-center w-full flex flex-wrap justify-center items-center p-7 gap-10">{error}</div>} {/* Display error message in the center */}
       <div className="flex">
-        <JobsFilter />
+        
         <div className='w-full flex flex-wrap justify-center items-center p-7 gap-10 '>
           {categoryjobs.length === 0 && !error ? (
             <div className="text-center">No jobs available</div>

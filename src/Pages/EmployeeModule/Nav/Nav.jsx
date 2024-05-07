@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import logo from "../../../Assets/Images/logo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 function Nav() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,6 +10,12 @@ function Nav() {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    const navigate = useNavigate()
+
+    const handleNavJobs = () =>{
+        navigate()
+    }
     return (
         <>
             <div className='flex justify-between items-center px-10 py-3 bg-primary_white relative'>
@@ -25,7 +32,7 @@ function Nav() {
                 </div>
 
                 <div className=' flex gap-5 items-center max-md:hidden'>
-                    <div className=' cursor-pointer'>Jobs</div>
+                    <div className=' cursor-pointer' onClick={handleNavJobs}>Jobs</div>
                     <div className=' cursor-pointer'>Companies</div>
                     <div className=' cursor-pointer'>About Us</div>
                     <div className=' cursor-pointer'>Contact Us</div>
