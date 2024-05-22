@@ -20,7 +20,7 @@ function Skills() {
   const headers = {
     'Authorization': `Bearer ${access_token}`,
     "Content-Type": "application/json",
-}
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +28,6 @@ function Skills() {
         const response1 = await MakeApiRequest('get', `${config.baseUrl}administrator/job-category/`);
         setJobCategories(response1);
         console.log(response1, 'categories');
-        
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -42,7 +41,8 @@ function Skills() {
   }));
 
   const handleInputChange = event => {
-    setInputValue(event.target.value);
+    const value = event.target.value;
+    setInputValue(value.charAt(0).toUpperCase() + value.slice(1));
   };
 
   const handleInputKeyPress = event => {
@@ -107,19 +107,20 @@ function Skills() {
       const response = await MakeApiRequest('POST', `${config.baseUrl}employee/employees/${user_id}/skills/`, headers, data);
       console.log(response);
       setSuccess(true);
-      
-      
     } catch (error) {
       console.error('Error adding skills:', error);
     }
   };
 
-  if (success) {
-    const redirectTimer = setTimeout(() => {
+  useEffect(() => {
+    if (success) {
+      const redirectTimer = setTimeout(() => {
         window.location.href = "/employee/employee-profile";
-    }, 5000);
-    return () => clearTimeout(redirectTimer);
-}
+      }, 5000);
+
+      return () => clearTimeout(redirectTimer);
+    }
+  }, [success]);
 
   return (
     <>
@@ -190,3 +191,4 @@ function Skills() {
 }
 
 export default Skills;
+
