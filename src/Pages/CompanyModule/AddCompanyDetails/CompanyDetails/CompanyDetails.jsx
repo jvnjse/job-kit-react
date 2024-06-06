@@ -20,11 +20,15 @@ function CompanyDetails() {
     const [companyTypes, setCompanyTypes] = useState([]);
     const [companyDepartments, setCompanyDepartments] = useState([]);
     const [rows, setRows] = useState([{ companyType: null, companyDepartments: null }]);
+    const [errors, setErrors] = useState([{ companyType: "", companyDepartments: "" }]);
+
+
 
     useEffect(() => {
         setCompanyTypes([{ label: 'Type A' }, { label: 'Type B', value: 'type_b' }, { label: 'Type C', value: 'type_c' }]);
         setCompanyDepartments([{ label: 'HR', value: 'hr' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }, { label: 'Finance', value: 'finance' }]);
     }, []);
+
     function HandleNextDetails() {
         setDetails(false)
 
@@ -43,25 +47,55 @@ function CompanyDetails() {
 
     const addNewRow = () => {
         setRows([...rows, { companyType: null, companyDepartments: null }]);
+        setErrors([...errors, {}]);
     };
     const handleCompanyTypeChange = (selectedOption, rowIndex) => {
         const updatedRows = [...rows];
         updatedRows[rowIndex].companyType = selectedOption;
         setRows(updatedRows);
+
+        const updatedErrors = [...errors];
+        updatedErrors[rowIndex].companyType = selectedOption ? "" : "Company type is required";
+        setErrors(updatedErrors);
     };
 
     const handleCompanyDepartmentsChange = (selectedOptions, rowIndex) => {
         const updatedRows = [...rows];
         updatedRows[rowIndex].companyDepartments = selectedOptions;
         setRows(updatedRows);
+
+        const updatedErrors = [...errors];
+        updatedErrors[rowIndex].companyDepartments = selectedOptions && selectedOptions.length > 0 ? "" : "Company department is required";
+        setErrors(updatedErrors);
     };
 
     console.log(rows)
+
+    const validateRows = () => {
+        const newErrors = rows.map((row, index) => {
+            const rowErrors = {};
+            if (!row.companyType) {
+                rowErrors.companyType = "Company type is required";
+            }
+            if (!row.companyDepartments || row.companyDepartments.length === 0) {
+                rowErrors.companyDepartments = "Company department is required";
+            }
+            return rowErrors;
+        });
+        setErrors(newErrors);
+        return newErrors.every(rowError => Object.keys(rowError).length === 0);
+    };
+
 
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
     const SubmitSecDep = () => {
+
+        if (!validateRows()) {
+            return;
+        }
+
         const userData = {
             user_id: user_id,
             sectors: [],
@@ -110,6 +144,7 @@ function CompanyDetails() {
                                             onChange={(selectedOption) => handleCompanyTypeChange(selectedOption, index)}
                                             options={companyTypes}
                                         />
+                                        {errors[index]?.companyType && <span className="text-red-500 text-xs">{errors[index].companyType}</span>}
                                     </label>
                                     <label className='flex flex-col gap-1 text-xs mt-4'>
                                         Company Departments
@@ -119,6 +154,7 @@ function CompanyDetails() {
                                             options={companyDepartments}
                                             isMulti
                                         />
+                                        {errors[index]?.companyDepartments && <span className="text-red-500 text-xs">{errors[index].companyDepartments}</span>}
                                     </label>
                                 </div>
                             ))}
