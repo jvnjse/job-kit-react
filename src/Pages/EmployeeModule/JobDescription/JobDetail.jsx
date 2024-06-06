@@ -1,9 +1,9 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import companylogo from "../../../Assets/Images/companylogo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  faCalendar, faShareFromSquare } from '@fortawesome/free-regular-svg-icons';
-import { faBookmark as regular} from '@fortawesome/free-regular-svg-icons';
-import { faBookmark as solid} from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faShareFromSquare } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as regular } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as solid } from '@fortawesome/free-solid-svg-icons';
 
 import { faInstagram, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import Nav from '../Nav/Nav';
@@ -21,7 +21,7 @@ function JobDetail() {
     const [enroll, setEnroll] = useState("Enroll")
     const user_id = Cookies.get('user_id')
     // console.log(user_id, "got the id")
-    const[companyid, setCompanyId] = useState("")
+    const [companyid, setCompanyId] = useState("")
 
     // const user_id = Cookies.get('user_id')
 
@@ -29,8 +29,8 @@ function JobDetail() {
 
     const location = useLocation();
 
-    const jobId =  new URLSearchParams(location.search).get('id').replace(/\/$/, '');
-    console.log(jobId,"jobid testing")
+    const jobId = new URLSearchParams(location.search).get('id').replace(/\/$/, '');
+    console.log(jobId, "jobid testing")
 
 
     const queryParams = new URLSearchParams(location.search);
@@ -42,66 +42,84 @@ function JobDetail() {
         'Authorization': `Bearer ${access_token}`
     }
 
-    
+
     const GetJobDetails = () => {
         MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}/`, headers)
-        .then(response => {
-            console.log(response, "getting the data");
-            setJob(response[0])
-
-            setCompanyId(response[0].company_user_id)
-            console.log(response[0].company_user_id, "cmpnyid")                                                                                             
-            })
-        .catch(error => {
-            console.log(error);
-        });
-    }
-
-  
-
-    const GetCompanyDetails = () => {
-        
-        MakeApiRequest('get', `${config.baseUrl}company/company/${companyid}/`, headers)
             .then(response => {
-                console.log(response)
-                setCompanydetails(response[0])
+                console.log(response, "getting the data");
+                setJob(response[0])
 
-
-    const fetchJobDetails = () => {
-        const headers = {
-            'Authorization': `Bearer ${access_token}`
-        }
-        
-        MakeApiRequest('get',`${config.baseUrl}company/get/job/${id}`,headers)
-            .then(jobResponse => {
-                console.log(jobResponse, "getting the job data");
-                setJob(jobResponse[0]);
-                fetchCompanyDetails(jobResponse[0].company_user_id);
-
+                setCompanyId(response[0].company_user_id)
+                console.log(response[0].company_user_id, "cmpnyid")
             })
             .catch(error => {
                 console.log(error);
             });
     }
-    useEffect(() => {
-        GetJobDetails()
-            
-                if (companyid) {
-                    GetCompanyDetails()
-                    GetRelatedJob()
-                }
-            
-    }, [companyid])
-       
-    useEffect(() => {
-        setEnroll(job.is_applied ? "Enrolled" : "Enroll");
-    }, [job.is_applied]);
 
-    const GetRelatedJob = () => {
-        MakeApiRequest('get', `${config.baseUrl}company/post/job/${companyid}/`, headers)
 
-    };
 
+    const GetCompanyDetails = () => {
+
+        MakeApiRequest('get', `${config.baseUrl}company/company/${companyid}/`, headers)
+            .then(response => {
+                console.log(response)
+                setCompanydetails(response[0])
+            })
+
+
+    }
+    const Applyjob = () => {
+
+        const data = {
+            user: user_id,
+            job_id: jobId
+        };
+        console.log(data, "post data")
+        MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`, headers, data)
+            .then(response => {
+                console.log(response, "applied job succesfully");
+                setEnroll("Enrolled")
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+    const SaveJob = (jobId) => {
+
+        const data = {
+            user: user_id,
+            job_id: jobId
+        };
+        console.log(data, "post data")
+        MakeApiRequest('post', `${config.baseUrl}employee/post-saved-jobs/`, headers, data)
+            .then(response => {
+                console.log(response, "saved job succesfully");
+                //    setSavedJobs([...savedJobs, jobId]);
+                //    setIsJobSaved(true);
+                //    updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+    const fetchRelatedJobs = () => {
+        const headers = {
+            'Authorization': `Bearer ${Cookies.get('access_token')}`
+        };
+
+        MakeApiRequest('get', `${config.baseUrl}company/post/job/${Cookies.get('user_id')}/`, headers)
+
+            .then(response => {
+                console.log(response);
+                setJobs(response.slice(0, 4)); // Limiting to four elements
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        console.log(jobs, "data")
+    }
     const fetchCompanyDetails = (companyId) => {
         const headers = {
             'Authorization': `Bearer ${access_token}`
@@ -118,81 +136,68 @@ function JobDetail() {
             });
     };
 
-    const fetchRelatedJobs = () => {
+    const fetchJobDetails = () => {
         const headers = {
-            'Authorization': `Bearer ${Cookies.get('access_token')}`
-        };
+            'Authorization': `Bearer ${access_token}`
+        }
 
-        MakeApiRequest('get', `${config.baseUrl}company/post/job/${Cookies.get('user_id')}/`, headers)
+        MakeApiRequest('get', `${config.baseUrl}company/get/job/${id}`, headers)
+            .then(jobResponse => {
+                console.log(jobResponse, "getting the job data");
+                setJob(jobResponse[0]);
+                fetchCompanyDetails(jobResponse[0].company_user_id);
 
-            .then(response => {
-                console.log(response);
-                setJobs(response.slice(0, 4)); // Limiting to four elements
             })
             .catch(error => {
                 console.log(error);
             });
-
-            console.log(jobs,"data")
     }
+    useEffect(() => {
+        GetJobDetails()
 
-    const SaveJob = (jobId) => {
+        if (companyid) {
+            GetCompanyDetails()
+            // GetRelatedJob()
+        }
 
-        const data = {
-            user: user_id,
-            job_id: jobId
-        };
-       console.log(data, "post data")
-       MakeApiRequest('post', `${config.baseUrl}employee/post-saved-jobs/`,headers,data)
-       .then(response => {
-           console.log(response, "saved job succesfully");
-        //    setSavedJobs([...savedJobs, jobId]);
-        //    setIsJobSaved(true);
-        //    updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
-           })
-       .catch(error => {
-           console.log(error);
-       });
-   }
+    }, [companyid])
+
+    useEffect(() => {
+        setEnroll(job.is_applied ? "Enrolled" : "Enroll");
+    }, [job.is_applied]);
+
+    // const GetRelatedJob = () => {
+    //     MakeApiRequest('get', `${config.baseUrl}company/post/job/${companyid}/`, headers)
+
+    // };
+
+
+
+
     // const data = useState({
     //     user:user_id,
     //     applied_job_id:jobId
     // })
     // console.log(data, "before")
-   //-------------------
-   const Applyjob = () => {
+    //-------------------
 
-     const data = {
-         user: user_id,
-         job_id: jobId
-     };
-    console.log(data, "post data")
-    MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
-    .then(response => {
-        console.log(response, "applied job succesfully");
-        setEnroll("Enrolled")                                                                                        
-        })
-    .catch(error => {
-        console.log(error);
-    });
-}
 
-//-------------------
+    //-------------------
     const handleEnroll = () => {
         console.log("enrolled")
         Applyjob()
     }
 
-    };
 
-   
+
+
     useEffect(() => {
         fetchJobDetails();
         fetchRelatedJobs();
     }, []);
 
 
-    
+
 
     return (
         <div>
@@ -210,10 +215,10 @@ function JobDetail() {
                             <div className=' text-xs font-extralight text-text_black_primary_color'>{job.job_description}</div>
                             <div className='flex gap-3 text-xl'>
                                 <div className=' flex flex-col'>
-                                <FontAwesomeIcon
-        icon={job.is_saved ? solid : regular}
-        onClick={() => SaveJob(job.id)}
-    />
+                                    <FontAwesomeIcon
+                                        icon={job.is_saved ? solid : regular}
+                                        onClick={() => SaveJob(job.id)}
+                                    />
                                     <span className=' text-[9px]'>Save</span>
                                 </div>
                                 <div className=' flex flex-col'>
@@ -236,20 +241,20 @@ function JobDetail() {
                         <div className=' text-lg font-bold text-text_black_primary_color mt-5'>Key Responsibilities:</div>
                         <ul className=' flex flex-col gap-1 list-outside ml-12 pr-24 max-sm:pr-2'>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>{job.qualifications_requirements}
-</li>
+                            </li>
                             {/* <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li>
                             <li className=' text-xs  text-text_black_primary_color list-disc'>Lorem ipsum dolor sit amet consectetur. Sem sit pellentesque donec eu nisl quis suscipit vulputate.</li> */}
                         </ul>
                         {/*------------------------------------------------------------------------------------------------ */}
                         <div className='flex text-base font-medium ml-12 gap-3'>
-    {job?.tags?.map((tag, index) => (
-        <div key={index} className='bg-violet-300 px-2 rounded-lg text-text_black_primary_color'>
-            {tag}
-        </div>
-    ))}
-    {/* skills */}
-</div>
+                            {job?.tags?.map((tag, index) => (
+                                <div key={index} className='bg-violet-300 px-2 rounded-lg text-text_black_primary_color'>
+                                    {tag}
+                                </div>
+                            ))}
+                            {/* skills */}
+                        </div>
 
 
                         {/* <div className=' flex text-base font-medium ml-12 gap-3'>
@@ -261,30 +266,30 @@ function JobDetail() {
                         <div className=' text-lg font-bold text-text_black_primary_color mt-5'>Related Jobs:</div>
                         {/* JOBBOX */}
                         <div className=' flex flex-wrap gap-10 px-12 mt-6'>
-                        {jobs  &&
-      jobs.map((job) => (
-        <div key={job.id} className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
-          <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
-            <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
-          </div>
-          <div className='flex flex-col  w-[250px]'>
-            {console.log("in return")}
-            <div className='text-base font-semibold'>{job.job_title}</div>
-            <div className='text-[12px] font-thin'>{companydetails.company_name} </div>
-            <div className='font-thin text-[10px]'>{job.location}</div>
-            <div className='font-thin text-[10px]'>{job.mode_of_work}</div>
-            <div className='flex gap-2 mt-1'>
-            <Link to={`/employee/jobdetails?id=${job.id}/`}> 
-              <div  className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
-              </Link>
-              {/* <div onClick={() => HandleEdit(job.id)} className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Edit Details</div> */}
-            </div>
-          </div>
-          <div className='text-button_primary_color absolute top-1 right-2'></div>
-        </div>
-      ))}
-      </div>
-   
+                            {jobs &&
+                                jobs.map((job) => (
+                                    <div key={job.id} className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
+                                        <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
+                                            <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
+                                        </div>
+                                        <div className='flex flex-col  w-[250px]'>
+                                            {console.log("in return")}
+                                            <div className='text-base font-semibold'>{job.job_title}</div>
+                                            <div className='text-[12px] font-thin'>{companydetails.company_name} </div>
+                                            <div className='font-thin text-[10px]'>{job.location}</div>
+                                            <div className='font-thin text-[10px]'>{job.mode_of_work}</div>
+                                            <div className='flex gap-2 mt-1'>
+                                                <Link to={`/employee/jobdetails?id=${job.id}/`}>
+                                                    <div className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
+                                                </Link>
+                                                {/* <div onClick={() => HandleEdit(job.id)} className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Edit Details</div> */}
+                                            </div>
+                                        </div>
+                                        <div className='text-button_primary_color absolute top-1 right-2'></div>
+                                    </div>
+                                ))}
+                        </div>
+
                         {/* since we are not having realted jobs, listing the jobs of the same comapny */}
                         {/* <div className=' flex flex-wrap gap-10 px-12 mt-6'>
                             <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer '>
@@ -360,7 +365,7 @@ function JobDetail() {
                         <div className=' text-xs font-thin ml-3 mt-2 flex gap-2 text-text_black_primary_color'><FontAwesomeIcon icon={faCalendar} className='text-base' />12 May, 2023</div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>End Date</div>
                         <div className=' text-xs font-thin ml-3 mt-2 flex gap-2 text-text_black_primary_color'><FontAwesomeIcon icon={faCalendar} className='text-base' />{job.application_deadline}
-</div>
+                        </div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>Social Media</div>
                         <div className=' flex gap-3 mt-2 text-xl ml-3 text-text_black_primary_color'><FontAwesomeIcon icon={faInstagram} /><FontAwesomeIcon icon={faTwitter} /><FontAwesomeIcon icon={faLinkedin} /></div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>Company Website</div>
@@ -368,7 +373,7 @@ function JobDetail() {
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
     )
 }
 
