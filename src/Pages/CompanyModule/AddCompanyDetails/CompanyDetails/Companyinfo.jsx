@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 
 function Companyinfo() {
     const user_id = Cookies.get('user_id')
+    console.log(user_id)
     const access_token = Cookies.get('access_token')
     const [file, setFile] = useState();
     const [viewfile, setViewFile] = useState();
