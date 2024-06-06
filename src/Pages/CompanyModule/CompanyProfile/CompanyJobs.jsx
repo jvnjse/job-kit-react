@@ -51,7 +51,7 @@ function CompanyJobs() {
        // tags: '', //keywords_tags given earlier which were not accepted in the backend
     });
 
- 
+
 
 
 
@@ -114,7 +114,6 @@ function CompanyJobs() {
         value: category.category_name,
         label: category.category_name
     }));
-     //----------------------------------------------------------------------
 
      const  handleNavigation =  (id)=>{
            navigate(`/employee/company/${id}`)
@@ -122,6 +121,8 @@ function CompanyJobs() {
 
   //--------------------------------------------------------------------------
   // creating
+
+
   const HandleEdit = (jobId) => {
     MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}/`, headers)
         .then(response => {
@@ -130,18 +131,7 @@ function CompanyJobs() {
             if (response.length > 0) {
                 const jobData = response[0]; // Assuming response is an array of objects
                 console.log("jobData.id:", jobData.id); // Log the id value here
-            //  setJobData({
-            //     id: jobData.id,
-            //     job_title: jobData.job_title,
-            //     job_description: jobData.job_description,
-            //     qualifications_requirements: jobData.qualifications_requirements,
-            //     location:jobData.location,
-            //     mode_of_work: jobData.mode_of_work,
-            //     salary_range_from:jobData.salary_range_from,
-            //     salary_range_to:jobData.salary_range_to,
-            //     application_deadline: jobData.application_deadline,
-            //     tags: jobData.tags?.join(','), // Assuming tags is an array
-            //  });
+          
             setJobData({
                 ...jobData,
                 tags: jobData.tags?.join(','), // Assuming tags is an array
@@ -179,8 +169,7 @@ function CompanyJobs() {
     });
 };
 
-  //--------------------------------------------------------------------------
-  // adding
+  
 
   const HandleJobpost = () => {
   
@@ -219,19 +208,7 @@ function CompanyJobs() {
 };
 
 
-//   const HandleJobpost = () => {
-//     MakeApiRequest('post', `${config.baseUrl}/post/job/${user_id}/`, headers, dataToSend)
-//         .then(response => {
-//             console.log(response)
-//             closemodal()
-//             // HandleNextDetails()
-//         })
-//         .catch(error => {
-//         });
-// }
 
-//  to handle the tag in skill-----------------------------------------
-//----------------------------------------------------------------------------
 const handleSkillInputChange = (event) => {
     setskillInputValue(event.target.value);
 };
@@ -258,18 +235,7 @@ const handleTagRemove = (tagIndex) => {
     setTags(updatedTags);
 };;
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //       try {
-    //         const response = await axios.get('http://127.0.0.1:8000/post/job/4/');
-    //         setJobData(response.data);
-    //       } catch (error) {
-    //         console.error('Error fetching data: ', error);
-    //       }
-    //     };
-    
-    //     fetchData();
-    //   }, []);
+   
 
     return (
         <div className=' px-8 py-4'>
@@ -280,41 +246,7 @@ const handleTagRemove = (tagIndex) => {
             </div>
             
             <div onClick={handleemployeeBoxClick} className='whitespace-nowrap w-min mt-4 text-sm px-2 bg-primary_blue py-1 text-text_white_primary_color rounded-lg cursor-pointer'>Add Job</div>
-            {/* --------------------------------------------------------------------------------------    
---------------------------------------------------------------------------------------  
- dispaly in the job vacancies 
-   
---------------------------------------------------------------------------------------  
---------------------------------------------------------------------------------------      */}
-
-     {/* <div>
-        hi
-      {jobData  &&
-      jobData.map((job) => (
-        <div key={job.id} className='bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
-          <div className='bg-background_grey_color w-14 h-14 rounded-xl'>
-            <img src={companylogo} alt="" className='object-cover mix-blend-multiply' />
-          </div>
-          <div className='flex flex-col'>
-            {console.log("in return")}
-            <div className='text-base font-semibold'>{job.job_title}</div>
-            <div className='text-[10px] font-thin'>{job.job_description}</div>
-            <div className='flex gap-2 mt-1'>
-              <div className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
-              <div className='text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Remote</div>
-            </div>
-          </div>
-          <div className='text-button_primary_color absolute top-1 right-2'></div>
-        </div>
-      ))}
-     </div> */}
-
-{/* --------------------------------------------------------------------------------------    
---------------------------------------------------------------------------------------  
- dispaly 
-   
---------------------------------------------------------------------------------------  
---------------------------------------------------------------------------------------      */}
+         
             <div className="flex flex-row flex-wrap gap-4 mt-5">
            
             <div className="flex flex-row flex-wrap gap-4 mt-5">
@@ -350,71 +282,6 @@ const handleTagRemove = (tagIndex) => {
       ))}
      </div>
                 
-                {/* <Link to={"/employee/jobdetails"}>
-                    <div className=' bg-primary_white flex p-3  rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max '>
-                        <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
-                            <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
-                        </div>
-                        <div className='flex  flex-col w-[250px]'>
-                            <div className=' text-base font-semibold'>Job Title</div>
-                            <div className=' text-[12px] font-thin'>Company name</div>
-                            <div className='font-thin text-[10px]'>location  </div>
-                            <div className=' flex gap-2 mt-1'>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>mode</div>
-                            </div>
-                        </div>
-                        <div className=' text-button_primary_color absolute top-1 right-2'></div>
-                    </div>
-                </Link> */}
-                {/* <Link to={"/employee/jobdetails"}>
-                    <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
-                        <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
-                            <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
-                        </div>
-                        <div className='flex flex-col'>
-                            <div className=' text-base font-semibold'>Job Title</div>
-                            <div className=' text-[10px] font-thin'>Lorem ipsum dolor sit amet consectetur.</div>
-                            <div className=' flex gap-2 mt-1'>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Remote</div>
-                            </div>
-                        </div>
-                        <div className=' text-button_primary_color absolute top-1 right-2'></div>
-                    </div>
-                </Link>
-                <Link to={"/employee/jobdetails"}>
-                    <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
-                        <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
-                            <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
-                        </div>
-                        <div className='flex flex-col'>
-                            <div className=' text-base font-semibold'>Job Title</div>
-                            <div className=' text-[10px] font-thin'>Lorem ipsum dolor sit amet consectetur.</div>
-                            <div className=' flex gap-2 mt-1'>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Remote</div>
-                            </div>
-                        </div>
-                        <div className=' text-button_primary_color absolute top-1 right-2'></div>
-                    </div>
-                </Link> */}
-                {/* <Link to={"/employee/jobdetails"}>
-                    <div className=' bg-primary_white flex p-3 rounded-lg gap-2 shadow-md relative cursor-pointer max-w-max'>
-                        <div className=' bg-background_grey_color w-14 h-14 rounded-xl'>
-                            <img src={companylogo} alt="" className=' object-cover mix-blend-multiply' />
-                        </div>
-                        <div className='flex flex-col'>
-                            <div className=' text-base font-semibold'>Job Title</div>
-                            <div className=' text-[10px] font-thin'>Lorem ipsum dolor sit amet consectetur.</div>
-                            <div className=' flex gap-2 mt-1'>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>View Details</div>
-                                <div className='  text-[8px] text-text_white_primary_color bg-primary_blue px-1 rounded-lg'>Remote</div>
-                            </div>
-                        </div>
-                        <div className=' text-button_primary_color absolute top-1 right-2'></div>
-                    </div>
-                </Link> */}
             </div>
             {jobpostmodal && (
                 <div className="" onClick={closemodal}>
@@ -480,17 +347,7 @@ const handleTagRemove = (tagIndex) => {
                                 />
                             </label>
 
-                            {/* <label className="flex flex-col font-bold mt-3">
-                                Mode of Work:
-                                <input
-                                    type="text"
-                                    name="mode_of_work"
-                                    value={jobData.mode_of_work}
-                                    onChange={handleChange}
-                                    className="text-sm font-thin bg-gray-200 p-2 rounded-lg"
-                                    placeholder="Select the mode of work"
-                                />
-                            </label> */}
+                            
 
                             <label className="flex flex-col font-bold mt-3">
                                 Mode of Work:
@@ -570,14 +427,7 @@ const handleTagRemove = (tagIndex) => {
                                    </div>
 
 
-                                {/* <input
-                                    type="text"
-                                    name="tags"
-                                    value={jobData.tags}
-                                    onChange={handleChange}
-                                    className="h-16 text-sm font-thin bg-gray-200 p-2 rounded-lg"
-                                    placeholder="Enter the keywords and tags related to the job"
-                                /> */}
+                                
                             </label>
 
                             <label className="flex flex-col font-bold mt-3">

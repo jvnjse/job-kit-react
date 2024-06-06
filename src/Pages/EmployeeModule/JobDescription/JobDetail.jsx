@@ -9,7 +9,7 @@ import { faInstagram, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg
 import Nav from '../Nav/Nav';
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Link } from "react-router-dom";
 // import { jwtDecode } from "jwt-decode";
@@ -17,20 +17,31 @@ import { Link } from "react-router-dom";
 function JobDetail() {
     const [job, setJob] = useState([])
     const [jobs, setJobs] = useState([])
+
     const [enroll, setEnroll] = useState("Enroll")
     const user_id = Cookies.get('user_id')
     // console.log(user_id, "got the id")
     const[companyid, setCompanyId] = useState("")
+
+    // const user_id = Cookies.get('user_id')
+
     const access_token = Cookies.get('access_token')
 
     const location = useLocation();
+
     const jobId =  new URLSearchParams(location.search).get('id').replace(/\/$/, '');
     console.log(jobId,"jobid testing")
 
+
+    const queryParams = new URLSearchParams(location.search);
+    const id = queryParams.get('id');
+    console.log(id);
     const [companydetails, setCompanydetails] = useState([])
+
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
+
     
     const GetJobDetails = () => {
         MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}/`, headers)
@@ -54,10 +65,22 @@ function JobDetail() {
             .then(response => {
                 console.log(response)
                 setCompanydetails(response[0])
-               
+
+
+    const fetchJobDetails = () => {
+        const headers = {
+            'Authorization': `Bearer ${access_token}`
+        }
+        
+        MakeApiRequest('get',`${config.baseUrl}company/get/job/${id}`,headers)
+            .then(jobResponse => {
+                console.log(jobResponse, "getting the job data");
+                setJob(jobResponse[0]);
+                fetchCompanyDetails(jobResponse[0].company_user_id);
+
             })
-      
             .catch(error => {
+                console.log(error);
             });
     }
     useEffect(() => {
@@ -76,16 +99,40 @@ function JobDetail() {
 
     const GetRelatedJob = () => {
         MakeApiRequest('get', `${config.baseUrl}company/post/job/${companyid}/`, headers)
-            .then(response => {
-                console.log(response)
-                setJobs(response.slice(0, 4)); // Limiting to four elements
-                // closemodal()
-                console.log("its working")
-               
+
+    };
+
+    const fetchCompanyDetails = (companyId) => {
+        const headers = {
+            'Authorization': `Bearer ${access_token}`
+        }
+
+
+        MakeApiRequest('get', `${config.baseUrl}company/company/${companyId}/`, headers)
+            .then(companyResponse => {
+                console.log(companyResponse, "getting the company data");
+                setCompanydetails(companyResponse[0]);
             })
             .catch(error => {
-                console.log(error)
+                console.error(error);
             });
+    };
+
+    const fetchRelatedJobs = () => {
+        const headers = {
+            'Authorization': `Bearer ${Cookies.get('access_token')}`
+        };
+
+        MakeApiRequest('get', `${config.baseUrl}company/post/job/${Cookies.get('user_id')}/`, headers)
+
+            .then(response => {
+                console.log(response);
+                setJobs(response.slice(0, 4)); // Limiting to four elements
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
             console.log(jobs,"data")
     }
 
@@ -135,6 +182,17 @@ function JobDetail() {
         console.log("enrolled")
         Applyjob()
     }
+
+    };
+
+   
+    useEffect(() => {
+        fetchJobDetails();
+        fetchRelatedJobs();
+    }, []);
+
+
+    
 
     return (
         <div>
@@ -190,6 +248,7 @@ function JobDetail() {
             {tag}
         </div>
     ))}
+    {/* skills */}
 </div>
 
 

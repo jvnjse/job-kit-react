@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import MakeApiRequest from '../../../Functions/AxiosApi';
 import config from '../../../Functions/config';
 
+
 function JobBox({ job, click }) {
     const { job_title, job_description, salary_range_from, salary_range_to, location, mode_of_work, tags, is_saved } = job;
     const access_token = Cookies.get('access_token')
@@ -51,6 +52,7 @@ function JobBox({ job, click }) {
             console.log(error);
         });
 }
+
 
 
     return (
