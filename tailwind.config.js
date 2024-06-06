@@ -57,6 +57,7 @@ module.exports = {
                 button_secondary_white_color: "#ffffff",
                 button_secondary_black_color: "#141414",
         //----------------prev end-----
+        textDecoration: ['hover'], // Add 'hover' variant for textDecoration
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

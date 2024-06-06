@@ -1,7 +1,10 @@
 import React, { useState, useEffect} from 'react'
 import companylogo from "../../../Assets/Images/companylogo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBookmark, faCalendar, faShareFromSquare } from '@fortawesome/free-regular-svg-icons';
+import {  faCalendar, faShareFromSquare } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as regular} from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as solid} from '@fortawesome/free-solid-svg-icons';
+
 import { faInstagram, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import Nav from '../Nav/Nav';
 import MakeApiRequest from '../../../Functions/AxiosApi';
@@ -9,13 +12,27 @@ import config from '../../../Functions/config';
 import { useLocation, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Link } from "react-router-dom";
+// import { jwtDecode } from "jwt-decode";
 
 function JobDetail() {
     const [job, setJob] = useState([])
     const [jobs, setJobs] = useState([])
+
+    const [enroll, setEnroll] = useState("Enroll")
+    const user_id = Cookies.get('user_id')
+    // console.log(user_id, "got the id")
+    const[companyid, setCompanyId] = useState("")
+
     // const user_id = Cookies.get('user_id')
+
     const access_token = Cookies.get('access_token')
+
     const location = useLocation();
+
+    const jobId =  new URLSearchParams(location.search).get('id').replace(/\/$/, '');
+    console.log(jobId,"jobid testing")
+
+
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
     console.log(id);
@@ -24,6 +41,31 @@ function JobDetail() {
     const headers = {
         'Authorization': `Bearer ${access_token}`
     }
+
+    
+    const GetJobDetails = () => {
+        MakeApiRequest('get', `${config.baseUrl}company/get/job/${jobId}/`, headers)
+        .then(response => {
+            console.log(response, "getting the data");
+            setJob(response[0])
+
+            setCompanyId(response[0].company_user_id)
+            console.log(response[0].company_user_id, "cmpnyid")                                                                                             
+            })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+  
+
+    const GetCompanyDetails = () => {
+        
+        MakeApiRequest('get', `${config.baseUrl}company/company/${companyid}/`, headers)
+            .then(response => {
+                console.log(response)
+                setCompanydetails(response[0])
+
 
     const fetchJobDetails = () => {
         const headers = {
@@ -35,10 +77,29 @@ function JobDetail() {
                 console.log(jobResponse, "getting the job data");
                 setJob(jobResponse[0]);
                 fetchCompanyDetails(jobResponse[0].company_user_id);
+
             })
             .catch(error => {
                 console.log(error);
             });
+    }
+    useEffect(() => {
+        GetJobDetails()
+            
+                if (companyid) {
+                    GetCompanyDetails()
+                    GetRelatedJob()
+                }
+            
+    }, [companyid])
+       
+    useEffect(() => {
+        setEnroll(job.is_applied ? "Enrolled" : "Enroll");
+    }, [job.is_applied]);
+
+    const GetRelatedJob = () => {
+        MakeApiRequest('get', `${config.baseUrl}company/post/job/${companyid}/`, headers)
+
     };
 
     const fetchCompanyDetails = (companyId) => {
@@ -63,6 +124,7 @@ function JobDetail() {
         };
 
         MakeApiRequest('get', `${config.baseUrl}company/post/job/${Cookies.get('user_id')}/`, headers)
+
             .then(response => {
                 console.log(response);
                 setJobs(response.slice(0, 4)); // Limiting to four elements
@@ -70,6 +132,57 @@ function JobDetail() {
             .catch(error => {
                 console.log(error);
             });
+
+            console.log(jobs,"data")
+    }
+
+    const SaveJob = (jobId) => {
+
+        const data = {
+            user: user_id,
+            job_id: jobId
+        };
+       console.log(data, "post data")
+       MakeApiRequest('post', `${config.baseUrl}employee/post-saved-jobs/`,headers,data)
+       .then(response => {
+           console.log(response, "saved job succesfully");
+        //    setSavedJobs([...savedJobs, jobId]);
+        //    setIsJobSaved(true);
+        //    updateSavedJobsOnServer([...savedJobs, jobId]);                                                                                       
+           })
+       .catch(error => {
+           console.log(error);
+       });
+   }
+    // const data = useState({
+    //     user:user_id,
+    //     applied_job_id:jobId
+    // })
+    // console.log(data, "before")
+   //-------------------
+   const Applyjob = () => {
+
+     const data = {
+         user: user_id,
+         job_id: jobId
+     };
+    console.log(data, "post data")
+    MakeApiRequest('post', `${config.baseUrl}employee/post-applied-jobs/`,headers,data)
+    .then(response => {
+        console.log(response, "applied job succesfully");
+        setEnroll("Enrolled")                                                                                        
+        })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
+//-------------------
+    const handleEnroll = () => {
+        console.log("enrolled")
+        Applyjob()
+    }
+
     };
 
    
@@ -77,6 +190,7 @@ function JobDetail() {
         fetchJobDetails();
         fetchRelatedJobs();
     }, []);
+
 
     
 
@@ -96,8 +210,11 @@ function JobDetail() {
                             <div className=' text-xs font-extralight text-text_black_primary_color'>{job.job_description}</div>
                             <div className='flex gap-3 text-xl'>
                                 <div className=' flex flex-col'>
-                                    <FontAwesomeIcon icon={faBookmark} />
-                                    <span className=' text-[9px]'>Share</span>
+                                <FontAwesomeIcon
+        icon={job.is_saved ? solid : regular}
+        onClick={() => SaveJob(job.id)}
+    />
+                                    <span className=' text-[9px]'>Save</span>
                                 </div>
                                 <div className=' flex flex-col'>
                                     <FontAwesomeIcon icon={faShareFromSquare} />
@@ -238,7 +355,7 @@ function JobDetail() {
                         </div>
                     </div>
                     <div className=' w-1/4 flex flex-col items-start pl-16 max-sm:pl-5'>
-                        <div className=' w-20 rounded-md bg-primary_blue tracking-widest text-text_white_primary_color text-center'>Enroll</div>
+                        <div onClick={handleEnroll} className=' w-20 rounded-md bg-primary_blue tracking-widest cursor-pointer text-text_white_primary_color text-center'>{enroll}</div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>Posted Date</div>
                         <div className=' text-xs font-thin ml-3 mt-2 flex gap-2 text-text_black_primary_color'><FontAwesomeIcon icon={faCalendar} className='text-base' />12 May, 2023</div>
                         <div className=' text-sm font-semibold mt-5 text-text_black_primary_color'>End Date</div>
