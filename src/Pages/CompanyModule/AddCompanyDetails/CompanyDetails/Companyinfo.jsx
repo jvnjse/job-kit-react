@@ -86,7 +86,6 @@ function Companyinfo() {
             })
             .catch(error => {
             });
-        console.log(formData)
     };
     
     function HandleNextDetails() {
