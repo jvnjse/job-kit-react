@@ -73,13 +73,16 @@ function App() {
               path="/employee/employee-profile"
               element={<Employeeprofile />}
             />
+            
+            <Route path="/employee/company/:id" element={<Companydetail />} />
+
             <Route path="/homejobs" element={<Home />} />
-            <Route path="/employee/company" element={<Companydetail />}></Route>
+            
             {/* COMPANY LINKS */}
             <Route path="/company" element={<CompanyHome />} />
             <Route path="/company/company-details" element={<AddDetails />} />
             <Route
-              path="/company/employeedetails"
+              path="/company/employeedetails/:id"
               element={<EmployeeDescription />}
             />
             <Route path="/company/profile" element={<CompanyProfile />} />
